@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Information -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>IOTWave</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>jionfull</Authors>
+    <Company>jionfull(NoCompany)</Company>
+    <Product>IOTWave</Product>
+    <Description>An IoT framework library for .NET 8.0 and .NET 10</Description>
+    <PackageTags>iot;framework;net8;net10;iotwave</PackageTags>
+    <PackageProjectUrl>https://github.com/jionfull/IOTWave</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jionfull/IOTWave</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Doc\README.md" Pack="true" PackagePath="README.md" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="LICENSE" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.12" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="ReactiveUI" Version="22.3.1" />
+    <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+  </ItemGroup>
+
+</Project>

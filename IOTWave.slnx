@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="IOTWave/IOTWave.csproj" />
+  <Project Path="IOTWaveDemo/IOTWaveDemo.Browser/IOTWaveDemo.Browser.csproj" Id="68e00dbd-4906-4890-b9fd-013d57d6aabe" />
+  <Project Path="IOTWaveDemo/IOTWaveDemo.Desktop/IOTWaveDemo.Desktop.csproj" Id="6964b0d1-d37d-4172-813f-01af491434b9" />
+  <Project Path="IOTWaveDemo/IOTWaveDemo/IOTWaveDemo.csproj" Id="05f9d28c-85d8-4abd-86d2-5ee003f91565" />
+</Solution>
