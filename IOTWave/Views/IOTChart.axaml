@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:IotWave.ViewModels"
+             x:DataType="vm:IOTWaveBaseViewModel"
+             xmlns:views="clr-namespace:IotWave.Views;assembly=IOTWave"
+             xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
+             x:Class="IOTWave.IOTChart">
+  <UserControl.Styles>
+    <Style Selector="views|WaveListPanel">
+      <Setter Property="Background" Value="Black"/>
+    </Style>
+  </UserControl.Styles>
+  <Grid>
+     <views:WaveListPanel x:Name="CurveDisplay"
+
+                                 StartTime="{Binding BeginTime}"
+                                 EndTime="{Binding EndTime}"
+                                 ShowCursor="True"
+                                 ItemsSource="{Binding Items}"
+                                 ShowTimeAxis="True"
+                                 CursorTime="{Binding SelectedTime}"
+                                 GridBrush="#6400B4D8"
+                                 LabelBrush="#7DD3FC"
+                                 IsInteractive="True"
+                                 TimeMarkers="{Binding TimeMarkers}"
+                                 TimeRangeMarkers="{Binding TimeRangeMarkers}">
+    <views:WaveListPanel.DataTemplates>
+      <DataTemplate DataType="{x:Type models:CurveGroup}">
+
+        <views:CurvePanel
+            ChartGlobal="{Binding $parent[views:WaveListPanel]}"
+            Foreground="#7DD3FC"
+            Height="200" Items="{Binding   }" YMarkers="{Binding YMarkers}" />
+    
+      </DataTemplate>
+      <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">
+        <views:StatusPanel
+            ChartGlobal="{Binding $parent[views:WaveListPanel]}"
+            Height="16" Items="{Binding   }"
+            Margin="0,2" />
+      </DataTemplate>
+
+    </views:WaveListPanel.DataTemplates>
+
+   
+ 
+  </views:WaveListPanel>
+  </Grid>
+ 
+</UserControl>

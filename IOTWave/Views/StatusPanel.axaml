@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:IotWave.Models"
+       
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="IotWave.Views.StatusPanel"
+             x:Name="Root">
+    <Grid>
+        <Border x:Name="MainBorder" Margin="0,4" BorderThickness="1" BorderBrush="Azure">
+       
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Items.Name, ElementName=Root}" 
+                           Margin="5,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="White" BlurRadius="3" OffsetX="0" OffsetY="0"  Opacity="1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+              
+            </StackPanel> 
+          
+        </Border> 
+        <TextBlock Text="{Binding CurrentStatus, ElementName=Root}" 
+                   Margin="0,0,0,0" 
+                   Foreground="Aqua"
+                   FontStyle="Italic">
+            <TextBlock.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="3"  />
+            </TextBlock.Effect>
+        </TextBlock>
+    </Grid>
+</UserControl>

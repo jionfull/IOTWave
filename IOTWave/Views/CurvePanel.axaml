@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:IotWave.Models"
+             xmlns:views="using:IotWave.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="IotWave.Views.CurvePanel"
+             x:Name="Root">
+   <UserControl.Styles>
+
+       <Style Selector="CheckBox:pointerover  /template/ ContentPresenter#PART_ContentPresenter">
+           <Setter Property="Foreground" Value="Aqua" ></Setter>
+       </Style>
+       <Style Selector="CheckBox:unchecked  /template/ Border#NormalRectangle">
+           <Setter Property="Background" Value="Transparent" ></Setter>
+           <Setter Property="BorderThickness" Value="1"></Setter>
+           <Setter Property="BorderBrush" Value="Aqua"></Setter>
+       </Style>
+       <Style Selector="CheckBox:checked  /template/ Border#NormalRectangle">
+           <Setter Property="Background" Value="Transparent" ></Setter>
+           <Setter Property="BorderThickness" Value="1"></Setter>
+           <Setter Property="BorderBrush" Value="Aqua"></Setter>
+       </Style>
+       <Style Selector="ListBoxItem">
+           <Setter Property="Background" Value="Transparent"/>
+           <Setter Property="BorderThickness" Value="0"/>
+       </Style>
+       <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+       </Style>
+       <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+           <Setter Property="BorderThickness" Value="0"/>
+       </Style>
+   </UserControl.Styles>
+   <Grid >
+      <ListBox x:Name="curveCheck" ItemsSource="{Binding Items.Curves, ElementName=Root}" 
+               VerticalAlignment="Top"
+              
+               Background="Transparent"  Height="40">
+           <ListBox.ItemsPanel>
+               <ItemsPanelTemplate>
+                   <StackPanel Orientation="Horizontal" Background="Transparent">
+                                             
+                   </StackPanel>
+               </ItemsPanelTemplate>
+               
+           </ListBox.ItemsPanel>
+           <ListBox.ItemTemplate>
+               <DataTemplate DataType="models:CurveData">
+                   <CheckBox  Background="Transparent" IsChecked="{Binding IsVisible}" 
+                              Content="{Binding Name}"
+                              Foreground="{Binding Foreground, ElementName=Root}"
+                              Margin="5,0">
+                       <CheckBox.Styles>
+                           <Style Selector="CheckBox:pointerover">
+                               <Setter Property="Foreground" Value="{Binding $parent[UserControl].Foreground}"/>
+                           </Style>
+                       </CheckBox.Styles>
+                   </CheckBox>
+               </DataTemplate>
+           </ListBox.ItemTemplate>
+       </ListBox>
+      
+   </Grid>
+</UserControl>
