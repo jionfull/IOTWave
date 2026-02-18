@@ -207,7 +207,11 @@ public partial class StatusPanel : ChartPanelBase
     /// </summary>
     private void UpdateCurrentStatus()
     {
-
+        if (ChartGlobal == null)
+        {
+            CurrentStatus = "";
+            return;
+        }
 
         var cursorTime = ChartGlobal.CursorTime;
 

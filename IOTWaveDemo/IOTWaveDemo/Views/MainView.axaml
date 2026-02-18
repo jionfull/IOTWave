@@ -8,10 +8,28 @@
              x:Class="IOTWaveDemo.Views.MainView"
              x:DataType="vm:MainViewModel">
   <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainViewModel />
   </Design.DataContext>
 
-  <iot:IOTChart DataContext="{Binding ViewModel}" />
+  <TabControl>
+    <TabItem Header="基本示例">
+      <iot:IOTChart DataContext="{Binding BasicViewModel}" />
+    </TabItem>
+    <TabItem Header="滚动条示例">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="此示例展示多个曲线面板，当面板数量较多时显示滚动条"
+                   Margin="10"
+                   FontSize="14"
+                   Foreground="Gray"/>
+        <iot:IOTChart Grid.Row="1"
+                      DataContext="{Binding ScrollableViewModel}"
+                      AutoDistributePanelHeight="False"
+                      VerticalScrollBarVisibility="Auto"/>
+      </Grid>
+    </TabItem>
+  </TabControl>
 </UserControl>

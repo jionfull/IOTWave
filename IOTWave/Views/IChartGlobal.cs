@@ -28,6 +28,7 @@ public interface IChartGlobal
     IBrush? GridBrush { get; }
     double GridThickness { get; }
     IBrush? LabelBrush { get; }
+    IBrush? SeparatorBrush { get; }
     public DateTime? CursorTime { get; }
 
     event Action InvalidateRequestedEvent;

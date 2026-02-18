@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
@@ -75,6 +76,26 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         AvaloniaProperty.Register<WaveListPanel, IBrush?>(
             nameof(LabelBrush), Brushes.Black);
 
+    public static readonly StyledProperty<IBrush?> SeparatorBrushProperty =
+        AvaloniaProperty.Register<WaveListPanel, IBrush?>(
+            nameof(SeparatorBrush), Brushes.White);
+
+    public static readonly StyledProperty<bool> AutoDistributePanelHeightProperty =
+        AvaloniaProperty.Register<WaveListPanel, bool>(
+            nameof(AutoDistributePanelHeight), false);
+
+    public static readonly StyledProperty<ScrollBarVisibility> VerticalScrollBarVisibilityProperty =
+        AvaloniaProperty.Register<WaveListPanel, ScrollBarVisibility>(
+            nameof(VerticalScrollBarVisibility), ScrollBarVisibility.Disabled);
+
+    public static readonly StyledProperty<double> StatusPanelHeightProperty =
+        AvaloniaProperty.Register<WaveListPanel, double>(
+            nameof(StatusPanelHeight), 20);
+
+    public static readonly StyledProperty<Thickness> StatusPanelMarginProperty =
+        AvaloniaProperty.Register<WaveListPanel, Thickness>(
+            nameof(StatusPanelMargin), new Thickness(0, 2));
+
     // 命令属性
     public static readonly DirectProperty<WaveListPanel, ICommand> ZoomInCommandProperty =
         AvaloniaProperty.RegisterDirect<WaveListPanel, ICommand>(
@@ -139,6 +160,39 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     {
         get => GetValue(LabelBrushProperty);
         set => SetValue(LabelBrushProperty, value);
+    }
+
+    public IBrush? SeparatorBrush
+    {
+        get => GetValue(SeparatorBrushProperty);
+        set => SetValue(SeparatorBrushProperty, value);
+    }
+
+    public bool AutoDistributePanelHeight
+    {
+        get => GetValue(AutoDistributePanelHeightProperty);
+        set => SetValue(AutoDistributePanelHeightProperty, value);
+    }
+
+    public ScrollBarVisibility VerticalScrollBarVisibility
+    {
+        get => GetValue(VerticalScrollBarVisibilityProperty);
+        set => SetValue(VerticalScrollBarVisibilityProperty, value);
+    }
+
+    public double StatusPanelHeight
+    {
+        get => GetValue(StatusPanelHeightProperty);
+        set => SetValue(StatusPanelHeightProperty, value);
+    }
+
+    /// <summary>
+    /// StatusPanel 的 Margin，计算高度时需要考虑
+    /// </summary>
+    public Thickness StatusPanelMargin
+    {
+        get => GetValue(StatusPanelMarginProperty);
+        set => SetValue(StatusPanelMarginProperty, value);
     }
 
     public bool ShowCursor
@@ -273,12 +327,33 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         this.GetObservable(StartTimeProperty).Subscribe(_ => _cursorCanvas?.InvalidateVisual());
         this.GetObservable(EndTimeProperty).Subscribe(_ => _cursorCanvas?.InvalidateVisual());
 
+        // 自动分配面板高度触发
+        this.GetObservable(AutoDistributePanelHeightProperty).Subscribe(_ => DistributePanelHeight());
+        this.GetObservable(StatusPanelHeightProperty).Subscribe(_ => DistributePanelHeight());
+        this.GetObservable(StatusPanelMarginProperty).Subscribe(_ => DistributePanelHeight());
+
+        // 监听 ItemsSource 变化
+        this.GetObservable(ItemsSourceProperty).Subscribe(_ =>
+        {
+            if (AutoDistributePanelHeight)
+            {
+                Dispatcher.UIThread.Post(() => DistributePanelHeight());
+            }
+        });
+
         // 注册 Ctrl+R 快捷键
         KeyBindings.Add(new KeyBinding
         {
             Gesture = KeyGesture.Parse("Ctrl+R"),
             Command = ReactiveCommand.Create(ResetAllYViews)
         });
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var result = base.ArrangeOverride(finalSize);
+        DistributePanelHeight();
+        return result;
     }
 
     // 缩放功能
@@ -408,7 +483,6 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             _scrollViewer.PointerMoved += OnPointerMoved;
             _scrollViewer.PointerPressed += OnPointerPressed;
             _scrollViewer.PointerReleased += OnPointerReleased;
-            _scrollViewer.PointerWheelChanged += OnPointerWheelChanged;
             if (_scrollViewer.Viewport.Width > LeftPadding + RightPadding)
             {
                 CursorPosition = _scrollViewer.Viewport.Width / 2;
@@ -416,10 +490,32 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             }
         }
 
+        // 在 MainGrid 上注册隧道事件，优先于 ScrollViewer 处理滚轮
+        if (_mainGrid != null)
+        {
+            _mainGrid.AddHandler(PointerWheelChangedEvent, OnPointerWheelChanged, RoutingStrategies.Tunnel);
+        }
+
         if (_timeAxisCanvas != null)
         {
             _timeAxisCanvas.MouseWheelZoom += OnTimeAxisMouseWheelZoom;
         }
+
+        // 添加 Loaded 事件监听，在布局完成后分配面板高度
+        Loaded += OnWaveListPanelLoaded;
+    }
+
+    private void OnWaveListPanelLoaded(object? sender, RoutedEventArgs e)
+    {
+        // 延迟执行，确保所有子元素布局完成
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (AutoDistributePanelHeight)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DistributePanelHeight] Loaded触发 - ScrollViewer.Bounds.Height={_scrollViewer?.Bounds.Height}, MainGrid.Bounds.Height={_mainGrid?.Bounds.Height}, Bounds.Height={Bounds.Height}");
+                DistributePanelHeight();
+            }
+        }, DispatcherPriority.Background);
     }
 
     private void OnTimeAxisMouseWheelZoom(object sender, MouseWheelZoomEventArgs e)
@@ -610,18 +706,69 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
 
     private void OnPointerWheelChanged(object sender, PointerWheelEventArgs e)
     {
+        // 首先阻止 ScrollViewer 的滚轮滚动
+        e.Handled = true;
+        
         if (!IsInteractive || _scrollViewer == null) return;
 
-        var position = e.GetCurrentPoint(_scrollViewer).Position;
+        // 检查是否按住 Ctrl 键进行 Y 轴缩放
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            // Y 轴缩放：找到鼠标下的 CurvePanel 并进行缩放
+            var curvePanel = FindCurvePanelAtPosition(e);
+            if (curvePanel != null)
+            {
+                double scaleFactor = e.Delta.Y > 0 ? 0.9 : 1.1;
+                curvePanel.ApplyYScale(scaleFactor);
+            }
+            return;
+        }
+
+        // X 轴缩放
+        var xPosition = e.GetCurrentPoint(_scrollViewer).Position;
         var delta = e.Delta.Y;
         if (delta > 0)
         {
-            ZoomIn(position.X);
+            ZoomIn(xPosition.X);
         }
         else
         {
-            ZoomOut(position.X);
+            ZoomOut(xPosition.X);
         }
+    }
+
+    private CurvePanel? FindCurvePanelAtPosition(PointerWheelEventArgs e)
+    {
+        if (_scrollViewer?.Content is ItemsPresenter itemsPresenter)
+        {
+            itemsPresenter.ApplyTemplate();
+            var panel = itemsPresenter.Panel;
+            if (panel != null)
+            {
+                foreach (var child in panel.Children)
+                {
+                    Control? targetControl = null;
+                    if (child is ContentPresenter contentPresenter)
+                    {
+                        targetControl = contentPresenter.Child;
+                    }
+                    else if (child is Control control)
+                    {
+                        targetControl = control;
+                    }
+
+                    if (targetControl is CurvePanel curvePanel)
+                    {
+                        var relativePos = e.GetCurrentPoint(curvePanel).Position;
+                        if (relativePos.Y >= 0 && relativePos.Y <= curvePanel.Bounds.Height)
+                        {
+                            return curvePanel;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     // 更新时间游标
@@ -708,6 +855,141 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     {
         base.Render(context);
         // TimeMarker 和 TimeRangeMarker 的绘制已移至 CursorCanvas 控件
+    }
+
+    /// <summary>
+    /// 自动分配面板高度：所有 CurvePanel 平均占满除 StatusPanel 以外的空间
+    /// </summary>
+    public void DistributePanelHeight()
+    {
+        if (!AutoDistributePanelHeight) return;
+        if (_scrollViewer == null || Items == null) return;
+
+        // 获取可用高度 - 优先使用 ScrollViewer 的实际渲染高度
+        double availableHeight = _scrollViewer.Bounds.Height;
+        
+        // 如果 ScrollViewer 高度无效（可能是初始化阶段），尝试使用父容器
+        if (availableHeight <= 0 && _mainGrid != null)
+        {
+            availableHeight = _mainGrid.Bounds.Height - 40;
+        }
+        
+        // 最后尝试使用控件自身高度
+        if (availableHeight <= 0)
+        {
+            availableHeight = Bounds.Height - 40;
+        }
+        
+        if (availableHeight <= 0)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DistributePanelHeight] 可用高度无效: {availableHeight}");
+            return;
+        }
+
+        // 统计 CurvePanel 和 StatusPanel 数量
+        int curvePanelCount = 0;
+        int statusPanelCount = 0;
+
+        foreach (var item in Items)
+        {
+            if (item is CurveGroup)
+                curvePanelCount++;
+            else if (item is StatuSeriesGroup)
+                statusPanelCount++;
+        }
+
+        if (curvePanelCount == 0)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DistributePanelHeight] 没有 CurvePanel");
+            return;
+        }
+
+        // 计算 StatusPanel 占用的总高度（包含 Margin）
+        double statusPanelTotalHeight = statusPanelCount * (StatusPanelHeight + StatusPanelMargin.Top + StatusPanelMargin.Bottom);
+
+        // 计算 CurvePanel 可用的总高度
+        double curveAvailableHeight = availableHeight - statusPanelTotalHeight;
+        if (curveAvailableHeight <= 0)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DistributePanelHeight] CurvePanel 可用高度不足: {curveAvailableHeight}");
+            return;
+        }
+
+        // 每个 CurvePanel 的高度
+        double curvePanelHeight = curveAvailableHeight / curvePanelCount;
+
+        System.Diagnostics.Debug.WriteLine($"[DistributePanelHeight] 计算结果: 可用高度={availableHeight}, CurvePanel数={curvePanelCount}, StatusPanel数={statusPanelCount}, 每个CurvePanel高度={curvePanelHeight}");
+
+        // 更新所有面板的高度
+        UpdatePanelHeights(curvePanelHeight);
+    }
+
+    /// <summary>
+    /// 更新所有面板的高度
+    /// </summary>
+    private void UpdatePanelHeights(double curvePanelHeight)
+    {
+        if (_scrollViewer == null)
+        {
+            System.Diagnostics.Debug.WriteLine("[UpdatePanelHeights] _scrollViewer 为 null");
+            return;
+        }
+
+        // 通过 ItemsPresenter 获取 Panel
+        if (_scrollViewer.Content is ItemsPresenter itemsPresenter)
+        {
+            // 强制应用模板，确保 Panel 已创建
+            itemsPresenter.ApplyTemplate();
+            
+            // Panel 可能是 VirtualizingStackPanel 或 StackPanel
+            var panel = itemsPresenter.Panel;
+            if (panel != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[UpdatePanelHeights] Panel 类型: {panel.GetType().Name}, Children 数量: {panel.Children.Count}");
+                
+                int curveCount = 0, statusCount = 0;
+                foreach (var child in panel.Children)
+                {
+                    // ItemsControl 的 Children 可能被包装在 ContentPresenter 中
+                    Control? targetControl = null;
+                    
+                    if (child is ContentPresenter contentPresenter)
+                    {
+                        // 从 ContentPresenter 获取实际内容
+                        targetControl = contentPresenter.Child;
+                        System.Diagnostics.Debug.WriteLine($"[UpdatePanelHeights] ContentPresenter.Child 类型: {targetControl?.GetType().Name ?? "null"}");
+                    }
+                    else if (child is Control control)
+                    {
+                        targetControl = control;
+                    }
+                    
+                    if (targetControl is CurvePanel curvePanel)
+                    {
+                        curvePanel.Height = curvePanelHeight;
+                        curveCount++;
+                    }
+                    else if (targetControl is StatusPanel statusPanel)
+                    {
+                        statusPanel.Height = StatusPanelHeight;
+                        statusCount++;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[UpdatePanelHeights] 未识别的子控件类型: {child.GetType().Name}");
+                    }
+                }
+                System.Diagnostics.Debug.WriteLine($"[UpdatePanelHeights] 已更新 {curveCount} 个 CurvePanel, {statusCount} 个 StatusPanel");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[UpdatePanelHeights] Panel 为 null");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"[UpdatePanelHeights] ScrollViewer.Content 不是 ItemsPresenter: {_scrollViewer.Content?.GetType().Name ?? "null"}");
+        }
     }
 }
 
