@@ -55,6 +55,15 @@ public partial class CurvePanel : ChartPanelBase
             set => SetValue(ShowYAxisProperty, value);
         }
 
+        /// <summary>
+        /// 是否绘制底部分割线，最后一个 CurvePanel 应设置为 false 以避免与 TimeAxis 重叠
+        /// </summary>
+        public bool DrawBottomSeparator
+        {
+            get => _yAxisRenderer.DrawBottomSeparator;
+            set => _yAxisRenderer.DrawBottomSeparator = value;
+        }
+
         public CurveGroup Items
         {
             get => GetValue(ItemsProperty);
@@ -487,6 +496,7 @@ public partial class CurvePanel : ChartPanelBase
         protected virtual void DrawGrid(DrawingContext context)
         {
             if (Bounds.Width <= 0 || Bounds.Height <= 0) return;
+            if (ChartGlobal == null) return;
 
             // 绘制背景
             var background = PanelBackground ?? Brushes.White;
@@ -577,6 +587,16 @@ public partial class CurvePanel : ChartPanelBase
             _yOffset = 0;
             _yScale = 1.0;
             AutoScaleY();
+            InvalidateVisual();
+        }
+
+        /// <summary>
+        /// 应用 Y 轴缩放
+        /// </summary>
+        public void ApplyYScale(double scaleFactor)
+        {
+            _yScale *= scaleFactor;
+            _yScale = Math.Max(0.1, Math.Min(10, _yScale)); // 限制缩放范围
             InvalidateVisual();
         }
 }

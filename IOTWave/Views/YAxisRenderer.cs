@@ -15,6 +15,13 @@ namespace IOTChartBuddy.Controls
         private int _yTickCount = 5;
         private IList<YMarker> _yMarkers = new List<YMarker>();
         private Rect _bounds = default;
+        private bool _drawBottomSeparator = true;
+
+        public bool DrawBottomSeparator
+        {
+            get => _drawBottomSeparator;
+            set => _drawBottomSeparator = value;
+        }
 
         public double YMin
         {
@@ -86,23 +93,33 @@ namespace IOTChartBuddy.Controls
             var firstTick = CalculateFirstTickValue(baseInterval, adjustedYMin);
 
 
-            context.DrawLine(axisPen,
-                new Point(0, _panel.Height),
-                new Point(_bounds.Width - _panel.ChartGlobal.RightPadding, _panel.Height));
-            var text = _panel.CreateFormattedText(adjustedYMin.ToString("F2"));
-            double textWidth = text.Width;
-            double textX = _panel.ChartGlobal.LeftPadding - textWidth - 2;
-            double textY = _panel.Height - text.Height;
-            context.DrawText(text, new Point(textX, textY));
+            // 底部分割线（最小值位置）- 使用独立的 SeparatorBrush
+            // 注意：最小值对应的 Y 坐标是 _bounds.Height，但要在边界内绘制
+            if (_drawBottomSeparator)
+            {
+                double minY = _bounds.Height - 0.5;  // 略微向上偏移以确保在边界内
+                var separatorBrush = _panel.ChartGlobal.SeparatorBrush ?? Brushes.White;
+                var separatorPen = new Pen(separatorBrush, _panel.ChartGlobal.GridThickness + 0.5);
+                context.DrawLine(separatorPen,
+                    new Point(0, minY),
+                    new Point(_bounds.Width - _panel.ChartGlobal.RightPadding, minY));
+                
+                // 底部最小值标签 - 放在分割线上方
+                var minText = _panel.CreateFormattedText(adjustedYMin.ToString("F2"));
+                double minTextWidth = minText.Width;
+                double minTextX = _panel.ChartGlobal.LeftPadding - minTextWidth - 2;
+                double minTextY = minY - minText.Height - 2;
+                context.DrawText(minText, new Point(minTextX, minTextY));
+            }
 
+            // 顶部最大值标签
             context.DrawLine(axisPen,
                 new Point(0, 0),
                 new Point(_bounds.Width - _panel.ChartGlobal.RightPadding, 0));
-            text = _panel.CreateFormattedText(adjustedYMax.ToString("F2"));
-            textWidth = text.Width;
-            textX = _panel.ChartGlobal.LeftPadding - textWidth - 2;
-            textY = 0;
-            context.DrawText(text, new Point(textX, textY));
+            var maxText = _panel.CreateFormattedText(adjustedYMax.ToString("F2"));
+            double maxTextWidth = maxText.Width;
+            double maxTextX = _panel.ChartGlobal.LeftPadding - maxTextWidth - 2;
+            context.DrawText(maxText, new Point(maxTextX, 0));
 
             for (double tickValue = firstTick; tickValue <= adjustedYMax - baseInterval * 0.5; tickValue += baseInterval)
             {
@@ -112,27 +129,27 @@ namespace IOTChartBuddy.Controls
                     new Point(_panel.ChartGlobal.LeftPadding, y),
                     new Point(_bounds.Width - _panel.ChartGlobal.RightPadding, y));
 
-                text = _panel.CreateFormattedText(tickValue.ToString("F2"));
-                textWidth = text.Width;
-                textX = _panel.ChartGlobal.LeftPadding - textWidth - 2;
+                var tickText = _panel.CreateFormattedText(tickValue.ToString("F2"));
+                double tickTextWidth = tickText.Width;
+                double tickTextX = _panel.ChartGlobal.LeftPadding - tickTextWidth - 2;
 
-                if (textX < 0)
+                if (tickTextX < 0)
                 {
-                    textX = 2;
+                    tickTextX = 2;
                 }
 
-                textY = y - text.Height / 2;
+                double tickTextY = y - tickText.Height / 2;
 
-                if (textY < 0)
+                if (tickTextY < 0)
                 {
-                    textY = 2;
+                    tickTextY = 2;
                 }
-                if (textY + text.Height > _bounds.Height)
+                if (tickTextY + tickText.Height > _bounds.Height)
                 {
-                    textY = _bounds.Height - text.Height - 2;
+                    tickTextY = _bounds.Height - tickText.Height - 2;
                 }
 
-                context.DrawText(text, new Point(textX, textY));
+                context.DrawText(tickText, new Point(tickTextX, tickTextY));
             }
         }
 

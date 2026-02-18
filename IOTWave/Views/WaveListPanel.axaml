@@ -34,7 +34,7 @@
                           <ScrollViewer Grid.Row="0"  Name="PART_ScrollViewer"
                                                        HorizontalAlignment="Stretch"
                                                       HorizontalScrollBarVisibility="Auto"
-                                                      VerticalScrollBarVisibility="Disabled"
+                                                      VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                                       Background="Transparent"
                                                       ZIndex="-1">
                          <ItemsPresenter x:Name="PART_ItemsPresenter"
