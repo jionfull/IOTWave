@@ -41,9 +41,6 @@ public class CurvePanel2 : TemplatedControl
         public static readonly StyledProperty<CurveGroup> ItemsProperty =
             AvaloniaProperty.Register<CurvePanel2, CurveGroup>(nameof(Items), new CurveGroup());
 
-        public static readonly StyledProperty<bool> ShowCurrentValueProperty =
-            AvaloniaProperty.Register<CurvePanel2, bool>(nameof(ShowCurrentValue), false);
-
 
 
         public double DesiredHeight
@@ -127,15 +124,6 @@ public class CurvePanel2 : TemplatedControl
             FlowDirection.LeftToRight,
             typeface, FontSize, labelBrush);
     }
-    /// <summary>
-    /// 是否在图例中显示光标位置的当前值
-    /// </summary>
-    public bool ShowCurrentValue
-        {
-            get => GetValue(ShowCurrentValueProperty);
-            set => SetValue(ShowCurrentValueProperty, value);
-        }
-
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);

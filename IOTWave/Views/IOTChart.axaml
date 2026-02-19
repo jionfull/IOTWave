@@ -13,6 +13,10 @@
     <Style Selector="views|WaveListPanel">
       <Setter Property="Background" Value="Black"/>
     </Style>
+    <!-- 根据 ShowCurrentValue 自动给 CurvePanel2 添加 Classes -->
+    <Style Selector="views|WaveListPanel[ShowCurrentValue=True] view|CurvePanel2">
+      <Setter Property="Classes" Value="curveLegendWithValue"/>
+    </Style>
   </UserControl.Styles>
   <Grid>
      <views:WaveListPanel x:Name="CurveDisplay"
@@ -41,8 +45,7 @@
             Foreground="#7DD3FC"
             Items="{Binding   }"
             YMarkers="{Binding YMarkers}"
-            Height="{Binding Height}"
-            ShowCurrentValue="{Binding $parent[views:WaveListPanel].ShowCurrentValue}" />
+            Height="{Binding Height}" />
     
       </DataTemplate>
       <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">

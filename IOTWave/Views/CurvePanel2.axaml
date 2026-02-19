@@ -18,24 +18,22 @@
     </StackPanel>
   </Design.PreviewWith>
 
+  <!-- 默认样式：仅显示图例名称 -->
   <Style Selector="controls|CurvePanel2">
-    <Setter Property="Background" Value="Transparent"/> 
+    <Setter Property="Background" Value="Transparent"/>
     <Setter Property="Template">
       <ControlTemplate>
         <Grid Background="{TemplateBinding Background}">
           <ListBox Name="PART_Legend"
+                   Classes="curveLegend"
                    ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
         </Grid>
       </ControlTemplate>
     </Setter>
   </Style>
 
-  <!-- 根据 ShowCurrentValue 属性自动切换图例样式 -->
-  <Style Selector="controls|CurvePanel2[ShowCurrentValue=False] /template/ ListBox#PART_Legend">
-    <Setter Property="Classes" Value="curveLegend"/>
-  </Style>
-
-  <Style Selector="controls|CurvePanel2[ShowCurrentValue=True] /template/ ListBox#PART_Legend">
+  <!-- 显示当前值样式：通过 Classes="curveLegendWithValue" 启用 -->
+  <Style Selector="controls|CurvePanel2.curveLegendWithValue /template/ ListBox#PART_Legend">
     <Setter Property="Classes" Value="curveLegendWithValue"/>
   </Style>
 

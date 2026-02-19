@@ -48,20 +48,15 @@
       </Grid>
     </TabItem>
     <TabItem Header="当前值显示示例">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="图例中显示光标位置的数据值：移动鼠标或点击图表，图例下方会实时显示光标时间点前最近的数据时间和数值"
-                   Margin="10"
-                   FontSize="14"
-                   Foreground="Gray"
-                   TextWrapping="Wrap"/>
-        <iot:IOTChart Grid.Row="1"
-                      DataContext="{Binding CurrentValueViewModel}"
-                      ShowCurrentValue="True"/>
-      </Grid>
+      <iot:IOTChart DataContext="{Binding CurrentValueViewModel}"
+                    ShowCurrentValue="True">
+        <iot:IOTChart.Styles>
+          <!-- 通过样式给 CurvePanel2 添加 Classes -->
+          <Style Selector="iot|CurvePanel2">
+            <Setter Property="Classes" Value="curveLegendWithValue"/>
+          </Style>
+        </iot:IOTChart.Styles>
+      </iot:IOTChart>
     </TabItem>
   </TabControl>
 </UserControl>
