@@ -49,7 +49,7 @@
             ChartGlobal="{Binding $parent[views:WaveListPanel]}"
             Items="{Binding   }"
             Height="{Binding Height}"
-            Margin="0,2" />
+            Margin="0,1" />
       </DataTemplate>
 
     </views:WaveListPanel.DataTemplates>

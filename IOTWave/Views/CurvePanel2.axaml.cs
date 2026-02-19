@@ -80,11 +80,7 @@ public class CurvePanel2 : TemplatedControl
         public CurveGroup Items
         {
             get => GetValue(ItemsProperty);
-            set
-            {
-                SetValue(ItemsProperty, value);
-                SetupCurveDataListeners();
-            }
+            set => SetValue(ItemsProperty, value);
         }
 
     public CurvePanel2()
@@ -92,6 +88,8 @@ public class CurvePanel2 : TemplatedControl
         YMarkers = new List<YMarker>();
         _yAxisRenderer = new YAxisRenderer2(this, ChartGlobal, CreateFormattedText);
 
+        // 订阅 Items 属性变化（绑定不经过 setter，需要通过 GetObservable 订阅）
+        this.GetObservable(ItemsProperty).Subscribe(_ => SetupCurveDataListeners());
 
         // 鼠标事件处理
         PointerPressed += OnPointerPressed;
@@ -144,11 +142,22 @@ public class CurvePanel2 : TemplatedControl
 
         // Find ItemsHost panel
         curveCheck = e.NameScope.Find<ListBox>("PART_Legend");
-        if (curveCheck != null) { 
-        
-        }
+        UpdateLegendPadding();
     }
 
+    public void UpdateLegendPadding()
+    {
+        if (ChartGlobal == null)
+        {
+            return;
+        }
+        if (this.curveCheck == null)
+        {           
+            return;
+        }
+        this.curveCheck.Padding = new Thickness(ChartGlobal.LeftPadding, 0, ChartGlobal.RightPadding, 0);
+
+    }
     private void OnChartGlobalChanged(IChartGlobal? obj)
     {
         if (obj == null)
@@ -161,9 +170,8 @@ public class CurvePanel2 : TemplatedControl
             return;
 
         }
-      
 
-        this.curveCheck.Padding = new Thickness(obj.LeftPadding, 0, obj.RightPadding, 0);
+        UpdateLegendPadding();
 
         // 订阅 ResetYViewRequested 事件
         obj.ResetYViewRequestedEvent += ResetView;
