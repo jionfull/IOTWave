@@ -1,5 +1,5 @@
 using Avalonia.Data;
-using IotWave.Views;
+using IOTWave.Views;
 
 namespace IOTChartBuddy.Controls
 {

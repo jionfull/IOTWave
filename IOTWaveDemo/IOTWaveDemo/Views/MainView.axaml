@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:IOTWaveDemo.ViewModels"
              xmlns:iot="using:IOTWave"
              xmlns:views="clr-namespace:IOTWave.Views;assembly=IOTWave"
-             xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
+             xmlns:models="clr-namespace:IOTWave.Models;assembly=IOTWave"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="IOTWaveDemo.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -68,12 +68,22 @@
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
             <views:CurvePanel2
-                Classes="curveLegendWithValue"
                 ChartGlobal="{Binding $parent[views:WaveListPanel]}"
                 Foreground="#7DD3FC"
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
-                Height="{Binding Height}" />
+                Height="{Binding Height}">
+              <!-- 直接定义模板：显示当前值 -->
+              <views:CurvePanel2.Template>
+                <ControlTemplate>
+                  <Grid Background="{TemplateBinding Background}">
+                    <ListBox Name="PART_Legend"
+                             Classes="curveLegendWithValue"
+                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
+                  </Grid>
+                </ControlTemplate>
+              </views:CurvePanel2.Template>
+            </views:CurvePanel2>
           </DataTemplate>
           <DataTemplate DataType="models:StatuSeriesGroup">
             <views:StatusPanel

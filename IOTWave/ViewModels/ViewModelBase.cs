@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace IotWave.ViewModels;
+namespace IOTWave.ViewModels;
 
 public class ViewModelBase : ObservableObject
 {

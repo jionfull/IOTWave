@@ -6,8 +6,8 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Media;
 using Avalonia.Threading;
-using IotWave.Models;
-using IotWave.Views;
+using IOTWave.Models;
+using IOTWave.Views;
 
 namespace IOTWave.Tests;
 

@@ -1,4 +1,4 @@
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public class DefaultTimeFormatter : ITimeFormatter
 {

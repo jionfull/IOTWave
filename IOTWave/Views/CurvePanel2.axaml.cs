@@ -3,8 +3,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using IOTChartBuddy.Controls;
-using IotWave.Models;
-using IotWave.Views;
+using IOTWave.Models;
+using IOTWave.Views;
 
 namespace IOTWave.Views;
 
@@ -82,6 +82,7 @@ public class CurvePanel2 : TemplatedControl
 
     public CurvePanel2()
     {
+        Background = Brushes.Transparent;
         YMarkers = new List<YMarker>();
         _yAxisRenderer = new YAxisRenderer2(this, ChartGlobal, CreateFormattedText);
 

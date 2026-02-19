@@ -1,4 +1,4 @@
-namespace IotWave.Models
+namespace IOTWave.Models
 {
     /// <summary>
     /// Y轴标记，由Y轴值、标题和标签构成

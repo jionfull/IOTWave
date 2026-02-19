@@ -3,8 +3,8 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
-using IotWave.Models;
-using IotWave.ViewModels;
+using IOTWave.Models;
+using IOTWave.ViewModels;
 using System;
 using System.Collections.Generic;
 

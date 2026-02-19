@@ -4,9 +4,9 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Markup.Xaml;
 using IOTChartBuddy.Controls;
-using IotWave.Models;
+using IOTWave.Models;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public partial class StatusPanel : ChartPanelBase
 {

@@ -1,6 +1,6 @@
 using Avalonia.Media;
-using IotWave.Models;
-using IotWave.Views;
+using IOTWave.Models;
+using IOTWave.Views;
 using IOTWave;
 
 namespace IOTWave.Views

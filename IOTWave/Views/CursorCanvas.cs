@@ -2,9 +2,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Media;
-using IotWave.Models;
+using IOTWave.Models;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 /// <summary>
 /// 独立的光标画布控件，用于绘制 TimeMarker、TimeRangeMarker 和 Cursor

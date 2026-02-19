@@ -1,7 +1,7 @@
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
-namespace IotWave.Views.Converters;
+namespace IOTWave.Views.Converters;
 
 public class ColorToBrushConverter : IValueConverter
 {

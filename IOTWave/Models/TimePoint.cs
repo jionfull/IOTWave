@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace IotWave.Models;
+namespace IOTWave.Models;
 // DataModels.cs
 public class TimePoint
 {

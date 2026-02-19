@@ -3,11 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:IotWave.ViewModels"
+             xmlns:vm="using:IOTWave.ViewModels"
              x:DataType="vm:IOTWaveBaseViewModel"
-             xmlns:views="clr-namespace:IotWave.Views;assembly=IOTWave"
-             xmlns:view="clr-namespace:IOTWave.Views;assembly=IOTWave"
-             xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
+             xmlns:views="clr-namespace:IOTWave.Views;assembly=IOTWave"
+             xmlns:models="clr-namespace:IOTWave.Models;assembly=IOTWave"
              x:Class="IOTWave.IOTChart">
   <UserControl.Styles>
     <Style Selector="views|WaveListPanel">
@@ -36,7 +35,7 @@
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 
-        <view:CurvePanel2
+        <views:CurvePanel2
             ChartGlobal="{Binding $parent[views:WaveListPanel]}"
             Foreground="#7DD3FC"
             Items="{Binding   }"

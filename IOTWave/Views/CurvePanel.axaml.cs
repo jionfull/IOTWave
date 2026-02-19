@@ -3,10 +3,10 @@ using Avalonia.Input;
 using Avalonia.Controls;
 using Avalonia.Media;
 using IOTChartBuddy.Controls;
-using IotWave.Models;
+using IOTWave.Models;
 using ReactiveUI;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public partial class CurvePanel : ChartPanelBase
 {

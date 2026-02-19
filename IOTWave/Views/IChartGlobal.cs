@@ -1,6 +1,6 @@
 using Avalonia.Media;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public interface IChartGlobal
 {

@@ -3,7 +3,7 @@ using System.Globalization;
 using Avalonia.Input;
 
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public class TimeAxis : Control
 {

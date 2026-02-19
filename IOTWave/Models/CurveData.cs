@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using Avalonia.Media;
 
-namespace IotWave.Models;
+namespace IOTWave.Models;
 
 public class CurveData : INotifyPropertyChanged
 {

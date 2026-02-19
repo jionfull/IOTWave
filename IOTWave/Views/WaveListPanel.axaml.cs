@@ -7,11 +7,11 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using IotWave.Models;
+using IOTWave.Models;
 using IOTWave.Views;
 using ReactiveUI;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public class WaveListPanel : SelectingItemsControl, IChartGlobal
 {

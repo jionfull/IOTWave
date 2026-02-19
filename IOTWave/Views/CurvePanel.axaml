@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="IotWave.Views.CurvePanel"
+             x:Class="IOTWave.Views.CurvePanel"
              x:Name="Root">
    <Grid>
       <!-- 使用外部样式类 curveLegend，ItemTemplate 已在 CurvePanelStyles.axaml 中定义 -->

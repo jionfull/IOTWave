@@ -1,6 +1,6 @@
 using System;
 
-namespace IotWave.Views;
+namespace IOTWave.Views;
 
 public class TimeAxisConsts
 {

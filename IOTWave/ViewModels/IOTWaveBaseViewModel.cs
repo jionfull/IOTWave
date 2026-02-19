@@ -1,9 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using IotWave.Models;
+using IOTWave.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace IotWave.ViewModels;
+namespace IOTWave.ViewModels;
 
 public partial class IOTWaveBaseViewModel:ViewModelBase
 {

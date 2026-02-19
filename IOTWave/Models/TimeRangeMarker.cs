@@ -1,4 +1,4 @@
-namespace IotWave.Models;
+namespace IOTWave.Models;
 
 public class TimeRangeMarker
 {

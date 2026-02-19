@@ -1,6 +1,6 @@
 using Avalonia.Data.Converters;
 
-namespace IotWave.Views.Converters;
+namespace IOTWave.Views.Converters;
 
 public class DateTimeToStringConverter : IValueConverter
 {
