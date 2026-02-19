@@ -6,12 +6,12 @@ using IOTChartBuddy.Controls;
 using IotWave.Models;
 using IotWave.Views;
 
-namespace IOTWave;
+namespace IOTWave.Views;
 
 public class CurvePanel2 : TemplatedControl
 {
     public static readonly StyledProperty<IChartGlobal> ChartGlobalProperty =
-AvaloniaProperty.Register<ChartPanelBase, IChartGlobal>(nameof(ChartGlobal), null, true, BindingMode.OneWay);
+        AvaloniaProperty.Register<CurvePanel2, IChartGlobal>(nameof(ChartGlobal), null, true, BindingMode.OneWay);
 
 
     public IChartGlobal ChartGlobal
@@ -92,12 +92,32 @@ AvaloniaProperty.Register<ChartPanelBase, IChartGlobal>(nameof(ChartGlobal), nul
         YMarkers = new List<YMarker>();
         _yAxisRenderer = new YAxisRenderer2(this, ChartGlobal, CreateFormattedText);
 
+
         // 鼠标事件处理
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
         PointerReleased += OnPointerReleased;
         PointerWheelChanged += OnPointerWheelChanged;
-        ChartGlobalProperty.Changed.AddClassHandler<CurvePanel2>((x,e)=>OnChartGlobalChanged(e.NewValue as IChartGlobal));
+        ChartGlobalProperty.Changed.AddClassHandler<CurvePanel2>((x,e)=>OnChartGlobalChanged2(e));
+    }
+
+    private void OnChartGlobalChanged2(AvaloniaPropertyChangedEventArgs e)
+    {
+        var oldGlobal = e.OldValue as IChartGlobal;
+        if (oldGlobal != null)
+        {
+            oldGlobal.InvalidateRequestedEvent -= OnInvalidateRequested;
+        }
+
+        if (ChartGlobal != null)
+        {
+            OnChartGlobalChanged(ChartGlobal);
+            ChartGlobal.InvalidateRequestedEvent += OnInvalidateRequested;
+        }
+    }
+    private void OnInvalidateRequested()
+    {
+        InvalidateVisual();
     }
 
     public FormattedText CreateFormattedText(string text)
@@ -141,6 +161,7 @@ AvaloniaProperty.Register<ChartPanelBase, IChartGlobal>(nameof(ChartGlobal), nul
             return;
 
         }
+      
 
         this.curveCheck.Padding = new Thickness(obj.LeftPadding, 0, obj.RightPadding, 0);
 

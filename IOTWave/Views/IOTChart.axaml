@@ -6,6 +6,7 @@
              xmlns:vm="using:IotWave.ViewModels"
              x:DataType="vm:IOTWaveBaseViewModel"
              xmlns:views="clr-namespace:IotWave.Views;assembly=IOTWave"
+             xmlns:view="clr-namespace:IOTWave.Views;assembly=IOTWave"
              xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
              x:Class="IOTWave.IOTChart">
   <UserControl.Styles>
@@ -35,7 +36,7 @@
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 
-        <views:CurvePanel
+        <view:CurvePanel2
             ChartGlobal="{Binding $parent[views:WaveListPanel]}"
             Foreground="#7DD3FC"
             Items="{Binding   }"
