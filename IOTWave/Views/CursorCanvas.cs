@@ -258,7 +258,17 @@ public class CursorCanvas : Control
                     12,
                     new SolidColorBrush(Color.FromRgb(224, 224, 224)));
 
-                context.DrawText(text, new Point(startX + 4, 4));
+                // 绘制阴影（底部）
+                var textY = bounds.Bottom - 16;
+                var shadowText = new FormattedText(
+                    marker.Label,
+                    System.Globalization.CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Arial"),
+                    12,
+                    new SolidColorBrush(Colors.Black));
+                context.DrawText(shadowText, new Point(startX + 5, textY + 1));
+                context.DrawText(text, new Point(startX + 4, textY));
             }
         }
     }
@@ -296,7 +306,17 @@ public class CursorCanvas : Control
                     12,
                     new SolidColorBrush(marker.Color));
 
-                context.DrawText(text, new Point(x + 4, 4));
+                // 绘制阴影（底部）
+                var textY = bounds.Bottom - 16;
+                var shadowText = new FormattedText(
+                    displayLabel,
+                    System.Globalization.CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface("Arial"),
+                    12,
+                    new SolidColorBrush(Colors.Black));
+                context.DrawText(shadowText, new Point(x + 5, textY + 1));
+                context.DrawText(text, new Point(x + 4, textY));
             }
         }
     }
@@ -324,7 +344,7 @@ public class CursorCanvas : Control
             {
                 timeText = CursorTime.Value.ToString("yyyy-MM-dd HH:mm:ss.fff");
             }
-            
+
             var text = new FormattedText(
                 timeText,
                 System.Globalization.CultureInfo.CurrentCulture,
@@ -336,7 +356,7 @@ public class CursorCanvas : Control
             // 动态调整文本位置：右侧时显示在左边，左侧时显示在右边
             var textWidth = text.Width;
             double textX;
-            
+
             if (CursorPosition + textWidth + 8 > bounds.Width - RightPadding)
             {
                 // 光标在右侧，文本显示在光标左边
@@ -348,7 +368,21 @@ public class CursorCanvas : Control
                 textX = CursorPosition + 4;
             }
 
-            var textY = bounds.Bottom-12;
+            // 绘制阴影
+            var textY = bounds.Bottom - 12;
+            var shadowText = new FormattedText(
+                timeText,
+                System.Globalization.CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Arial"),
+                12,
+                new SolidColorBrush(Colors.Black));
+         
+            context.DrawText(shadowText, new Point(textX + 1, textY));
+            context.DrawText(shadowText, new Point(textX, textY + 1));
+            context.DrawText(shadowText, new Point(textX - 1, textY));
+            context.DrawText(shadowText, new Point(textX, textY - 1));
+
             context.DrawText(text, new Point(textX, textY));
         }
     }
