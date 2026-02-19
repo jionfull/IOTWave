@@ -41,7 +41,8 @@
             Foreground="#7DD3FC"
             Items="{Binding   }"
             YMarkers="{Binding YMarkers}"
-            Height="{Binding Height}" />
+            Height="{Binding Height}"
+            ShowCurrentValue="{Binding $parent[views:WaveListPanel].ShowCurrentValue}" />
     
       </DataTemplate>
       <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">

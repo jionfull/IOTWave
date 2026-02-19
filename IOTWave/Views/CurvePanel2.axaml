@@ -23,12 +23,20 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid Background="{TemplateBinding Background}">
-          <ListBox Name="PART_Legend" 
-                   Classes="curveLegend"
+          <ListBox Name="PART_Legend"
                    ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
         </Grid>
       </ControlTemplate>
     </Setter>
+  </Style>
+
+  <!-- 根据 ShowCurrentValue 属性自动切换图例样式 -->
+  <Style Selector="controls|CurvePanel2[ShowCurrentValue=False] /template/ ListBox#PART_Legend">
+    <Setter Property="Classes" Value="curveLegend"/>
+  </Style>
+
+  <Style Selector="controls|CurvePanel2[ShowCurrentValue=True] /template/ ListBox#PART_Legend">
+    <Setter Property="Classes" Value="curveLegendWithValue"/>
   </Style>
 
 </Styles>
