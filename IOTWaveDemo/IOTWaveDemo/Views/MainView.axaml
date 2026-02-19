@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:IOTWaveDemo.ViewModels"
              xmlns:iot="using:IOTWave"
+             xmlns:views="clr-namespace:IOTWave.Views;assembly=IOTWave"
              xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="IOTWaveDemo.Views.MainView"
@@ -52,7 +53,7 @@
                     ShowCurrentValue="True">
         <iot:IOTChart.Styles>
           <!-- 通过样式给 CurvePanel2 添加 Classes -->
-          <Style Selector="iot|CurvePanel2">
+          <Style Selector="views|CurvePanel2">
             <Setter Property="Classes" Value="curveLegendWithValue"/>
           </Style>
         </iot:IOTChart.Styles>
