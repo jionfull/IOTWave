@@ -49,15 +49,41 @@
       </Grid>
     </TabItem>
     <TabItem Header="当前值显示示例">
-      <iot:IOTChart DataContext="{Binding CurrentValueViewModel}"
-                    ShowCurrentValue="True">
-        <iot:IOTChart.Styles>
-          <!-- 通过样式给 CurvePanel2 添加 Classes -->
-          <Style Selector="views|CurvePanel2">
-            <Setter Property="Classes" Value="curveLegendWithValue"/>
-          </Style>
-        </iot:IOTChart.Styles>
-      </iot:IOTChart>
+      <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
+      <iot:WaveListPanel
+          DataContext="{Binding CurrentValueViewModel}"
+          StartTime="{Binding BeginTime}"
+          EndTime="{Binding EndTime}"
+          ShowCursor="True"
+          ItemsSource="{Binding Items}"
+          ShowTimeAxis="True"
+          GridBrush="#6400B4D8"
+          LabelBrush="#7DD3FC"
+          IsInteractive="True"
+          StatusPanelHeight="20"
+          TimeMarkers="{Binding TimeMarkers}"
+          TimeRangeMarkers="{Binding TimeRangeMarkers}"
+          ShowCurrentValue="True"
+          Background="Black">
+        <iot:WaveListPanel.DataTemplates>
+          <DataTemplate DataType="models:CurveGroup">
+            <views:CurvePanel2
+                Classes="curveLegendWithValue"
+                ChartGlobal="{Binding $parent[iot:WaveListPanel]}"
+                Foreground="#7DD3FC"
+                Items="{Binding}"
+                YMarkers="{Binding YMarkers}"
+                Height="{Binding Height}" />
+          </DataTemplate>
+          <DataTemplate DataType="models:StatuSeriesGroup">
+            <iot:StatusPanel
+                ChartGlobal="{Binding $parent[iot:WaveListPanel]}"
+                Items="{Binding}"
+                Height="{Binding Height}"
+                Margin="0,1" />
+          </DataTemplate>
+        </iot:WaveListPanel.DataTemplates>
+      </iot:WaveListPanel>
     </TabItem>
   </TabControl>
 </UserControl>
