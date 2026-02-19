@@ -32,6 +32,9 @@ public partial class CurvePanel : ChartPanelBase
         public static readonly StyledProperty<CurveGroup> ItemsProperty =
             AvaloniaProperty.Register<CurvePanel, CurveGroup>(nameof(Items), new CurveGroup());
 
+        public static readonly StyledProperty<bool> ShowCurrentValueProperty =
+            AvaloniaProperty.Register<CurvePanel, bool>(nameof(ShowCurrentValue), false);
+
 
         public double DesiredHeight
         {
@@ -74,6 +77,15 @@ public partial class CurvePanel : ChartPanelBase
             }
         }
 
+        /// <summary>
+        /// 是否在图例中显示光标位置的当前值
+        /// </summary>
+        public bool ShowCurrentValue
+        {
+            get => GetValue(ShowCurrentValueProperty);
+            set => SetValue(ShowCurrentValueProperty, value);
+        }
+
 
         public CurvePanel()
         {
@@ -92,6 +104,23 @@ public partial class CurvePanel : ChartPanelBase
             this.GetObservable(YMarkersProperty).Subscribe(_ => InvalidateVisual());
         }
 
+        private void OnShowCurrentValueChanged(bool showCurrentValue)
+        {
+            if (curveCheck == null) return;
+            
+            // 更新 ListBox 的 Classes
+            if (showCurrentValue)
+            {
+                curveCheck.Classes.Remove("curveLegend");
+                curveCheck.Classes.Add("curveLegendWithValue");
+            }
+            else
+            {
+                curveCheck.Classes.Remove("curveLegendWithValue");
+                curveCheck.Classes.Add("curveLegend");
+            }
+        }
+
         private void OnChartGlobalChanged(IChartGlobal obj)
         {
             if (obj == null)
@@ -104,6 +133,26 @@ public partial class CurvePanel : ChartPanelBase
 
             // 订阅 ResetYViewRequested 事件
             obj.ResetYViewRequestedEvent += ResetView;
+
+            // 订阅光标时间变化 - 通过 WaveListPanel 的属性订阅
+            if (obj is WaveListPanel waveListPanel)
+            {
+                waveListPanel.GetObservable(WaveListPanel.CursorTimeProperty).Subscribe(OnCursorTimeChanged);
+
+                // 订阅 ShowCurrentValue 变化
+                waveListPanel.GetObservable(WaveListPanel.ShowCurrentValueProperty).Subscribe(OnShowCurrentValueChanged);
+            }
+        }
+
+        private void OnCursorTimeChanged(DateTime? cursorTime)
+        {
+            if (Items?.Curves == null) return;
+            
+            // 更新所有曲线的当前值
+            foreach (var curve in Items.Curves)
+            {
+                curve.UpdateCurrentValue(cursorTime);
+            }
         }
 
         private void SetupCurveDataListeners()

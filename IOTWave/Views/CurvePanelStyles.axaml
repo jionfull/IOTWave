@@ -13,6 +13,7 @@
 
     <!-- 曲线图例项模板 - 可被外部覆盖 -->
     <Styles.Resources>
+        <!-- 基础模板：仅显示曲线名称 -->
         <DataTemplate x:Key="CurveLegendItemTemplate" DataType="models:CurveData">
             <CheckBox Background="Transparent" 
                       IsChecked="{Binding IsVisible}" 
@@ -36,14 +37,72 @@
                 </CheckBox.Styles>
             </CheckBox>
         </DataTemplate>
+
+        <!-- 带数值显示的模板：显示曲线名称 + 当前时间 + 当前值 -->
+        <DataTemplate x:Key="CurveLegendWithValueTemplate" DataType="models:CurveData">
+            <StackPanel Orientation="Vertical" Margin="5,0" Spacing="2">
+                <!-- 曲线名称和可见性控制 -->
+                <CheckBox Background="Transparent" 
+                          IsChecked="{Binding IsVisible}" 
+                          Content="{Binding Name}"
+                          Foreground="{Binding Brush}">
+                    <CheckBox.Styles>
+                        <Style Selector="CheckBox:pointerover">
+                            <Setter Property="Foreground" Value="{Binding Brush}"/>
+                        </Style>
+                        <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                        </Style>
+                        <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                        </Style>
+                    </CheckBox.Styles>
+                </CheckBox>
+                
+                <!-- 当前值显示区域 -->
+                <StackPanel Orientation="Horizontal" Spacing="4" Margin="20,0,0,0">
+                    <TextBlock Text="{Binding CurrentTimeText}" 
+                               FontSize="10" 
+                               Foreground="{Binding Brush}"
+                               Opacity="0.8"/>
+                    <TextBlock Text=":" 
+                               FontSize="10" 
+                               Foreground="{Binding Brush}"
+                               Opacity="0.6"/>
+                    <TextBlock Text="{Binding CurrentValueText}" 
+                               FontSize="10" 
+                               Foreground="{Binding Brush}"
+                               FontWeight="Bold"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
     </Styles.Resources>
 
-    <!-- ListBox 容器样式 -->
+    <!-- ListBox 容器样式 - 基础样式 -->
     <Style Selector="ListBox.curveLegend">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Background="Transparent"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ListBox 容器样式 - 带数值显示 -->
+    <Style Selector="ListBox.curveLegendWithValue">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Height" Value="55"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -64,6 +123,21 @@
     </Style>
     
     <Style Selector="ListBox.curveLegend > ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!-- 带数值显示的 ListBoxItem 样式 -->
+    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    
+    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem:selected /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>

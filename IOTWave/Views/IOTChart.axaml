@@ -30,14 +30,15 @@
                                  UseRelativeTime="{Binding UseRelativeTime}"
                                  RelativeTimeBase="{Binding RelativeTimeBase}"
                                  AutoDistributePanelHeight="{Binding $parent[UserControl].AutoDistributePanelHeight}"
-                                 VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}">
+                                 VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}"
+                                 ShowCurrentValue="{Binding $parent[UserControl].ShowCurrentValue}">
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 
         <views:CurvePanel
             ChartGlobal="{Binding $parent[views:WaveListPanel]}"
             Foreground="#7DD3FC"
-            Items="{Binding   }" 
+            Items="{Binding   }"
             YMarkers="{Binding YMarkers}"
             Height="{Binding Height}" />
     
