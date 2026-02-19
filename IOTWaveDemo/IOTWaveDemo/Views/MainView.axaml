@@ -50,7 +50,7 @@
     </TabItem>
     <TabItem Header="当前值显示示例">
       <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
-      <iot:WaveListPanel
+      <views:WaveListPanel
           DataContext="{Binding CurrentValueViewModel}"
           StartTime="{Binding BeginTime}"
           EndTime="{Binding EndTime}"
@@ -65,25 +65,25 @@
           TimeRangeMarkers="{Binding TimeRangeMarkers}"
           ShowCurrentValue="True"
           Background="Black">
-        <iot:WaveListPanel.DataTemplates>
+        <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
             <views:CurvePanel2
                 Classes="curveLegendWithValue"
-                ChartGlobal="{Binding $parent[iot:WaveListPanel]}"
+                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
                 Foreground="#7DD3FC"
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}" />
           </DataTemplate>
           <DataTemplate DataType="models:StatuSeriesGroup">
-            <iot:StatusPanel
-                ChartGlobal="{Binding $parent[iot:WaveListPanel]}"
+            <views:StatusPanel
+                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
                 Items="{Binding}"
                 Height="{Binding Height}"
                 Margin="0,1" />
           </DataTemplate>
-        </iot:WaveListPanel.DataTemplates>
-      </iot:WaveListPanel>
+        </views:WaveListPanel.DataTemplates>
+      </views:WaveListPanel>
     </TabItem>
   </TabControl>
 </UserControl>
