@@ -21,11 +21,15 @@ namespace IOTWaveDemo.ViewModels
         [ObservableProperty]
         private IOTWaveBaseViewModel relativeTimeViewModel = new IOTWaveBaseViewModel();
 
+        [ObservableProperty]
+        private IOTWaveBaseViewModel currentValueViewModel = new IOTWaveBaseViewModel();
+
         public MainViewModel()
         {
             InitializeBasicData();
             InitializeScrollableData();
             InitializeRelativeTimeData();
+            InitializeCurrentValueData();
         }
 
         private void InitializeBasicData()
@@ -477,6 +481,85 @@ namespace IOTWaveDemo.ViewModels
                 Label = "衰减阶段",
                 Color = Color.FromArgb(60, 100, 200, 255)
             });
+        }
+
+        /// <summary>
+        /// 初始化当前值显示示例 - 展示图例中显示光标位置的数值
+        /// </summary>
+        private void InitializeCurrentValueData()
+        {
+            var rnd = new Random();
+            var startTime = DateTime.Now.Date;
+            
+            CurrentValueViewModel.BeginTime = startTime;
+            CurrentValueViewModel.EndTime = startTime.AddHours(1);
+
+            // 温度曲线面板
+            var tempPanel = new CurveGroup()
+            {
+                Legend = "温度监控",
+                Height = 200
+            };
+
+            var tempCurve1 = new CurveData
+            {
+                Name = "温度传感器1",
+                Color = Color.Parse("#FF6B6B")
+            };
+
+            var tempCurve2 = new CurveData
+            {
+                Name = "温度传感器2",
+                Color = Color.Parse("#4ECDC4")
+            };
+
+            // 生成数据点
+            for (int i = 0; i < 3600; i++)
+            {
+                var time = startTime.AddSeconds(i);
+                tempCurve1.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 25 + 5 * Math.Sin(i * Math.PI / 180) + rnd.NextDouble() * 1
+                });
+                tempCurve2.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 28 + 4 * Math.Cos(i * Math.PI / 150) + rnd.NextDouble() * 0.8
+                });
+            }
+
+            tempPanel.Curves.Add(tempCurve1);
+            tempPanel.Curves.Add(tempCurve2);
+            tempPanel.YMarkers.Add(new YMarker(30, "高温警告"));
+            CurrentValueViewModel.Items.Add(tempPanel);
+
+            // 压力曲线面板
+            var pressurePanel = new CurveGroup()
+            {
+                Legend = "压力监控",
+                Height = 150
+            };
+
+            var pressureCurve = new CurveData
+            {
+                Name = "压力传感器",
+                Color = Color.Parse("#45B7D1")
+            };
+
+            for (int i = 0; i < 3600; i++)
+            {
+                var time = startTime.AddSeconds(i);
+                pressureCurve.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 100 + 10 * Math.Sin(i * Math.PI / 200) + rnd.NextDouble() * 2
+                });
+            }
+
+            pressurePanel.Curves.Add(pressureCurve);
+            pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
+            CurrentValueViewModel.Items.Add(pressurePanel);
         }
     }
 }

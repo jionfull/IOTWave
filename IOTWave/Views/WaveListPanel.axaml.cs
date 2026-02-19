@@ -104,6 +104,10 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         AvaloniaProperty.Register<WaveListPanel, DateTime>(
             nameof(RelativeTimeBase), DateTime.Now);
 
+    public static readonly StyledProperty<bool> ShowCurrentValueProperty =
+        AvaloniaProperty.Register<WaveListPanel, bool>(
+            nameof(ShowCurrentValue), false);
+
     // 命令属性
     public static readonly DirectProperty<WaveListPanel, ICommand> ZoomInCommandProperty =
         AvaloniaProperty.RegisterDirect<WaveListPanel, ICommand>(
@@ -219,6 +223,15 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     {
         get => GetValue(RelativeTimeBaseProperty);
         set => SetValue(RelativeTimeBaseProperty, value);
+    }
+
+    /// <summary>
+    /// 是否在图例中显示光标位置的当前值
+    /// </summary>
+    public bool ShowCurrentValue
+    {
+        get => GetValue(ShowCurrentValueProperty);
+        set => SetValue(ShowCurrentValueProperty, value);
     }
 
     public bool ShowCursor

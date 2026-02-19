@@ -42,6 +42,11 @@ public interface IChartGlobal
     IBrush? SeparatorBrush { get; }
     public DateTime? CursorTime { get; }
 
+    /// <summary>
+    /// 是否在图例中显示光标位置的当前值
+    /// </summary>
+    bool ShowCurrentValue { get; }
+
     event Action InvalidateRequestedEvent;
     event Action ResetYViewRequestedEvent;
 }
