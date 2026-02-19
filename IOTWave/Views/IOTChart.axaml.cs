@@ -1,5 +1,4 @@
 using Avalonia.Controls.Primitives;
-using IotWave.Views;
 
 namespace IOTWave;
 
@@ -13,6 +12,14 @@ public partial class IOTChart : UserControl
         AvaloniaProperty.Register<IOTChart, ScrollBarVisibility>(
             nameof(VerticalScrollBarVisibility), ScrollBarVisibility.Disabled);
 
+    public static readonly StyledProperty<bool> UseRelativeTimeProperty =
+        AvaloniaProperty.Register<IOTChart, bool>(
+            nameof(UseRelativeTime), false);
+
+    public static readonly StyledProperty<DateTime> RelativeTimeBaseProperty =
+        AvaloniaProperty.Register<IOTChart, DateTime>(
+            nameof(RelativeTimeBase), DateTime.Now);
+
     public bool AutoDistributePanelHeight
     {
         get => GetValue(AutoDistributePanelHeightProperty);
@@ -25,22 +32,26 @@ public partial class IOTChart : UserControl
         set => SetValue(VerticalScrollBarVisibilityProperty, value);
     }
 
+    /// <summary>
+    /// 是否使用相对时间模式显示时间轴
+    /// </summary>
+    public bool UseRelativeTime
+    {
+        get => GetValue(UseRelativeTimeProperty);
+        set => SetValue(UseRelativeTimeProperty, value);
+    }
+
+    /// <summary>
+    /// 相对时间的基准时间点（显示为 0s）
+    /// </summary>
+    public DateTime RelativeTimeBase
+    {
+        get => GetValue(RelativeTimeBaseProperty);
+        set => SetValue(RelativeTimeBaseProperty, value);
+    }
+
     public IOTChart()
     {
         InitializeComponent();
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        
-        // 将属性绑定到内部的 WaveListPanel
-        if (this.FindControl<WaveListPanel>("CurveDisplay") is WaveListPanel waveListPanel)
-        {
-            waveListPanel.Bind(WaveListPanel.AutoDistributePanelHeightProperty,
-                this.GetBindingObservable(AutoDistributePanelHeightProperty));
-            waveListPanel.Bind(WaveListPanel.VerticalScrollBarVisibilityProperty,
-                this.GetBindingObservable(VerticalScrollBarVisibilityProperty));
-        }
     }
 }

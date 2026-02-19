@@ -188,6 +188,45 @@ public class CursorCanvas : Control
         DrawCursor(context, bounds);
     }
 
+    /// <summary>
+    /// 格式化相对时间
+    /// </summary>
+    private static string FormatRelativeTime(TimeSpan offset)
+    {
+        if (offset.TotalSeconds < 0)
+        {
+            return $"-{FormatPositiveTime(offset.Duration())}";
+        }
+        return FormatPositiveTime(offset);
+    }
+
+    /// <summary>
+    /// 格式化正数时间差
+    /// </summary>
+    private static string FormatPositiveTime(TimeSpan duration)
+    {
+        if (duration.TotalDays >= 1)
+        {
+            return $"{(int)duration.TotalDays}d {duration.Hours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalHours >= 1)
+        {
+            return $"{(int)duration.TotalHours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalMinutes >= 1)
+        {
+            return $"{(int)duration.TotalMinutes}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalSeconds >= 1)
+        {
+            return $"{duration.TotalSeconds:F2}s";
+        }
+        else
+        {
+            return $"{duration.TotalMilliseconds:F0}ms";
+        }
+    }
+
     private void DrawTimeRangeMarkers(DrawingContext context, Rect bounds)
     {
         if (TimeRangeMarkers == null || ChartGlobal == null) return;
@@ -241,8 +280,16 @@ public class CursorCanvas : Control
 
             if (!string.IsNullOrEmpty(marker.Label))
             {
+                // 相对时间模式下，在标签后添加相对时间
+                string displayLabel = marker.Label;
+                if (ChartGlobal.UseRelativeTime)
+                {
+                    var offset = marker.Time - ChartGlobal.RelativeTimeBase;
+                    displayLabel = $"{marker.Label} ({FormatRelativeTime(offset)})";
+                }
+
                 var text = new FormattedText(
-                    marker.Label,
+                    displayLabel,
                     System.Globalization.CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Arial"),
@@ -264,9 +311,20 @@ public class CursorCanvas : Control
         context.DrawLine(pen, new Point(CursorPosition, 0), new Point(CursorPosition, bounds.Height));
 
         // 绘制时间文本
-        if (CursorTime.HasValue)
+        if (CursorTime.HasValue && ChartGlobal != null)
         {
-            var timeText = CursorTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
+            string timeText;
+            if (ChartGlobal.UseRelativeTime)
+            {
+                // 相对时间模式
+                var offset = CursorTime.Value - ChartGlobal.RelativeTimeBase;
+                timeText = FormatRelativeTime(offset);
+            }
+            else
+            {
+                timeText = CursorTime.Value.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            }
+            
             var text = new FormattedText(
                 timeText,
                 System.Globalization.CultureInfo.CurrentCulture,
@@ -290,7 +348,7 @@ public class CursorCanvas : Control
                 textX = CursorPosition + 4;
             }
 
-            var textY = 4;
+            var textY = bounds.Bottom-12;
             context.DrawText(text, new Point(textX, textY));
         }
     }

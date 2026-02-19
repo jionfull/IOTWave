@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using Avalonia.Input;
 
 
@@ -120,7 +121,22 @@ public class TimeAxis : Control
     {
         DateTime bTime = new DateTime(ChartGlobal.StartTime.Ticks);
 
-        String labelText = bTime.ToString("HH:mm:ss");
+        String labelText;
+        String labelText2;
+        
+        if (ChartGlobal.UseRelativeTime)
+        {
+            // 相对时间模式
+            var offset = bTime - ChartGlobal.RelativeTimeBase;
+            labelText = FormatRelativeTime(offset);
+            labelText2 = $"基准: {ChartGlobal.RelativeTimeBase:HH:mm:ss.fff}";
+        }
+        else
+        {
+            labelText = bTime.ToString("HH:mm:ss");
+            labelText2 = bTime.ToString("M月d日");
+        }
+        
         var formattedText = new FormattedText(
             labelText,
             CultureInfo.CurrentCulture,
@@ -131,11 +147,8 @@ public class TimeAxis : Control
 
         var textY = ScaleConfig.MajorTickLength + 2;
 
-        // 边界检查
-
-
         context.DrawText(formattedText, new Point(ChartGlobal.LeftPadding, textY));
-        String labelText2 = bTime.ToString("M月d日");
+        
         var formattedText2 = new FormattedText(
             labelText2,
             CultureInfo.CurrentCulture,
@@ -146,45 +159,90 @@ public class TimeAxis : Control
 
         var textY2 = ScaleConfig.MajorTickLength + 2 + ScaleConfig.FontSize;
 
-        // 边界检查
-
-
         context.DrawText(formattedText2, new Point(ChartGlobal.LeftPadding, textY2));
+    }
+
+    /// <summary>
+    /// 格式化相对时间
+    /// </summary>
+    private string FormatRelativeTime(TimeSpan offset)
+    {
+        if (offset.TotalSeconds < 0)
+        {
+            return $"-{FormatPositiveTime(offset.Duration())}";
+        }
+        return FormatPositiveTime(offset);
+    }
+
+    /// <summary>
+    /// 格式化正数时间差
+    /// </summary>
+    private static string FormatPositiveTime(TimeSpan duration)
+    {
+        if (duration.TotalDays >= 1)
+        {
+            return $"{(int)duration.TotalDays}d {duration.Hours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalHours >= 1)
+        {
+            return $"{(int)duration.TotalHours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalMinutes >= 1)
+        {
+            return $"{(int)duration.TotalMinutes}:{duration.Seconds:D2}";
+        }
+        else if (duration.TotalSeconds >= 1)
+        {
+            return $"{duration.TotalSeconds:F1}s";
+        }
+        else
+        {
+            return $"{duration.TotalMilliseconds:F0}ms";
+        }
     }
 
     private void DrawTimeLabel(DrawingContext context, long preTicks, long ticks, double x, double y)
     {
         DateTime priTime = new DateTime(preTicks);
         DateTime tickTime = new DateTime(ticks);
-        String labelText = tickTime.ToString("HH:mm:ss");
-        if (tickTime.Date != priTime.Date)
+        
+        String labelText;
+        
+        if (ChartGlobal.UseRelativeTime)
         {
-            labelText = $"{tickTime:MM/dd}日";
+            // 相对时间模式：显示与基准时间的差值
+            var offset = tickTime - ChartGlobal.RelativeTimeBase;
+            labelText = FormatRelativeTime(offset);
         }
-        else if (tickTime.Hour != priTime.Hour)
+        else
         {
-            labelText = $"{tickTime:HH:mm}";
-        }
-        else if (tickTime.Minute != priTime.Minute)
-        {
-            labelText = $"{tickTime:mm分ss}";
-        }
-        else if (tickTime.Second != priTime.Second)
-        {
-            labelText = $"{tickTime:ss秒ff}";
-        }
-        else if (tickTime.Millisecond != priTime.Millisecond)
-        {
-            labelText = $"{tickTime.Millisecond}ms";
-        }
-        else if (tickTime.Microsecond != priTime.Microsecond)
-        {
-            labelText = $"{tickTime.Microsecond}mS";
-        }
-
-        else if (tickTime.Nanosecond != priTime.Nanosecond)
-        {
-            labelText = $"{tickTime.Minute}nS";
+            // 普通模式：根据刻度间隔决定显示格式
+            var interval = ticks - preTicks;
+            
+            if (interval >= TimeSpan.TicksPerDay)
+            {
+                labelText = tickTime.ToString("MM/dd");
+            }
+            else if (interval >= TimeSpan.TicksPerHour)
+            {
+                labelText = tickTime.ToString("HH:mm");
+            }
+            else if (interval >= TimeSpan.TicksPerMinute)
+            {
+                labelText = tickTime.ToString("HH:mm:ss");
+            }
+            else if (interval >= TimeSpan.TicksPerSecond)
+            {
+                labelText = tickTime.ToString("ss.ff") + "s";
+            }
+            else if (interval >= TimeSpan.TicksPerMillisecond)
+            {
+                labelText = tickTime.Millisecond + "ms";
+            }
+            else
+            {
+                labelText = (tickTime.Ticks % TimeSpan.TicksPerMillisecond) + "μs";
+            }
         }
 
 

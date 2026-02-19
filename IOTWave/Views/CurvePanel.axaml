@@ -12,16 +12,6 @@
        <Style Selector="CheckBox:pointerover  /template/ ContentPresenter#PART_ContentPresenter">
            <Setter Property="Foreground" Value="Aqua" ></Setter>
        </Style>
-       <Style Selector="CheckBox:unchecked  /template/ Border#NormalRectangle">
-           <Setter Property="Background" Value="Transparent" ></Setter>
-           <Setter Property="BorderThickness" Value="1"></Setter>
-           <Setter Property="BorderBrush" Value="Aqua"></Setter>
-       </Style>
-       <Style Selector="CheckBox:checked  /template/ Border#NormalRectangle">
-           <Setter Property="Background" Value="Transparent" ></Setter>
-           <Setter Property="BorderThickness" Value="1"></Setter>
-           <Setter Property="BorderBrush" Value="Aqua"></Setter>
-       </Style>
        <Style Selector="ListBoxItem">
            <Setter Property="Background" Value="Transparent"/>
            <Setter Property="BorderThickness" Value="0"/>
@@ -51,11 +41,21 @@
                <DataTemplate DataType="models:CurveData">
                    <CheckBox  Background="Transparent" IsChecked="{Binding IsVisible}" 
                               Content="{Binding Name}"
-                              Foreground="{Binding Foreground, ElementName=Root}"
+                              Foreground="{Binding Brush}"
                               Margin="5,0">
                        <CheckBox.Styles>
                            <Style Selector="CheckBox:pointerover">
-                               <Setter Property="Foreground" Value="{Binding $parent[UserControl].Foreground}"/>
+                               <Setter Property="Foreground" Value="{Binding Brush}"/>
+                           </Style>
+                           <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+                               <Setter Property="Background" Value="Transparent"/>
+                               <Setter Property="BorderThickness" Value="2"/>
+                               <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                           </Style>
+                           <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                               <Setter Property="Background" Value="Transparent"/>
+                               <Setter Property="BorderThickness" Value="2"/>
+                               <Setter Property="BorderBrush" Value="{Binding Brush}"/>
                            </Style>
                        </CheckBox.Styles>
                    </CheckBox>

@@ -96,6 +96,14 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         AvaloniaProperty.Register<WaveListPanel, Thickness>(
             nameof(StatusPanelMargin), new Thickness(0, 2));
 
+    public static readonly StyledProperty<bool> UseRelativeTimeProperty =
+        AvaloniaProperty.Register<WaveListPanel, bool>(
+            nameof(UseRelativeTime), false);
+
+    public static readonly StyledProperty<DateTime> RelativeTimeBaseProperty =
+        AvaloniaProperty.Register<WaveListPanel, DateTime>(
+            nameof(RelativeTimeBase), DateTime.Now);
+
     // 命令属性
     public static readonly DirectProperty<WaveListPanel, ICommand> ZoomInCommandProperty =
         AvaloniaProperty.RegisterDirect<WaveListPanel, ICommand>(
@@ -193,6 +201,24 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     {
         get => GetValue(StatusPanelMarginProperty);
         set => SetValue(StatusPanelMarginProperty, value);
+    }
+
+    /// <summary>
+    /// 是否使用相对时间模式显示时间轴
+    /// </summary>
+    public bool UseRelativeTime
+    {
+        get => GetValue(UseRelativeTimeProperty);
+        set => SetValue(UseRelativeTimeProperty, value);
+    }
+
+    /// <summary>
+    /// 相对时间的基准时间点（显示为 0s）
+    /// </summary>
+    public DateTime RelativeTimeBase
+    {
+        get => GetValue(RelativeTimeBaseProperty);
+        set => SetValue(RelativeTimeBaseProperty, value);
     }
 
     public bool ShowCursor
@@ -638,12 +664,34 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
 
     private long CalculateFirstTick(long interval)
     {
-        // 找到第一个大于等于Start的刻度位置
-        var remainder = StartTime.Ticks % interval;
-        var firstTick = StartTime.Ticks - remainder + interval;
-        if (remainder > interval / 2)
+        // 相对时间模式：刻度对齐到基准时间
+        var alignmentBase = UseRelativeTime ? RelativeTimeBase.Ticks : 0;
+        
+        // 计算第一个刻度位置
+        long firstTick;
+        if (UseRelativeTime && alignmentBase != 0)
         {
-            firstTick += interval;
+            // 相对时间模式：刻度对齐到基准时间
+            var remainder = (StartTime.Ticks - alignmentBase) % interval;
+            firstTick = StartTime.Ticks - remainder;
+            if (remainder < 0)
+            {
+                firstTick -= interval;
+            }
+            if (firstTick < StartTime.Ticks)
+            {
+                firstTick += interval;
+            }
+        }
+        else
+        {
+            // 普通模式：对齐到自然时间
+            var remainder = StartTime.Ticks % interval;
+            firstTick = StartTime.Ticks - remainder + interval;
+            if (remainder > interval / 2)
+            {
+                firstTick += interval;
+            }
         }
 
         return firstTick;

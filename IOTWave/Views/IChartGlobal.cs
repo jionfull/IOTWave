@@ -6,6 +6,17 @@ public interface IChartGlobal
 {
     DateTime StartTime { get; }
     DateTime EndTime { get; }
+    
+    /// <summary>
+    /// 是否使用相对时间模式
+    /// </summary>
+    bool UseRelativeTime { get; }
+    
+    /// <summary>
+    /// 相对时间的基准时间点（显示为 0s）
+    /// </summary>
+    DateTime RelativeTimeBase { get; }
+    
     double TimeToX(DateTime time);
 
 
