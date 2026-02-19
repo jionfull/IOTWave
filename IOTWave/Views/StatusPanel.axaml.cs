@@ -87,13 +87,17 @@ public partial class StatusPanel : ChartPanelBase
 
     private void DrawGrid(DrawingContext context)
     {
-        // 绘制背景
+        var leftPadding = ChartGlobal?.LeftPadding ?? 0;
+        var rightPadding = ChartGlobal?.RightPadding ?? 0;
+
+        // 绘制背景（整个控件区域）
         var background = PanelBackground ?? Brushes.White;
         context.FillRectangle(background, Bounds);
 
-        // 绘制边框
+        // 绘制边框（与 MainBorder 的 Margin 一致，只在内容区域绘制）
+        var borderRect = new Rect(leftPadding, 0, Bounds.Width - leftPadding - rightPadding, Bounds.Height);
         var borderPen = new Pen(BorderBrush, BorderThickness);
-        context.DrawRectangle(null, borderPen, Bounds);
+        context.DrawRectangle(null, borderPen, borderRect);
 
         // 绘制网格线
         var gridBrush = ChartGlobal?.GridBrush ?? Brushes.LightGray;
@@ -106,8 +110,6 @@ public partial class StatusPanel : ChartPanelBase
             new Point(Bounds.Width - (ChartGlobal?.RightPadding ?? 0), Bounds.Height));
 
         // 垂直时间网格线
-        var leftPadding = ChartGlobal?.LeftPadding ?? 0;
-        var rightPadding = ChartGlobal?.RightPadding ?? 0;
         var drawAreaWidth = Bounds.Width - leftPadding - rightPadding;
 
         if (ChartGlobal == null || drawAreaWidth <= 0) return;
