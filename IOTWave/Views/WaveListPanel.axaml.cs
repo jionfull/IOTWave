@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using IotWave.Models;
+using IOTWave.Views;
 using ReactiveUI;
 
 namespace IotWave.Views;
@@ -775,12 +776,19 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         // 检查是否按住 Ctrl 键进行 Y 轴缩放
         if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
-            // Y 轴缩放：找到鼠标下的 CurvePanel 并进行缩放
-            var curvePanel = FindCurvePanelAtPosition(e);
-            if (curvePanel != null)
+            // Y 轴缩放：找到鼠标下的 CurvePanel 或 CurvePanel2 并进行缩放
+            var panel = FindCurvePanelAtPosition(e);
+            if (panel != null)
             {
                 double scaleFactor = e.Delta.Y > 0 ? 0.9 : 1.1;
-                curvePanel.ApplyYScale(scaleFactor);
+                if (panel is CurvePanel curvePanel)
+                {
+                    curvePanel.ApplyYScale(scaleFactor);
+                }
+                else if (panel is CurvePanel2 curvePanel2)
+                {
+                    curvePanel2.ApplyYScale(scaleFactor);
+                }
             }
             return;
         }
@@ -798,7 +806,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         }
     }
 
-    private CurvePanel? FindCurvePanelAtPosition(PointerWheelEventArgs e)
+    private object? FindCurvePanelAtPosition(PointerWheelEventArgs e)
     {
         if (_scrollViewer?.Content is ItemsPresenter itemsPresenter)
         {
@@ -824,6 +832,14 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                         if (relativePos.Y >= 0 && relativePos.Y <= curvePanel.Bounds.Height)
                         {
                             return curvePanel;
+                        }
+                    }
+                    else if (targetControl is CurvePanel2 curvePanel2)
+                    {
+                        var relativePos = e.GetCurrentPoint(curvePanel2).Position;
+                        if (relativePos.Y >= 0 && relativePos.Y <= curvePanel2.Bounds.Height)
+                        {
+                            return curvePanel2;
                         }
                     }
                 }
@@ -1028,6 +1044,11 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                     if (targetControl is CurvePanel curvePanel)
                     {
                         curvePanel.Height = curvePanelHeight;
+                        curveCount++;
+                    }
+                    if (targetControl is CurvePanel2 curvePanel2)
+                    {
+                        curvePanel2.Height = curvePanelHeight;
                         curveCount++;
                     }
                     else if (targetControl is StatusPanel statusPanel)
