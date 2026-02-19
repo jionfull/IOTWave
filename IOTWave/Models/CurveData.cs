@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Avalonia.Media;
 
 namespace IotWave.Models;
 
@@ -7,7 +8,24 @@ public class CurveData : INotifyPropertyChanged
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;
     public string Legend { get; set; }= String.Empty;
-    public Color Color { get; set; } = Colors.Blue;
+    
+    private Color _color = Colors.Blue;
+    public Color Color 
+    { 
+        get => _color;
+        set
+        {
+            _color = value;
+            OnPropertyChanged(nameof(Color));
+            OnPropertyChanged(nameof(Brush));
+        }
+    }
+    
+    /// <summary>
+    /// 获取曲线颜色的 Brush 对象，用于 UI 绑定
+    /// </summary>
+    public IBrush Brush => new SolidColorBrush(Color);
+    
     public List<TimePoint> Points { get; set; } = new();
     public double MinValue => Points.Any() ? Points.Min(p => p.Value) : 0;
     public double MaxValue => Points.Any() ? Points.Max(p => p.Value) : 0;

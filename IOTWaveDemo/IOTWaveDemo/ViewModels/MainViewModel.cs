@@ -18,10 +18,14 @@ namespace IOTWaveDemo.ViewModels
         [ObservableProperty]
         private IOTWaveBaseViewModel scrollableViewModel = new IOTWaveBaseViewModel();
 
+        [ObservableProperty]
+        private IOTWaveBaseViewModel relativeTimeViewModel = new IOTWaveBaseViewModel();
+
         public MainViewModel()
         {
             InitializeBasicData();
             InitializeScrollableData();
+            InitializeRelativeTimeData();
         }
 
         private void InitializeBasicData()
@@ -320,6 +324,159 @@ namespace IOTWaveDemo.ViewModels
                 DestinationRect = new RelativeRect(0, 0, bitmap.PixelSize.Height, bitmap.PixelSize.Width, RelativeUnit.Absolute)
             };
             return brush;
+        }
+
+        /// <summary>
+        /// 初始化相对时间模式示例 - 事件型曲线数据
+        /// 示例：启动时间为9点05分43秒，每秒40个点，共7秒数据
+        /// </summary>
+        private void InitializeRelativeTimeData()
+        {
+            var rnd = new Random();
+            
+            // 设定事件开始时间：9:05:43
+            var eventStartTime = DateTime.Today.AddHours(9).AddMinutes(5).AddSeconds(43);
+            
+            // 设置相对时间基准为事件开始时间（显示为 0s）
+            RelativeTimeViewModel.RelativeTimeBase = eventStartTime;
+            RelativeTimeViewModel.UseRelativeTime = true;
+            
+            // 时间范围：事件开始前0.5秒到事件结束后0.5秒
+            RelativeTimeViewModel.BeginTime = eventStartTime.AddSeconds(-0.5);
+            RelativeTimeViewModel.EndTime = eventStartTime.AddSeconds(7.5);
+
+            // 创建事件型曲线数据 - 模拟振动信号
+            var vibrationPanel = new CurveGroup()
+            {
+                Legend = "振动信号",
+                Height = 200
+            };
+
+            var vibrationCurve = new CurveData
+            {
+                Name = "振动传感器",
+                Color = Color.Parse("#00FF00")
+            };
+
+            // 每秒40个点，共7秒数据 = 280个点
+            int pointsPerSecond = 40;
+            int totalSeconds = 7;
+            int totalPoints = pointsPerSecond * totalSeconds;
+            
+            // 生成事件数据
+            for (int i = 0; i < totalPoints; i++)
+            {
+                var time = eventStartTime.AddSeconds((double)i / pointsPerSecond);
+                double value;
+                
+                // 模拟事件波形：前1秒平静，然后有突发信号，之后衰减
+                double t = (double)i / pointsPerSecond;
+                if (t < 1)
+                {
+                    // 静止阶段：小幅噪声
+                    value = rnd.NextDouble() * 0.1 - 0.05;
+                }
+                else if (t < 2)
+                {
+                    // 突发阶段：大幅振动
+                    value = Math.Sin((t - 1) * 50) * Math.Exp((t - 1) * 2) * 5;
+                }
+                else
+                {
+                    // 衰减阶段：指数衰减
+                    value = Math.Sin((t - 1) * 50) * Math.Exp(-(t - 2) * 0.8) * 3;
+                }
+                
+                vibrationCurve.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = value
+                });
+            }
+
+            vibrationPanel.Curves.Add(vibrationCurve);
+            vibrationPanel.YMarkers.Add(new YMarker(3, "警告阈值"));
+            vibrationPanel.YMarkers.Add(new YMarker(-3, "警告阈值"));
+            RelativeTimeViewModel.Items.Add(vibrationPanel);
+
+            // 创建第二个曲线 - 模拟压力变化
+            var pressurePanel = new CurveGroup()
+            {
+                Legend = "压力变化",
+                Height = 150
+            };
+
+            var pressureCurve = new CurveData
+            {
+                Name = "压力传感器",
+                Color = Color.Parse("#FF6B6B")
+            };
+
+            for (int i = 0; i < totalPoints; i++)
+            {
+                var time = eventStartTime.AddSeconds((double)i / pointsPerSecond);
+                double t = (double)i / pointsPerSecond;
+                double value;
+                
+                if (t < 1)
+                {
+                    value = 100;
+                }
+                else if (t < 3)
+                {
+                    value = 100 + (t - 1) * 20 + rnd.NextDouble() * 2;
+                }
+                else
+                {
+                    value = 140 - (t - 3) * 10 + rnd.NextDouble() * 2;
+                }
+                
+                pressureCurve.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = value
+                });
+            }
+
+            pressurePanel.Curves.Add(pressureCurve);
+            pressurePanel.YMarkers.Add(new YMarker(120, "高压警告"));
+            RelativeTimeViewModel.Items.Add(pressurePanel);
+
+            // 添加时间标记 - 在相对时间模式下会显示相对时间
+            RelativeTimeViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = eventStartTime,
+                Label = "事件开始",
+                Color = Colors.Cyan
+            });
+            RelativeTimeViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = eventStartTime.AddSeconds(2),
+                Label = "峰值时刻",
+                Color = Colors.Yellow
+            });
+            RelativeTimeViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = eventStartTime.AddSeconds(7),
+                Label = "事件结束",
+                Color = Colors.Orange
+            });
+
+            // 添加时间范围标记
+            RelativeTimeViewModel.TimeRangeMarkers.Add(new TimeRangeMarker
+            {
+                StartTime = eventStartTime.AddSeconds(1),
+                EndTime = eventStartTime.AddSeconds(2),
+                Label = "突发阶段",
+                Color = Color.FromArgb(80, 255, 100, 100)
+            });
+            RelativeTimeViewModel.TimeRangeMarkers.Add(new TimeRangeMarker
+            {
+                StartTime = eventStartTime.AddSeconds(2),
+                EndTime = eventStartTime.AddSeconds(7),
+                Label = "衰减阶段",
+                Color = Color.FromArgb(60, 100, 200, 255)
+            });
         }
     }
 }

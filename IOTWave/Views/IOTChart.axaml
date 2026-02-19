@@ -15,7 +15,6 @@
   </UserControl.Styles>
   <Grid>
      <views:WaveListPanel x:Name="CurveDisplay"
-
                                  StartTime="{Binding BeginTime}"
                                  EndTime="{Binding EndTime}"
                                  ShowCursor="True"
@@ -27,7 +26,11 @@
                                  IsInteractive="True"
                                  StatusPanelHeight="20"
                                  TimeMarkers="{Binding TimeMarkers}"
-                                 TimeRangeMarkers="{Binding TimeRangeMarkers}">
+                                 TimeRangeMarkers="{Binding TimeRangeMarkers}"
+                                 UseRelativeTime="{Binding UseRelativeTime}"
+                                 RelativeTimeBase="{Binding RelativeTimeBase}"
+                                 AutoDistributePanelHeight="{Binding $parent[UserControl].AutoDistributePanelHeight}"
+                                 VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}">
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 

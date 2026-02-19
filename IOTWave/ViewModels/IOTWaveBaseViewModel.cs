@@ -16,6 +16,12 @@ public partial class IOTWaveBaseViewModel:ViewModelBase
      [ObservableProperty]
      private DateTime? _selectedTime;
 
+     [ObservableProperty]
+     private bool _useRelativeTime = false;
+
+     [ObservableProperty]
+     private DateTime _relativeTimeBase = DateTime.Now;
+
 
     public ObservableCollection<DataSeriesGroupBase> Items { get; } = new()
     {
