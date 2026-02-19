@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:IOTWaveDemo.ViewModels"
              xmlns:iot="using:IOTWave"
+             xmlns:models="clr-namespace:IotWave.Models;assembly=IOTWave"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="IOTWaveDemo.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -47,6 +48,32 @@
       </Grid>
     </TabItem>
     <TabItem Header="当前值显示示例">
+      <TabItem.Resources>
+        <!-- 自定义图例模板：横向紧凑布局 -->
+        <DataTemplate x:Key="CurveLegendWithValueTemplate" DataType="models:CurveData">
+          <StackPanel Orientation="Horizontal" Spacing="4" Margin="5,0">
+            <CheckBox Background="Transparent"
+                      IsChecked="{Binding IsVisible}"
+                      Content="{Binding Name}"
+                      Foreground="{Binding Brush}">
+              <CheckBox.Styles>
+                <Style Selector="CheckBox:pointerover">
+                  <Setter Property="Foreground" Value="{Binding Brush}"/>
+                </Style>
+                <Style Selector="CheckBox /template/ Border#NormalRectangle">
+                  <Setter Property="Background" Value="Transparent"/>
+                  <Setter Property="BorderThickness" Value="2"/>
+                  <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                </Style>
+              </CheckBox.Styles>
+            </CheckBox>
+            <TextBlock Text="[" Foreground="{Binding Brush}" Opacity="0.6" FontSize="10" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding CurrentTimeText}" Foreground="{Binding Brush}" Opacity="0.8" FontSize="10" VerticalAlignment="Center"/>
+            <TextBlock Text="]" Foreground="{Binding Brush}" Opacity="0.6" FontSize="10" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding CurrentValueText}" Foreground="{Binding Brush}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+          </StackPanel>
+        </DataTemplate>
+      </TabItem.Resources>
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
