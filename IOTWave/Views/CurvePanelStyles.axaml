@@ -1,0 +1,71 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="using:IotWave.Models">
+    
+    <!-- 曲线图例 ListBox 的 DataTemplate -->
+    <Design.PreviewWith>
+        <ListBox ItemsSource="{Binding Curves}">
+            <ListBox.ItemTemplate>
+                <StaticResource ResourceKey="CurveLegendItemTemplate"/>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Design.PreviewWith>
+
+    <!-- 曲线图例项模板 - 可被外部覆盖 -->
+    <Styles.Resources>
+        <DataTemplate x:Key="CurveLegendItemTemplate" DataType="models:CurveData">
+            <CheckBox Background="Transparent" 
+                      IsChecked="{Binding IsVisible}" 
+                      Content="{Binding Name}"
+                      Foreground="{Binding Brush}"
+                      Margin="5,0">
+                <CheckBox.Styles>
+                    <Style Selector="CheckBox:pointerover">
+                        <Setter Property="Foreground" Value="{Binding Brush}"/>
+                    </Style>
+                    <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                        <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                    </Style>
+                    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                        <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                    </Style>
+                </CheckBox.Styles>
+            </CheckBox>
+        </DataTemplate>
+    </Styles.Resources>
+
+    <!-- ListBox 容器样式 -->
+    <Style Selector="ListBox.curveLegend">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Background="Transparent"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ListBoxItem 样式 -->
+    <Style Selector="ListBox.curveLegend > ListBoxItem">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+    <Style Selector="ListBox.curveLegend > ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    
+    <Style Selector="ListBox.curveLegend > ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+</Styles>
