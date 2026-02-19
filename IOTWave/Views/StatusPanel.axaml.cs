@@ -94,10 +94,6 @@ public partial class StatusPanel : ChartPanelBase
         var background = PanelBackground ?? Brushes.White;
         context.FillRectangle(background, Bounds);
 
-        // 绘制边框（与 MainBorder 的 Margin 一致，只在内容区域绘制）
-        var borderRect = new Rect(leftPadding, 0, Bounds.Width - leftPadding - rightPadding, Bounds.Height);
-        var borderPen = new Pen(BorderBrush, BorderThickness);
-        context.DrawRectangle(null, borderPen, borderRect);
 
         // 绘制网格线
         var gridBrush = ChartGlobal?.GridBrush ?? Brushes.LightGray;
