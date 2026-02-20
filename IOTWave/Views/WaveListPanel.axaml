@@ -12,7 +12,7 @@
                   
                 <!-- 主容器 -->
               
-                    <Grid Name="PART_MainGrid" RowDefinitions="*,Auto"   Background="{TemplateBinding Background}" Margin="{TemplateBinding Padding}">
+                    <Grid Name="PART_MainGrid" RowDefinitions="*,Auto"   Background="{TemplateBinding Background}" >
                     
                         <!-- TimeMarker 和 Cursor 绘制层 -->
                         <controls:CursorCanvas Grid.Row="0" Grid.RowSpan="2"   Name="PART_CursorCanvas"
@@ -33,6 +33,7 @@
                         
                           <ScrollViewer Grid.Row="0"  Name="PART_ScrollViewer"
                                                        HorizontalAlignment="Stretch"
+                                                       Margin="0,20,0,0"
                                                       HorizontalScrollBarVisibility="Auto"
                                                       VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                                       Background="Transparent"
