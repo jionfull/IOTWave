@@ -80,6 +80,53 @@
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
+
+        <!-- 日报表图例项模板 -->
+        <DataTemplate x:Key="ReportLegendItemTemplate" DataType="models:CurveData">
+            <StackPanel Margin="5,0" Spacing="2" Background="Transparent">
+                <!-- 曲线名称和可见性控制 -->
+                <CheckBox Background="Transparent"
+                          IsChecked="{Binding IsVisible}"
+                          Content="{Binding Name}"
+                          Foreground="{Binding Brush}">
+                    <CheckBox.Styles>
+                        <Style Selector="CheckBox:pointerover">
+                            <Setter Property="Foreground" Value="{Binding Brush}"/>
+                        </Style>
+                        <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                        </Style>
+                        <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+                        </Style>
+                    </CheckBox.Styles>
+                </CheckBox>
+                <!-- 当前值显示区域 -->
+                <ContentControl
+                  Background="Transparent"
+                  Tag="{Binding Brush}"
+                  Content="{Binding CursorPoint}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate DataType="models:ReportPoint">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
+                                           FontSize="10"
+                                           Foreground="{Binding $parent[ContentControl].Tag}"
+                                           Opacity="0.8"/>
+                                <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
+                                           FontSize="10"
+                                           Foreground="{Binding $parent[ContentControl].Tag}"
+                                           FontWeight="Bold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+            </StackPanel>
+        </DataTemplate>
     </Styles.Resources>
 
     <!-- ListBox 容器样式 - 基础样式 -->
@@ -198,53 +245,6 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
-
-    <!-- 日报表图例项模板 -->
-    <DataTemplate x:Key="ReportLegendItemTemplate" DataType="models:CurveData">
-        <StackPanel Margin="5,0" Spacing="2" Background="Transparent">
-            <!-- 曲线名称和可见性控制 -->
-            <CheckBox Background="Transparent"
-                      IsChecked="{Binding IsVisible}"
-                      Content="{Binding Name}"
-                      Foreground="{Binding Brush}">
-                <CheckBox.Styles>
-                    <Style Selector="CheckBox:pointerover">
-                        <Setter Property="Foreground" Value="{Binding Brush}"/>
-                    </Style>
-                    <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="2"/>
-                        <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                    </Style>
-                    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="2"/>
-                        <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                    </Style>
-                </CheckBox.Styles>
-            </CheckBox>
-            <!-- 当前值显示区域 -->
-            <ContentControl
-              Background="Transparent"
-              Tag="{Binding Brush}"
-              Content="{Binding CursorPoint}">
-                <ContentControl.ContentTemplate>
-                    <DataTemplate DataType="models:ReportPoint">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
-                                       FontSize="10"
-                                       Foreground="{Binding $parent[ContentControl].Tag}"
-                                       Opacity="0.8"/>
-                            <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
-                                       FontSize="10"
-                                       Foreground="{Binding $parent[ContentControl].Tag}"
-                                       FontWeight="Bold"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ContentControl.ContentTemplate>
-            </ContentControl>
-        </StackPanel>
-    </DataTemplate>
 
     <!-- 日报表 ListBox 样式 -->
     <Style Selector="ListBox.reportLegend">
