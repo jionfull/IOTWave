@@ -120,94 +120,13 @@
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}">
-              <!-- 直接定义模板：显示当前值 -->
+              <!-- 日报表图例模板 -->
               <views:CurvePanel2.Template>
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
                     <ListBox Name="PART_Legend"
-                             Background="Transparent"
-                             BorderBrush="Transparent"
-                             BorderThickness="0"
-                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}">
-                      <ListBox.Template>
-                        <ControlTemplate>
-                          <Border Name="border"
-                                  ClipToBounds="{TemplateBinding ClipToBounds}"
-                                  Background="Transparent"
-                                  BorderBrush="Transparent"
-                                  BorderThickness="0">
-                            <ScrollViewer Name="PART_ScrollViewer"
-                                          VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
-                                          HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          VerticalScrollBarVisibility="Auto"
-                                          IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
-                                          IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
-                                          IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
-                                          AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
-                                          BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
-                              <ItemsPresenter Name="PART_ItemsPresenter"
-                                              ItemsPanel="{TemplateBinding ItemsPanel}"
-                                              Margin="{TemplateBinding Padding}"/>
-                            </ScrollViewer>
-                          </Border>
-                        </ControlTemplate>
-                      </ListBox.Template>
-                      <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                          <StackPanel Orientation="Horizontal" Background="Transparent"/>
-                        </ItemsPanelTemplate>
-                      </ListBox.ItemsPanel>
-                      <ListBox.ItemTemplate>
-                        <DataTemplate DataType="models:CurveData">
-                          <StackPanel Margin="5,0" Spacing="2" Background="Transparent">
-                            <!-- 曲线名称和可见性控制 -->
-                            <CheckBox Background="Transparent"
-                                      IsChecked="{Binding IsVisible}"
-                                      Content="{Binding Name}"
-                                      Foreground="{Binding Brush}">
-                              <CheckBox.Styles>
-                                <Style Selector="CheckBox:pointerover">
-                                  <Setter Property="Foreground" Value="{Binding Brush}"/>
-                                </Style>
-                                <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
-                                  <Setter Property="Background" Value="Transparent"/>
-                                  <Setter Property="BorderThickness" Value="2"/>
-                                  <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                                </Style>
-                                <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
-                                  <Setter Property="Background" Value="Transparent"/>
-                                  <Setter Property="BorderThickness" Value="2"/>
-                                  <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                                </Style>
-                              </CheckBox.Styles>
-                            </CheckBox>
-                            <!-- 当前值显示区域 -->
-                            <ContentControl
-                              Background="Transparent"
-                              Tag="{Binding Brush}"
-                              Content="{Binding CursorPoint}">
-
-                              <ContentControl.ContentTemplate>
-                                <DataTemplate DataType="models:ReportPoint">
-                                  <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
-                                               FontSize="10"
-                                               Foreground="{Binding $parent[ContentControl].Tag}"
-                                               Opacity="0.8"/>
-
-                                    <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
-                                               FontSize="10"
-                                               Foreground="{Binding $parent[ContentControl].Tag}"
-                                               FontWeight="Bold"/>
-                                  </StackPanel>
-                                </DataTemplate>
-                              </ContentControl.ContentTemplate>
-                            </ContentControl>
-                          </StackPanel>
-                        </DataTemplate>
-                      </ListBox.ItemTemplate>
-                    </ListBox>
+                             Classes="reportLegend"
+                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
                   </Grid>
                 </ControlTemplate>
               </views:CurvePanel2.Template>
