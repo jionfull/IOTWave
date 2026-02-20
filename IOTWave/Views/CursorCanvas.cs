@@ -258,8 +258,8 @@ public class CursorCanvas : Control
                     12,
                     new SolidColorBrush(Color.FromRgb(224, 224, 224)));
 
-                // 绘制阴影（底部）
-                var textY = bounds.Bottom - 16;
+                // 绘制阴影（顶部）
+                var textY = 2.0;
                 var shadowText = new FormattedText(
                     marker.Label,
                     System.Globalization.CultureInfo.CurrentCulture,
@@ -306,8 +306,8 @@ public class CursorCanvas : Control
                     12,
                     new SolidColorBrush(marker.Color));
 
-                // 绘制阴影（底部）
-                var textY = bounds.Bottom - 16;
+                // 绘制阴影（顶部）
+                var textY = 2.0;
                 var shadowText = new FormattedText(
                     displayLabel,
                     System.Globalization.CultureInfo.CurrentCulture,
@@ -368,7 +368,7 @@ public class CursorCanvas : Control
                 textX = CursorPosition + 4;
             }
 
-            // 绘制阴影
+            // 绘制阴影（底部）
             var textY = bounds.Bottom - 12;
             var shadowText = new FormattedText(
                 timeText,
@@ -377,7 +377,7 @@ public class CursorCanvas : Control
                 new Typeface("Arial"),
                 12,
                 new SolidColorBrush(Colors.Black));
-         
+
             context.DrawText(shadowText, new Point(textX + 1, textY));
             context.DrawText(shadowText, new Point(textX, textY + 1));
             context.DrawText(shadowText, new Point(textX - 1, textY));
