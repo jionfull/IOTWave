@@ -78,7 +78,7 @@
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
                     <ListBox Name="PART_Legend"
-                             Classes="legendBase curveLegendWithValue"
+                             Classes="transparentListBoxBase curveLegendWithValue"
                              ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
                   </Grid>
                 </ControlTemplate>

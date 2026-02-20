@@ -129,46 +129,6 @@
         </DataTemplate>
     </Styles.Resources>
 
-    <!-- ListBox 公共基础样式 -->
-    <Style Selector="ListBox.legendBase">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Background="Transparent"/>
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- ListBox 容器样式 - 基础样式 -->
-    <Style Selector="ListBox.curveLegend">
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
-    </Style>
-
-    <!-- ListBox 容器样式 - 带数值显示 -->
-    <Style Selector="ListBox.curveLegendWithValue">
-        <Setter Property="Height" Value="55"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
-    </Style>
-
-    <!-- ListBoxItem 公共样式 -->
-    <Style Selector="ListBox.legendBase > ListBoxItem">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-    </Style>
-
-    <Style Selector="ListBox.legendBase > ListBoxItem:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
-    <Style Selector="ListBox.legendBase > ListBoxItem:selected /template/ ContentPresenter">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-    </Style>
-
     <!-- 透明背景 ListBox 公共基础样式（包含 Template） -->
     <Style Selector="ListBox.transparentListBoxBase">
         <Setter Property="Background" Value="Transparent"/>
@@ -229,6 +189,18 @@
     <!-- 日报表 ListBox 样式 -->
     <Style Selector="ListBox.reportLegend">
         <Setter Property="ItemTemplate" Value="{StaticResource ReportLegendItemTemplate}"/>
+    </Style>
+
+    <!-- ListBox 容器样式 - 基础样式 -->
+    <Style Selector="ListBox.curveLegend">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
+    </Style>
+
+    <!-- ListBox 容器样式 - 带数值显示 -->
+    <Style Selector="ListBox.curveLegendWithValue">
+        <Setter Property="Height" Value="55"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
     </Style>
 
 </Styles>
