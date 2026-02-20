@@ -26,7 +26,7 @@ public class CurvePanel : TemplatedControl
         private bool _isDragging = false;
         private Point _lastDragPoint;
     private ListBox? curveCheck;
-    private readonly YAxisRenderer2 _yAxisRenderer;
+    private readonly YAxisRenderer _yAxisRenderer;
 
         // 属性
         public static readonly StyledProperty<double> DesiredHeightProperty =
@@ -84,7 +84,7 @@ public class CurvePanel : TemplatedControl
     {
         Background = Brushes.Transparent;
         YMarkers = new List<YMarker>();
-        _yAxisRenderer = new YAxisRenderer2(this, ChartGlobal, CreateFormattedText);
+        _yAxisRenderer = new YAxisRenderer(this, ChartGlobal, CreateFormattedText);
 
         // 订阅 Items 属性变化（绑定不经过 setter，需要通过 GetObservable 订阅）
         this.GetObservable(ItemsProperty).Subscribe(_ => SetupCurveDataListeners());

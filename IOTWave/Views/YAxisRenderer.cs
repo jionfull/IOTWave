@@ -5,7 +5,7 @@ using IOTWave;
 
 namespace IOTWave.Views
 {
-    public class YAxisRenderer2
+    public class YAxisRenderer
     {
         private readonly CurvePanel _panel;
 
@@ -68,7 +68,7 @@ namespace IOTWave.Views
 
         public IChartGlobal ChartGlobal;
 
-        public YAxisRenderer2(CurvePanel panel, IChartGlobal chartGlobal, Func<string, FormattedText> createFormattedText)
+        public YAxisRenderer(CurvePanel panel, IChartGlobal chartGlobal, Func<string, FormattedText> createFormattedText)
         {
             _panel = panel;
 
