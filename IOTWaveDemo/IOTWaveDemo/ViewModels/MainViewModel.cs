@@ -590,13 +590,17 @@ namespace IOTWaveDemo.ViewModels
             var tempCurve1 = new CurveData
             {
                 Name = "最大值",
-                Color = Color.Parse("#FF6B6B")
+                Color = Color.Parse("#FF6B6B"),
+                ShowPoints = true,
+                PointShowLimit = 86400 * 2 // 每像素代表10天以内时显示圆点
             };
 
             var tempCurve2 = new CurveData
             {
                 Name = "最小值",
-                Color = Color.Parse("#4ECDC4")
+                Color = Color.Parse("#4ECDC4"),
+                ShowPoints = true,
+                PointShowLimit = 86400 * 2
             };
 
             // 生成数据点
@@ -630,7 +634,9 @@ namespace IOTWaveDemo.ViewModels
             var pressureCurve = new CurveData
             {
                 Name = "平均值",
-                Color = Color.Parse("#45B7D1")
+                Color = Color.Parse("#45B7D1"),
+                ShowPoints = true,
+                PointShowLimit = 86400 * 10
             };
 
             for (int i = 0; i < 100; i++)
