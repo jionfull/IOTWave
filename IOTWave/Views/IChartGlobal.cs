@@ -16,6 +16,11 @@ public interface IChartGlobal
     /// 相对时间的基准时间点（显示为 0s）
     /// </summary>
     DateTime RelativeTimeBase { get; }
+
+    /// <summary>
+    /// 相对时间基准的显示标签（如"基准"、"动作时间"等）
+    /// </summary>
+    string RelativeTimeBaseLabel { get; }
     
     double TimeToX(DateTime time);
 

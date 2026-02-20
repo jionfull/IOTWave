@@ -349,6 +349,7 @@ namespace IOTWaveDemo.ViewModels
             // 设置相对时间基准为事件开始时间（显示为 0s）
             RelativeTimeViewModel.RelativeTimeBase = eventStartTime;
             RelativeTimeViewModel.UseRelativeTime = true;
+            RelativeTimeViewModel.RelativeTimeBaseLabel = "动作时间";
             
             // 时间范围：事件开始前0.5秒到事件结束后0.5秒
             RelativeTimeViewModel.BeginTime = eventStartTime.AddSeconds(-0.5);

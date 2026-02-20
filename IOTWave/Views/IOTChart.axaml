@@ -27,8 +27,9 @@
                                  StatusPanelHeight="20"
                                  TimeMarkers="{Binding TimeMarkers}"
                                  TimeRangeMarkers="{Binding TimeRangeMarkers}"
-                                 UseRelativeTime="{Binding UseRelativeTime}"
-                                 RelativeTimeBase="{Binding RelativeTimeBase}"
+                                UseRelativeTime="{Binding UseRelativeTime}"
+                                RelativeTimeBase="{Binding RelativeTimeBase}"
+                                RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                  AutoDistributePanelHeight="{Binding $parent[UserControl].AutoDistributePanelHeight}"
                                  VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}"
                                  ShowCurrentValue="{Binding $parent[UserControl].ShowCurrentValue}">

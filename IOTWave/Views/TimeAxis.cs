@@ -129,7 +129,7 @@ public class TimeAxis : Control
             // 相对时间模式
             var offset = bTime - ChartGlobal.RelativeTimeBase;
             labelText = FormatRelativeTime(offset);
-            labelText2 = $"基准: {ChartGlobal.RelativeTimeBase:HH:mm:ss.fff}";
+            labelText2 = $"{ChartGlobal.RelativeTimeBaseLabel}: {ChartGlobal.RelativeTimeBase:HH:mm:ss.fff}";
         }
         else
         {

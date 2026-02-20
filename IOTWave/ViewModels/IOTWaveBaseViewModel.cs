@@ -22,6 +22,9 @@ public partial class IOTWaveBaseViewModel:ViewModelBase
      [ObservableProperty]
      private DateTime _relativeTimeBase = DateTime.Now;
 
+     [ObservableProperty]
+     private string _relativeTimeBaseLabel = "基准";
+
 
     public ObservableCollection<DataSeriesGroupBase> Items { get; } = new()
     {

@@ -20,6 +20,10 @@ public partial class IOTChart : UserControl
         AvaloniaProperty.Register<IOTChart, DateTime>(
             nameof(RelativeTimeBase), DateTime.Now);
 
+    public static readonly StyledProperty<string> RelativeTimeBaseLabelProperty =
+        AvaloniaProperty.Register<IOTChart, string>(
+            nameof(RelativeTimeBaseLabel), "基准");
+
     public static readonly StyledProperty<bool> ShowCurrentValueProperty =
         AvaloniaProperty.Register<IOTChart, bool>(
             nameof(ShowCurrentValue), false);
@@ -52,6 +56,15 @@ public partial class IOTChart : UserControl
     {
         get => GetValue(RelativeTimeBaseProperty);
         set => SetValue(RelativeTimeBaseProperty, value);
+    }
+
+    /// <summary>
+    /// 相对时间基准的显示标签（如"基准"、"动作时间"等）
+    /// </summary>
+    public string RelativeTimeBaseLabel
+    {
+        get => GetValue(RelativeTimeBaseLabelProperty);
+        set => SetValue(RelativeTimeBaseLabelProperty, value);
     }
 
     /// <summary>
