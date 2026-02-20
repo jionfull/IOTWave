@@ -129,12 +129,10 @@
         </DataTemplate>
     </Styles.Resources>
 
-    <!-- ListBox 容器样式 - 基础样式 -->
-    <Style Selector="ListBox.curveLegend">
+    <!-- ListBox 公共基础样式 -->
+    <Style Selector="ListBox.legendBase">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -142,49 +140,31 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- ListBox 容器样式 - 基础样式 -->
+    <Style Selector="ListBox.curveLegend">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
     </Style>
 
     <!-- ListBox 容器样式 - 带数值显示 -->
     <Style Selector="ListBox.curveLegendWithValue">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Height" Value="55"/>
         <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Background="Transparent"/>
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
-    <!-- ListBoxItem 样式 -->
-    <Style Selector="ListBox.curveLegend > ListBoxItem">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-    </Style>
-    
-    <Style Selector="ListBox.curveLegend > ListBoxItem:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-    
-    <Style Selector="ListBox.curveLegend > ListBoxItem:selected /template/ ContentPresenter">
+    <!-- ListBoxItem 公共样式 -->
+    <Style Selector="ListBox.legendBase > ListBoxItem">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
-    <!-- 带数值显示的 ListBoxItem 样式 -->
-    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-    </Style>
-    
-    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem:pointerover /template/ ContentPresenter">
+    <Style Selector="ListBox.legendBase > ListBoxItem:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
     </Style>
-    
-    <Style Selector="ListBox.curveLegendWithValue > ListBoxItem:selected /template/ ContentPresenter">
+
+    <Style Selector="ListBox.legendBase > ListBoxItem:selected /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>

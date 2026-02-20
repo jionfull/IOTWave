@@ -6,7 +6,7 @@
     <StackPanel Width="400" Spacing="10">
       <StackPanel Background="{DynamicResource SystemRegionBrush}">
         <controls:CurvePanel2 />
-        <controls:CurvePanel2 Classes="curveLegendWithValue" />
+        <controls:CurvePanel2 Classes="legendBase curveLegendWithValue" />
       </StackPanel>
     </StackPanel>
   </Design.PreviewWith>
@@ -18,7 +18,7 @@
       <ControlTemplate>
         <Grid Background="{TemplateBinding Background}">
           <ListBox Name="PART_Legend"
-                   Classes="curveLegend"
+                   Classes="legendBase curveLegend"
                    ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
         </Grid>
       </ControlTemplate>
