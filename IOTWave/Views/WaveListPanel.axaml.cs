@@ -781,11 +781,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             if (panel != null)
             {
                 double scaleFactor = e.Delta.Y > 0 ? 0.9 : 1.1;
-                if (panel is CurvePanel curvePanel)
-                {
-                    curvePanel.ApplyYScale(scaleFactor);
-                }
-                else if (panel is CurvePanel2 curvePanel2)
+               if (panel is CurvePanel2 curvePanel2)
                 {
                     curvePanel2.ApplyYScale(scaleFactor);
                 }
@@ -825,16 +821,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                     {
                         targetControl = control;
                     }
-
-                    if (targetControl is CurvePanel curvePanel)
-                    {
-                        var relativePos = e.GetCurrentPoint(curvePanel).Position;
-                        if (relativePos.Y >= 0 && relativePos.Y <= curvePanel.Bounds.Height)
-                        {
-                            return curvePanel;
-                        }
-                    }
-                    else if (targetControl is CurvePanel2 curvePanel2)
+                    if (targetControl is CurvePanel2 curvePanel2)
                     {
                         var relativePos = e.GetCurrentPoint(curvePanel2).Position;
                         if (relativePos.Y >= 0 && relativePos.Y <= curvePanel2.Bounds.Height)
@@ -1041,12 +1028,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                         targetControl = control;
                     }
                     
-                    if (targetControl is CurvePanel curvePanel)
-                    {
-                        curvePanel.Height = curvePanelHeight;
-                        curveCount++;
-                    }
-                    if (targetControl is CurvePanel2 curvePanel2)
+                   if (targetControl is CurvePanel2 curvePanel2)
                     {
                         curvePanel2.Height = curvePanelHeight;
                         curveCount++;

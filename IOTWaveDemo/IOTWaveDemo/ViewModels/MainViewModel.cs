@@ -23,6 +23,10 @@ namespace IOTWaveDemo.ViewModels
 
         [ObservableProperty]
         private IOTWaveBaseViewModel currentValueViewModel = new IOTWaveBaseViewModel();
+       
+        [ObservableProperty]
+        private IOTWaveBaseViewModel dayReportViewModel = new IOTWaveBaseViewModel();
+
 
         public MainViewModel()
         {
@@ -30,6 +34,7 @@ namespace IOTWaveDemo.ViewModels
             InitializeScrollableData();
             InitializeRelativeTimeData();
             InitializeCurrentValueData();
+            InitializeDayReportData();
         }
 
         private void InitializeBasicData()
@@ -560,6 +565,87 @@ namespace IOTWaveDemo.ViewModels
             pressurePanel.Curves.Add(pressureCurve);
             pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
             CurrentValueViewModel.Items.Add(pressurePanel);
+        }
+
+
+
+        /// <summary>
+        /// 初始化当前值显示示例 - 展示图例中显示光标位置的数值
+        /// </summary>
+        private void InitializeDayReportData()
+        {
+            var rnd = new Random();
+            var startTime = DateTime.Now.Date;
+
+            DayReportViewModel.BeginTime = startTime;
+            DayReportViewModel.EndTime = startTime.AddDays(100);
+
+            // 温度曲线面板
+            var tempPanel = new CurveGroup()
+            {
+                Legend = "环境温度",
+                Height = 200
+            };
+
+            var tempCurve1 = new CurveData
+            {
+                Name = "最大值",
+                Color = Color.Parse("#FF6B6B")
+            };
+
+            var tempCurve2 = new CurveData
+            {
+                Name = "最小值",
+                Color = Color.Parse("#4ECDC4")
+            };
+
+            // 生成数据点
+            for (int i = 0; i < 100; i++)
+            {
+                var time = startTime.AddDays(i).AddHours(i%10);
+                tempCurve1.Points.Add(new ReportPoint
+                {
+                    ReportTime = time,
+                    Value = 25 + 5 * Math.Sin(i * Math.PI / 180) + rnd.NextDouble() * 1
+                });
+                tempCurve2.Points.Add(new ReportPoint
+                {
+                    ReportTime = time,
+                    Value = 28 + 4 * Math.Cos(i * Math.PI / 150) + rnd.NextDouble() * 0.8
+                });
+            }
+
+            tempPanel.Curves.Add(tempCurve1);
+            tempPanel.Curves.Add(tempCurve2);
+            tempPanel.YMarkers.Add(new YMarker(30, "高温警告"));
+            DayReportViewModel.Items.Add(tempPanel);
+
+            // 压力曲线面板
+            var pressurePanel = new CurveGroup()
+            {
+                Legend = "压力监控",
+                Height = 150
+            };
+
+            var pressureCurve = new CurveData
+            {
+                Name = "平均值",
+                Color = Color.Parse("#45B7D1")
+            };
+
+            for (int i = 0; i < 100; i++)
+            {
+                var time = startTime.AddDays(i).AddHours(rnd.Next(0, 10));
+                pressureCurve.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 100 + 10 * Math.Sin(i * Math.PI / 200) + rnd.NextDouble() * 2
+                });
+            }
+
+            pressurePanel.Curves.Add(pressureCurve);
+            pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
+            DayReportViewModel.Items.Add(pressurePanel);
         }
     }
 }

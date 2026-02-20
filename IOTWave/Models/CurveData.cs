@@ -1,9 +1,10 @@
 using System.ComponentModel;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace IOTWave.Models;
 
-public class CurveData : INotifyPropertyChanged
+public partial class CurveData :ObservableObject
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;
@@ -72,6 +73,10 @@ public class CurveData : INotifyPropertyChanged
         }
     }
 
+    [ObservableProperty]
+    private TimePoint? _cursorPoint;
+  
+
     private DateTime? _currentTime;
     /// <summary>
     /// 当前值对应的时间点
@@ -121,6 +126,7 @@ public class CurveData : INotifyPropertyChanged
         if (index > 0)
         {
             var point = Points[index - 1];
+            CursorPoint = point;
             CurrentValue = point.Value;
             CurrentTime = point.Time;
         }
@@ -134,8 +140,4 @@ public class CurveData : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

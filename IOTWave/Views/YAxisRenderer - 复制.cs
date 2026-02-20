@@ -77,6 +77,7 @@ namespace IOTWave.Views
         public void DrawYAxis(DrawingContext context)
         {
             if (_bounds.Width <= 0) return;
+            if(_panel.ChartGlobal == null) return;
 
             double yAxisWidth = 50;
             var axisBrush = _panel.ChartGlobal.GridBrush ?? Brushes.Black;

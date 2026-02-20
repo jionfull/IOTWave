@@ -24,6 +24,21 @@ public class TimePoint
     }
 }
 
+public class ReportPoint : TimePoint
+{
+    private DateTime _reportTime;
+    /// <summary>
+    /// 报表时间点
+    /// </summary>
+    public DateTime ReportTime { 
+        get => _reportTime;
+        set
+        { 
+            _reportTime = value;
+            base.Time = value.Date;
+        }
+    }
+}
 public class StatuPoint
 {
     public DateTime Time { get; set; }
