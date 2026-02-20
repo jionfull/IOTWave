@@ -50,6 +50,22 @@
                       VerticalScrollBarVisibility="Auto"/>
       </Grid>
     </TabItem>
+    <TabItem Header="滚动条示例2">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="此示例展示多个曲线面板，当面板数量较多时显示滚动条"
+                   Margin="10"
+                   FontSize="14"
+                   Foreground="Gray"/>
+        <views:IOTChart2 Grid.Row="1"
+                         DataContext="{Binding ScrollableViewModel}"
+                         AutoDistributePanelHeight="False"
+                         VerticalScrollBarVisibility="Auto"/>
+      </Grid>
+    </TabItem>
     <TabItem Header="相对时间示例">
       <Grid>
         <Grid.RowDefinitions>

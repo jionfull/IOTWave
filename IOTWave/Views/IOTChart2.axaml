@@ -23,11 +23,55 @@
                                      StatusPanelHeight="20"
                                      TimeMarkers="{Binding TimeMarkers}"
                                      TimeRangeMarkers="{Binding TimeRangeMarkers}"
-                                     UseRelativeTime="{Binding UseRelativeTime}"
-                                     RelativeTimeBase="{Binding RelativeTimeBase}"
-                                     AutoDistributePanelHeight="{Binding AutoDistributePanelHeight}"
-                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}"
-                                     ShowCurrentValue="{Binding $parent[UserControl].ShowCurrentValue}"
+                                     UseRelativeTime="{TemplateBinding UseRelativeTime}"
+                                     RelativeTimeBase="{TemplateBinding RelativeTimeBase}"
+                                     AutoDistributePanelHeight="{TemplateBinding AutoDistributePanelHeight}"
+                                     VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                                     ShowCurrentValue="{TemplateBinding ShowCurrentValue}"
+                                     Background="Black">
+                    <controls:WaveListPanel.DataTemplates>
+                        <DataTemplate DataType="{x:Type models:CurveGroup}">
+                            <controls:CurvePanel
+                                ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
+                                Foreground="#7DD3FC"
+                                Items="{Binding}"
+                                YMarkers="{Binding YMarkers}"
+                                Height="{Binding Height}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">
+                            <controls:StatusPanel
+                                ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
+                                Items="{Binding}"
+                                Height="{Binding Height}"
+                                Margin="0,1" />
+                        </DataTemplate>
+                    </controls:WaveListPanel.DataTemplates>
+                </controls:WaveListPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="controls|IOTChart2.showValue">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <controls:WaveListPanel x:Name="CurveDisplay"
+                                     StartTime="{Binding BeginTime}"
+                                     EndTime="{Binding EndTime}"
+                                     ShowCursor="True"
+                                     ItemsSource="{Binding Items}"
+                                     ShowTimeAxis="True"
+                                     CursorTime="{Binding SelectedTime}"
+                                     GridBrush="#6400B4D8"
+                                     LabelBrush="#7DD3FC"
+                                     IsInteractive="True"
+                                     StatusPanelHeight="20"
+                                     TimeMarkers="{Binding TimeMarkers}"
+                                     TimeRangeMarkers="{Binding TimeRangeMarkers}"
+                                     UseRelativeTime="{TemplateBinding UseRelativeTime}"
+                                     RelativeTimeBase="{TemplateBinding RelativeTimeBase}"
+                                     AutoDistributePanelHeight="{TemplateBinding AutoDistributePanelHeight}"
+                                     VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                                     ShowCurrentValue="{TemplateBinding ShowCurrentValue}"
                                      Background="Black">
                     <controls:WaveListPanel.DataTemplates>
                         <DataTemplate DataType="{x:Type models:CurveGroup}">
