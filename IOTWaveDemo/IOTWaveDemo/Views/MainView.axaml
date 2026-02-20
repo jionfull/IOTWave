@@ -14,87 +14,9 @@
   </Design.DataContext>
 
   <TabControl>
-    <TabItem Header="基本示例">
-      <iot:IOTChart DataContext="{Binding BasicViewModel}" />
-    </TabItem>
-    <TabItem Header="滚动条示例">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="此示例展示多个曲线面板，当面板数量较多时显示滚动条"
-                   Margin="10"
-                   FontSize="14"
-                   Foreground="Gray"/>
-        <iot:IOTChart Grid.Row="1"
-                      DataContext="{Binding ScrollableViewModel}"
-                      AutoDistributePanelHeight="False"
-                      VerticalScrollBarVisibility="Auto"/>
-      </Grid>
-    </TabItem>
-    <TabItem Header="相对时间示例">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="事件型曲线数据：启动时间9:05:43，每秒40点，共7秒。时间轴刻度对齐到基准时间(2s, 4s, 6s, 8s)，光标/标记显示相对时间"
-                   Margin="10"
-                   FontSize="14"
-                   Foreground="Gray"
-                   TextWrapping="Wrap"/>
-        <iot:IOTChart Grid.Row="1"
-                      DataContext="{Binding RelativeTimeViewModel}"/>
-      </Grid>
-    </TabItem>
-    <TabItem Header="当前值显示示例">
-      <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
-      <views:WaveListPanel
-          DataContext="{Binding CurrentValueViewModel}"
-          StartTime="{Binding BeginTime}"
-          EndTime="{Binding EndTime}"
-          ShowCursor="True"
-          ItemsSource="{Binding Items}"
-          ShowTimeAxis="True"
-          GridBrush="#6400B4D8"
-          LabelBrush="#7DD3FC"
-          IsInteractive="True"
-          StatusPanelHeight="20"
-          TimeMarkers="{Binding TimeMarkers}"
-          TimeRangeMarkers="{Binding TimeRangeMarkers}"
-          ShowCurrentValue="True"
-          Background="Black">
-        <views:WaveListPanel.DataTemplates>
-          <DataTemplate DataType="models:CurveGroup">
-            <views:CurvePanel2
-                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
-                Foreground="#7DD3FC"
-                Items="{Binding}"
-                YMarkers="{Binding YMarkers}"
-                Height="{Binding Height}">
-              <!-- 直接定义模板：显示当前值 -->
-              <views:CurvePanel2.Template>
-                <ControlTemplate>
-                  <Grid Background="{TemplateBinding Background}">
-                    <ListBox Name="PART_Legend"
-                             Classes="curveLegendWithValue"
-                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
-                  </Grid>
-                </ControlTemplate>
-              </views:CurvePanel2.Template>
-            </views:CurvePanel2>
-          </DataTemplate>
-          <DataTemplate DataType="models:StatuSeriesGroup">
-            <views:StatusPanel
-                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
-                Items="{Binding}"
-                Height="{Binding Height}"
-                Margin="0,1" />
-          </DataTemplate>
-        </views:WaveListPanel.DataTemplates>
-      </views:WaveListPanel>
-    </TabItem>
+ 
+ 
+ 
      <TabItem Header="日报表显示示例">
       <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
       <views:WaveListPanel
@@ -186,7 +108,7 @@
                             <ContentControl
                               Background="Transparent"
                              
-                              DataContext="{Binding CursorPoint}">
+                              Content="{Binding CursorPoint}">
 
                               <ContentControl.ContentTemplate>
                                 <DataTemplate DataType="models:ReportPoint">
