@@ -8,10 +8,10 @@ using IOTWave.Views;
 
 namespace IOTWave.Views;
 
-public class CurvePanel2 : TemplatedControl
+public class CurvePanel : TemplatedControl
 {
     public static readonly StyledProperty<IChartGlobal> ChartGlobalProperty =
-        AvaloniaProperty.Register<CurvePanel2, IChartGlobal>(nameof(ChartGlobal), null, true, BindingMode.OneWay);
+        AvaloniaProperty.Register<CurvePanel, IChartGlobal>(nameof(ChartGlobal), null, true, BindingMode.OneWay);
 
 
     public IChartGlobal ChartGlobal
@@ -30,16 +30,16 @@ public class CurvePanel2 : TemplatedControl
 
         // 属性
         public static readonly StyledProperty<double> DesiredHeightProperty =
-            AvaloniaProperty.Register<CurvePanel2, double>(nameof(DesiredHeight), 200.0);
+            AvaloniaProperty.Register<CurvePanel, double>(nameof(DesiredHeight), 200.0);
 
         public static readonly StyledProperty<IList<YMarker>> YMarkersProperty =
-            AvaloniaProperty.Register<CurvePanel2, IList<YMarker>>(nameof(YMarkers));
+            AvaloniaProperty.Register<CurvePanel, IList<YMarker>>(nameof(YMarkers));
 
         public static readonly StyledProperty<bool> ShowYAxisProperty =
-            AvaloniaProperty.Register<CurvePanel2, bool>(nameof(ShowYAxis), true);
+            AvaloniaProperty.Register<CurvePanel, bool>(nameof(ShowYAxis), true);
 
         public static readonly StyledProperty<CurveGroup> ItemsProperty =
-            AvaloniaProperty.Register<CurvePanel2, CurveGroup>(nameof(Items), new CurveGroup());
+            AvaloniaProperty.Register<CurvePanel, CurveGroup>(nameof(Items), new CurveGroup());
 
 
 
@@ -80,7 +80,7 @@ public class CurvePanel2 : TemplatedControl
             set => SetValue(ItemsProperty, value);
         }
 
-    public CurvePanel2()
+    public CurvePanel()
     {
         Background = Brushes.Transparent;
         YMarkers = new List<YMarker>();
@@ -94,7 +94,7 @@ public class CurvePanel2 : TemplatedControl
         PointerMoved += OnPointerMoved;
         PointerReleased += OnPointerReleased;
         PointerWheelChanged += OnPointerWheelChanged;
-        ChartGlobalProperty.Changed.AddClassHandler<CurvePanel2>((x,e)=>OnChartGlobalChanged2(e));
+        ChartGlobalProperty.Changed.AddClassHandler<CurvePanel>((x,e)=>OnChartGlobalChanged2(e));
     }
 
     private void OnChartGlobalChanged2(AvaloniaPropertyChangedEventArgs e)

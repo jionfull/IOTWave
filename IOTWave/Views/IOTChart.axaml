@@ -35,7 +35,7 @@
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 
-        <views:CurvePanel2
+        <views:CurvePanel
             ChartGlobal="{Binding $parent[views:WaveListPanel]}"
             Foreground="#7DD3FC"
             Items="{Binding   }"

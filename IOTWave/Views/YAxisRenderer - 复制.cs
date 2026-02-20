@@ -7,7 +7,7 @@ namespace IOTWave.Views
 {
     public class YAxisRenderer2
     {
-        private readonly CurvePanel2 _panel;
+        private readonly CurvePanel _panel;
 
         private double _yMin = 0;
         private double _yMax = 100;
@@ -68,7 +68,7 @@ namespace IOTWave.Views
 
         public IChartGlobal ChartGlobal;
 
-        public YAxisRenderer2(CurvePanel2 panel, IChartGlobal chartGlobal, Func<string, FormattedText> createFormattedText)
+        public YAxisRenderer2(CurvePanel panel, IChartGlobal chartGlobal, Func<string, FormattedText> createFormattedText)
         {
             _panel = panel;
 

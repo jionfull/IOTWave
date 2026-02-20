@@ -73,13 +73,13 @@
           EndTime="{Binding EndTime}">
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
-            <views:CurvePanel2
+            <views:CurvePanel
                 ChartGlobal="{Binding $parent[views:WaveListPanel]}"
                 Foreground="#7DD3FC"
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}">
-              <views:CurvePanel2.Template>
+              <views:CurvePanel.Template>
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
                     <ListBox Name="PART_Legend"
@@ -87,8 +87,8 @@
                              ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
                   </Grid>
                 </ControlTemplate>
-              </views:CurvePanel2.Template>
-            </views:CurvePanel2>
+              </views:CurvePanel.Template>
+            </views:CurvePanel>
           </DataTemplate>
           <DataTemplate DataType="models:StatuSeriesGroup">
             <views:StatusPanel
@@ -111,13 +111,13 @@
           EndTime="{Binding EndTime}">
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
-            <views:CurvePanel2
+            <views:CurvePanel
                 ChartGlobal="{Binding $parent[views:WaveListPanel]}"
                 Foreground="#7DD3FC"
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}">
-              <views:CurvePanel2.Template>
+              <views:CurvePanel.Template>
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
                     <ListBox Name="PART_Legend"
@@ -125,8 +125,8 @@
                              ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
                   </Grid>
                 </ControlTemplate>
-              </views:CurvePanel2.Template>
-            </views:CurvePanel2>
+              </views:CurvePanel.Template>
+            </views:CurvePanel>
           </DataTemplate>
           <DataTemplate DataType="models:StatuSeriesGroup">
             <views:StatusPanel
