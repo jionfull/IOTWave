@@ -3,4 +3,5 @@
     <StyleInclude Source="avares://IOTWave/Views/WaveListPanel.axaml"/>
   <StyleInclude Source="avares://IOTWave/Views/CurvePanelStyles.axaml"/>
   <StyleInclude Source="avares://IOTWave/Views/CurvePanel.axaml"/>
+  <StyleInclude Source="avares://IOTWave/Views/IOTChart2.axaml"/>
 </Styles>

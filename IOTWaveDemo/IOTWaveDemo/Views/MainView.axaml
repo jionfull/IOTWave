@@ -31,6 +31,9 @@
     <TabItem Header="基本示例">
       <iot:IOTChart DataContext="{Binding BasicViewModel}" />
     </TabItem>
+    <TabItem Header="IOTChart2示例">
+      <views:IOTChart2 DataContext="{Binding BasicViewModel}" />
+    </TabItem>
     <TabItem Header="滚动条示例">
       <Grid>
         <Grid.RowDefinitions>

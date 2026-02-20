@@ -1,69 +1,69 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:IOTWave.Views">
+        xmlns:controls="using:IOTWave.Views"
+        xmlns:views="clr-namespace:IOTWave.Views;assembly=IOTWave"
+        xmlns:models="clr-namespace:IOTWave.Models;assembly=IOTWave">
     <Design.PreviewWith>
         <controls:WaveListPanel />
     </Design.PreviewWith>
 
     <Style Selector="controls|WaveListPanel">
         <!-- Set Defaults -->
-        <Setter Property="Template" >
+        <Setter Property="Template">
             <ControlTemplate>
-                  
+
                 <!-- 主容器 -->
-              
-                    <Grid Name="PART_MainGrid" RowDefinitions="*,Auto"   Background="{TemplateBinding Background}" >
-                    
-                        <!-- TimeMarker 和 Cursor 绘制层 -->
-                        <controls:CursorCanvas Grid.Row="0" Grid.RowSpan="2"   Name="PART_CursorCanvas"
-                                IsHitTestVisible="False"
-                                ChartGlobal="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                TimeMarkers="{TemplateBinding TimeMarkers}"
-                                TimeRangeMarkers="{TemplateBinding TimeRangeMarkers}"
-                                LeftPadding="{TemplateBinding LeftPadding}"
-                                RightPadding="{TemplateBinding RightPadding}"
-                                CursorPosition="{TemplateBinding CursorPosition}"
-                                CursorColor="{TemplateBinding CursorColor}"
-                                CursorWidth="{TemplateBinding CursorWidth}"
-                                ShowCursor="{TemplateBinding ShowCursor}"
-                                CursorTime="{TemplateBinding CursorTime}"
-                                ZIndex="0"
-                                >
-                        </controls:CursorCanvas>
-                        
-                          <ScrollViewer Grid.Row="0"  Name="PART_ScrollViewer"
-                                                       HorizontalAlignment="Stretch"
-                                                       Margin="0,16,0,0"
-                                                      HorizontalScrollBarVisibility="Auto"
-                                                      VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
-                                                      Background="Transparent"
-                                                      ZIndex="-1">
-                         <ItemsPresenter x:Name="PART_ItemsPresenter"
-                                       />
-                        </ScrollViewer>
+
+                <Grid Name="PART_MainGrid" RowDefinitions="*,Auto" Background="{TemplateBinding Background}">
+
+                    <!-- TimeMarker 和 Cursor 绘制层 -->
+                    <controls:CursorCanvas Grid.Row="0" Grid.RowSpan="2" Name="PART_CursorCanvas"
+                                           IsHitTestVisible="False"
+                                           ChartGlobal="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                           TimeMarkers="{TemplateBinding TimeMarkers}"
+                                           TimeRangeMarkers="{TemplateBinding TimeRangeMarkers}"
+                                           LeftPadding="{TemplateBinding LeftPadding}"
+                                           RightPadding="{TemplateBinding RightPadding}"
+                                           CursorPosition="{TemplateBinding CursorPosition}"
+                                           CursorColor="{TemplateBinding CursorColor}"
+                                           CursorWidth="{TemplateBinding CursorWidth}"
+                                           ShowCursor="{TemplateBinding ShowCursor}"
+                                           CursorTime="{TemplateBinding CursorTime}"
+                                           ZIndex="0">
+                    </controls:CursorCanvas>
+
+                    <ScrollViewer Grid.Row="0" Name="PART_ScrollViewer"
+                                  HorizontalAlignment="Stretch"
+                                  Margin="0,16,0,0"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                                  Background="Transparent"
+                                  ZIndex="-1">
+                        <ItemsPresenter x:Name="PART_ItemsPresenter" />
+                    </ScrollViewer>
 
 
-                            <controls:TimeAxis Name="PART_TimeAxisCanvas"
-                            Grid.Row="1"
-                            Height="40"
-                            ChartGlobal="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                            ZIndex="-1"
-                          />
-                    </Grid>
-               
-         
+                    <controls:TimeAxis Name="PART_TimeAxisCanvas"
+                                       Grid.Row="1"
+                                       Height="40"
+                                       ChartGlobal="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                       ZIndex="-1" />
+                </Grid>
+
+
             </ControlTemplate>
         </Setter>
-    
-            <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
+
+
+        <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
             <Setter Property="ZIndex" Value="-2" />
         </Style>
-      
-            <Style Selector="^ /template/ controls|TimeAxis#PART_TimeAxisCanvas">
+
+        <Style Selector="^ /template/ controls|TimeAxis#PART_TimeAxisCanvas">
             <Setter Property="ZIndex" Value="-1" />
         </Style>
-     
-            <Style Selector="^ /template/ controls|CursorCanvas#PART_CursorCanvas">
+
+        <Style Selector="^ /template/ controls|CursorCanvas#PART_CursorCanvas">
             <Setter Property="ZIndex" Value="0" />
         </Style>
     </Style>
