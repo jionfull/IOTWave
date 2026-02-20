@@ -13,6 +13,20 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
+  <UserControl.Styles>
+    <!-- WaveListPanel 公共样式（仅静态属性） -->
+    <Style Selector="views|WaveListPanel.demoPanel">
+      <Setter Property="ShowCursor" Value="True"/>
+      <Setter Property="ShowTimeAxis" Value="True"/>
+      <Setter Property="GridBrush" Value="#6400B4D8"/>
+      <Setter Property="LabelBrush" Value="#7DD3FC"/>
+      <Setter Property="IsInteractive" Value="True"/>
+      <Setter Property="StatusPanelHeight" Value="20"/>
+      <Setter Property="ShowCurrentValue" Value="True"/>
+      <Setter Property="Background" Value="Black"/>
+    </Style>
+  </UserControl.Styles>
+
   <TabControl>
     <TabItem Header="基本示例">
       <iot:IOTChart DataContext="{Binding BasicViewModel}" />
@@ -49,22 +63,14 @@
       </Grid>
     </TabItem>
     <TabItem Header="当前值显示示例">
-      <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
       <views:WaveListPanel
+          Classes="demoPanel"
           DataContext="{Binding CurrentValueViewModel}"
-          StartTime="{Binding BeginTime}"
-          EndTime="{Binding EndTime}"
-          ShowCursor="True"
           ItemsSource="{Binding Items}"
-          ShowTimeAxis="True"
-          GridBrush="#6400B4D8"
-          LabelBrush="#7DD3FC"
-          IsInteractive="True"
-          StatusPanelHeight="20"
           TimeMarkers="{Binding TimeMarkers}"
           TimeRangeMarkers="{Binding TimeRangeMarkers}"
-          ShowCurrentValue="True"
-          Background="Black">
+          StartTime="{Binding BeginTime}"
+          EndTime="{Binding EndTime}">
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
             <views:CurvePanel2
@@ -73,7 +79,6 @@
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}">
-              <!-- 直接定义模板：显示当前值 -->
               <views:CurvePanel2.Template>
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
@@ -96,22 +101,14 @@
       </views:WaveListPanel>
     </TabItem>
      <TabItem Header="日报表显示示例">
-      <!-- 通过自定义 DataTemplate 给 CurvePanel2 设置 Classes -->
       <views:WaveListPanel
+          Classes="demoPanel"
           DataContext="{Binding DayReportViewModel}"
-          StartTime="{Binding BeginTime}"
-          EndTime="{Binding EndTime}"
-          ShowCursor="True"
           ItemsSource="{Binding Items}"
-          ShowTimeAxis="True"
-          GridBrush="#6400B4D8"
-          LabelBrush="#7DD3FC"
-          IsInteractive="True"
-          StatusPanelHeight="20"
           TimeMarkers="{Binding TimeMarkers}"
           TimeRangeMarkers="{Binding TimeRangeMarkers}"
-          ShowCurrentValue="True"
-          Background="Black">
+          StartTime="{Binding BeginTime}"
+          EndTime="{Binding EndTime}">
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
             <views:CurvePanel2
@@ -120,7 +117,6 @@
                 Items="{Binding}"
                 YMarkers="{Binding YMarkers}"
                 Height="{Binding Height}">
-              <!-- 日报表图例模板 -->
               <views:CurvePanel2.Template>
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
