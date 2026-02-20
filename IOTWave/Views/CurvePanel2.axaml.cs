@@ -330,6 +330,10 @@ public class CurvePanel2 : TemplatedControl
 
     private void DrawCurves(DrawingContext context)
     {
+        if (ChartGlobal == null)
+        {
+            return;
+        }
         var drawArea = new Rect(
             ChartGlobal.LeftPadding,
             0,

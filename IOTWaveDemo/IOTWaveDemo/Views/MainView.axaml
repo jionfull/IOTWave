@@ -182,6 +182,28 @@
                                 </Style>
                               </CheckBox.Styles>
                             </CheckBox>
+                            <!-- 当前值显示区域 -->
+                            <ContentControl
+                              Background="Transparent"
+                             
+                              DataContext="{Binding CursorPoint}">
+
+                              <ContentControl.ContentTemplate>
+                                <DataTemplate DataType="models:ReportPoint">
+                                  <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ReportTime}"
+                                               FontSize="10"
+                                               Foreground="Aqua"
+                                               Opacity="0.8"/>
+
+                                    <TextBlock Text="{Binding Value}"
+                                               FontSize="10"
+                                               Foreground="Aqua"
+                                               FontWeight="Bold"/>
+                                  </StackPanel>
+                                </DataTemplate>
+                              </ContentControl.ContentTemplate>
+                            </ContentControl>
                           </StackPanel>
                         </DataTemplate>
                       </ListBox.ItemTemplate>

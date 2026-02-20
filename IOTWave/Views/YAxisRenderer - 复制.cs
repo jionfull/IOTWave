@@ -158,6 +158,7 @@ namespace IOTWave.Views
         public void DrawYMarkers(DrawingContext context)
         {
             double yAxisWidth = 50;
+            if(_panel.ChartGlobal==null) return;
 
             foreach (var marker in _yMarkers)
             {
