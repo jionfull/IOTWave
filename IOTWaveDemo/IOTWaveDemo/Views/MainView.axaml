@@ -125,7 +125,7 @@
                 <ControlTemplate>
                   <Grid Background="{TemplateBinding Background}">
                     <ListBox Name="PART_Legend"
-                             Classes="reportLegend"
+                             Classes="transparentListBoxBase reportLegend"
                              ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
                   </Grid>
                 </ControlTemplate>

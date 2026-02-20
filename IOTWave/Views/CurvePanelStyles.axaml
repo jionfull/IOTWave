@@ -169,8 +169,8 @@
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
-    <!-- 横向透明背景 ListBox 样式 -->
-    <Style Selector="ListBox.horizontalTransparentListBox">
+    <!-- 透明背景 ListBox 公共基础样式（包含 Template） -->
+    <Style Selector="ListBox.transparentListBoxBase">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -210,78 +210,25 @@
         </Setter>
     </Style>
 
-    <!-- 横向透明背景 ListBox 的 ListBoxItem 样式 -->
-    <Style Selector="ListBox.horizontalTransparentListBox > ListBoxItem">
+    <!-- 透明背景 ListBoxItem 公共样式 -->
+    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="0"/>
     </Style>
 
-    <Style Selector="ListBox.horizontalTransparentListBox > ListBoxItem:pointerover /template/ ContentPresenter">
+    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
-    <Style Selector="ListBox.horizontalTransparentListBox > ListBoxItem:selected /template/ ContentPresenter">
+    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem:selected /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
     <!-- 日报表 ListBox 样式 -->
     <Style Selector="ListBox.reportLegend">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="ItemTemplate" Value="{StaticResource ReportLegendItemTemplate}"/>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Background="Transparent"/>
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Border Name="border"
-                            ClipToBounds="{TemplateBinding ClipToBounds}"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            BorderThickness="0">
-                        <ScrollViewer Name="PART_ScrollViewer"
-                                      VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
-                                      HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto"
-                                      IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
-                                      IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
-                                      IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
-                                      AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
-                                      BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
-                            <ItemsPresenter Name="PART_ItemsPresenter"
-                                            ItemsPanel="{TemplateBinding ItemsPanel}"
-                                            Margin="{TemplateBinding Padding}"/>
-                        </ScrollViewer>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- 日报表 ListBoxItem 样式 -->
-    <Style Selector="ListBox.reportLegend > ListBoxItem">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="0"/>
-    </Style>
-
-    <Style Selector="ListBox.reportLegend > ListBoxItem:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
-    <Style Selector="ListBox.reportLegend > ListBoxItem:selected /template/ ContentPresenter">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
 </Styles>
