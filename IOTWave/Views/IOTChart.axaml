@@ -31,8 +31,7 @@
                                 RelativeTimeBase="{Binding RelativeTimeBase}"
                                 RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                  AutoDistributePanelHeight="{Binding $parent[UserControl].AutoDistributePanelHeight}"
-                                 VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}"
-                                 ShowCurrentValue="{Binding $parent[UserControl].ShowCurrentValue}">
+                                 VerticalScrollBarVisibility="{Binding $parent[UserControl].VerticalScrollBarVisibility}">
     <views:WaveListPanel.DataTemplates>
       <DataTemplate DataType="{x:Type models:CurveGroup}">
 

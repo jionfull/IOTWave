@@ -28,7 +28,6 @@
                                         RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                         AutoDistributePanelHeight="{Binding $parent[controls:IOTChart2].AutoDistributePanelHeight}"
                                         VerticalScrollBarVisibility="{Binding $parent[controls:IOTChart2].VerticalScrollBarVisibility}"
-                                        ShowCurrentValue="{Binding $parent[controls:IOTChart2].ShowCurrentValue}"
                                         Background="Black">
                     <controls:WaveListPanel.DataTemplates>
                         <DataTemplate DataType="{x:Type models:CurveGroup}">
@@ -52,7 +51,7 @@
         </Setter>
     </Style>
     <Style Selector="controls|IOTChart2.showValue">
-        <!-- Set Defaults -->
+        <!-- 带当前值显示的模板 -->
         <Setter Property="Template">
             <ControlTemplate>
                 <controls:WaveListPanel x:Name="CurveDisplay"
@@ -73,7 +72,6 @@
                                         RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                         AutoDistributePanelHeight="{Binding $parent[controls:IOTChart2].AutoDistributePanelHeight}"
                                         VerticalScrollBarVisibility="{Binding $parent[controls:IOTChart2].VerticalScrollBarVisibility}"
-                                        ShowCurrentValue="{Binding $parent[controls:IOTChart2].ShowCurrentValue}"
                                         Background="Black">
                     <controls:WaveListPanel.DataTemplates>
                         <DataTemplate DataType="{x:Type models:CurveGroup}">
@@ -82,7 +80,17 @@
                                 Foreground="#7DD3FC"
                                 Items="{Binding}"
                                 YMarkers="{Binding YMarkers}"
-                                Height="{Binding Height}" />
+                                Height="{Binding Height}">
+                                <controls:CurvePanel.Template>
+                                    <ControlTemplate>
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ListBox Name="PART_Legend"
+                                                     Classes="legendBox curveLegendWithValue"
+                                                     ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </controls:CurvePanel.Template>
+                            </controls:CurvePanel>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">
                             <controls:StatusPanel
@@ -93,32 +101,6 @@
                         </DataTemplate>
                     </controls:WaveListPanel.DataTemplates>
                 </controls:WaveListPanel>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- 为 IOTChart2 内的 CurvePanel 设置自定义模板 -->
-    <Style Selector="controls|IOTChart2 /template/ controls|CurvePanel">
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Grid Background="{TemplateBinding Background}">
-                    <ListBox Name="PART_Legend"
-                             Classes="legendBox curveLegend"
-                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
-                </Grid>
-            </ControlTemplate>
-        </Setter>
-    </Style>
-
-    <!-- 为 IOTChart2.showValue 内的 CurvePanel 设置带值的模板 -->
-    <Style Selector="controls|IOTChart2.showValue /template/ controls|CurvePanel">
-        <Setter Property="Template">
-            <ControlTemplate>
-                <Grid Background="{TemplateBinding Background}">
-                    <ListBox Name="PART_Legend"
-                             Classes="legendBox curveLegendWithValue"
-                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
-                </Grid>
             </ControlTemplate>
         </Setter>
     </Style>

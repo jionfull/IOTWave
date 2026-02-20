@@ -22,7 +22,6 @@
       <Setter Property="LabelBrush" Value="#7DD3FC"/>
       <Setter Property="IsInteractive" Value="True"/>
       <Setter Property="StatusPanelHeight" Value="20"/>
-      <Setter Property="ShowCurrentValue" Value="True"/>
       <Setter Property="Background" Value="Black"/>
     </Style>
   </UserControl.Styles>
@@ -49,21 +48,7 @@
                          VerticalScrollBarVisibility="Auto"/>
       </Grid>
     </TabItem>
-    <TabItem Header="相对时间示例">
-      <Grid>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="事件型曲线数据：启动时间9:05:43，每秒40点，共7秒。时间轴刻度对齐到基准时间(2s, 4s, 6s, 8s)，光标/标记显示相对时间"
-                   Margin="10"
-                   FontSize="14"
-                   Foreground="Gray"
-                   TextWrapping="Wrap"/>
-        <iot:IOTChart Grid.Row="1"
-                      DataContext="{Binding RelativeTimeViewModel}"/>
-      </Grid>
-    </TabItem>
+ 
     <TabItem Header="相对时间示例2">
       <Grid>
         <Grid.RowDefinitions>
@@ -116,6 +101,10 @@
           </DataTemplate>
         </views:WaveListPanel.DataTemplates>
       </views:WaveListPanel>
+    </TabItem>
+      <TabItem Header="当前值显示示例2">
+       <views:IOTChart2 Classes="showValue" DataContext="{Binding CurrentValueViewModel}" />
+     
     </TabItem>
      <TabItem Header="日报表显示示例">
       <views:WaveListPanel

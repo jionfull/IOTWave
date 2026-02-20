@@ -24,10 +24,6 @@ public partial class IOTChart : UserControl
         AvaloniaProperty.Register<IOTChart, string>(
             nameof(RelativeTimeBaseLabel), "基准");
 
-    public static readonly StyledProperty<bool> ShowCurrentValueProperty =
-        AvaloniaProperty.Register<IOTChart, bool>(
-            nameof(ShowCurrentValue), false);
-
     public bool AutoDistributePanelHeight
     {
         get => GetValue(AutoDistributePanelHeightProperty);
@@ -65,15 +61,6 @@ public partial class IOTChart : UserControl
     {
         get => GetValue(RelativeTimeBaseLabelProperty);
         set => SetValue(RelativeTimeBaseLabelProperty, value);
-    }
-
-    /// <summary>
-    /// 是否在图例中显示光标位置的当前值
-    /// </summary>
-    public bool ShowCurrentValue
-    {
-        get => GetValue(ShowCurrentValueProperty);
-        set => SetValue(ShowCurrentValueProperty, value);
     }
 
     public IOTChart()
