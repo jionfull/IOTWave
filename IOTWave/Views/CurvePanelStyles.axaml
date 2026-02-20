@@ -129,8 +129,8 @@
         </DataTemplate>
     </Styles.Resources>
 
-    <!-- 透明背景 ListBox 公共基础样式（包含 Template） -->
-    <Style Selector="ListBox.transparentListBoxBase">
+    <!-- 图例 ListBox 公共基础样式 -->
+    <Style Selector="ListBox.legendBox">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -170,18 +170,18 @@
         </Setter>
     </Style>
 
-    <!-- 透明背景 ListBoxItem 公共样式 -->
-    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem">
+    <!-- 图例 ListBoxItem 公共样式 -->
+    <Style Selector="ListBox.legendBox > ListBoxItem">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="0"/>
     </Style>
 
-    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem:pointerover /template/ ContentPresenter">
+    <Style Selector="ListBox.legendBox > ListBoxItem:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
-    <Style Selector="ListBox.transparentListBoxBase > ListBoxItem:selected /template/ ContentPresenter">
+    <Style Selector="ListBox.legendBox > ListBoxItem:selected /template/ ContentPresenter">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
