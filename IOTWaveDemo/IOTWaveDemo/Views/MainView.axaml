@@ -185,20 +185,20 @@
                             <!-- 当前值显示区域 -->
                             <ContentControl
                               Background="Transparent"
-                             
-                              DataContext="{Binding CursorPoint}">
+                              Tag="{Binding Brush}"
+                              Content="{Binding CursorPoint}">
 
                               <ContentControl.ContentTemplate>
                                 <DataTemplate DataType="models:ReportPoint">
-                                  <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding ReportTime}"
+                                  <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
                                                FontSize="10"
-                                               Foreground="Aqua"
+                                               Foreground="{Binding $parent[ContentControl].Tag}"
                                                Opacity="0.8"/>
 
-                                    <TextBlock Text="{Binding Value}"
+                                    <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
                                                FontSize="10"
-                                               Foreground="Aqua"
+                                               Foreground="{Binding $parent[ContentControl].Tag}"
                                                FontWeight="Bold"/>
                                   </StackPanel>
                                 </DataTemplate>
