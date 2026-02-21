@@ -71,7 +71,8 @@
             <TextBlock Text="{Binding RelativeCursorTime}"
                        FontSize="10"
                        Foreground="{Binding Brush}"
-                       Opacity="0.8"/>
+                       Opacity="0.8"
+                       IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNotNullOrEmpty}}"/>
 
             <!-- 绝对时间（仅在没有相对时间时显示） -->
             <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
