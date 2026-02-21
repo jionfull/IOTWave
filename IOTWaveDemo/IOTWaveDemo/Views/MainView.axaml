@@ -25,6 +25,30 @@
       <Setter Property="Background" Value="Black"/>
     </Style>
 
+    <!-- DataGrid 样式 -->
+    <Style Selector="DataGrid">
+      <Setter Property="Foreground" Value="#7DD3FC"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Background" Value="#1A1A1A"/>
+    </Style>
+    <Style Selector="DataGridRow">
+      <Setter Property="Background" Value="#1A1A1A"/>
+      <Setter Property="Height" Value="32"/>
+    </Style>
+    <Style Selector="DataGridCell">
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="4"/>
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    <Style Selector="DataGridCell:pointerover /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Opacity" Value="0.15"/>
+      <Setter Property="Fill" Value="#7DD3FC"/>
+    </Style>
+    <Style Selector="DataGridCell:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Opacity" Value="0.25"/>
+      <Setter Property="Fill" Value="#00B4D8"/>
+    </Style>
+
     <!-- 时间跳转按钮样式 -->
     <Style Selector="Button.jumpBtn">
       <Setter Property="Foreground" Value="White"/>
@@ -55,7 +79,58 @@
   <TabControl>
 
     <TabItem Header="IOTChart2示例">
-      <views:IOTChart2 DataContext="{Binding BasicViewModel}" />
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="200"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 左侧面板列表 -->
+        <Border Background="#1A1A1A" BorderBrush="#333" BorderThickness="0,0,1,0">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="面板列表"
+                       Margin="10,8"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       Foreground="White"/>
+            
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding BasicViewModel.Items}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="False"
+                      Background="#1A1A1A"
+                      BorderThickness="0"
+                      RowBackground="#1A1A1A"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="None">
+              <DataGrid.Columns>
+               
+                <DataGridTemplateColumn Width="*" Header="名称"  >
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate DataType="models:DataSeriesGroupBase">
+                      <CheckBox Content="{Binding Name}"
+                                IsChecked="{Binding IsVisible}"
+                                Foreground="#7DD3FC"
+                                Background="Transparent"
+                                Margin="8,5"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                  
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </Grid>
+        </Border>
+        
+        <!-- 右侧图表 -->
+        <views:IOTChart2 Grid.Column="1"
+                         DataContext="{Binding BasicViewModel}" />
+      </Grid>
     </TabItem>
 
     <TabItem Header="滚动条示例2">
