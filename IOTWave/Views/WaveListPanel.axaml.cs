@@ -514,6 +514,14 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             StartTime = targetTime - TimeSpan.FromTicks(timeSpan.Ticks / 2);
             EndTime = targetTime + TimeSpan.FromTicks(timeSpan.Ticks / 2);
 
+            // 将光标移动到目标时间位置（内容区域中心）
+            var viewportWidth = GetEffectiveViewportWidth();
+            if (viewportWidth > LeftPadding + RightPadding)
+            {
+                // 光标位置 = LeftPadding + 内容区域宽度的一半
+                CursorPosition = LeftPadding + (viewportWidth - LeftPadding - RightPadding) / 2;
+            }
+
             OnTimeRangeChanged();
         }
         finally
@@ -531,6 +539,10 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         var timeSpan = EndTime - StartTime;
         StartTime = dataStartTime;
         EndTime = dataStartTime + timeSpan;
+        
+        // 将光标移动到起始时间位置
+        CursorPosition = LeftPadding;
+        
         OnTimeRangeChanged();
     }
 
@@ -543,6 +555,14 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         var timeSpan = EndTime - StartTime;
         EndTime = dataEndTime;
         StartTime = dataEndTime - timeSpan;
+        
+        // 将光标移动到结束时间位置
+        var viewportWidth = GetEffectiveViewportWidth();
+        if (viewportWidth > RightPadding)
+        {
+            CursorPosition = viewportWidth - RightPadding;
+        }
+        
         OnTimeRangeChanged();
     }
 
@@ -571,12 +591,33 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             _isJumping = true;
             StartTime = targetTime - TimeSpan.FromTicks(visibleSpan.Ticks / 2);
             EndTime = targetTime + TimeSpan.FromTicks(visibleSpan.Ticks / 2);
+            
+            // 将光标移动到目标时间位置（内容区域中心）
+            var viewportWidth = GetEffectiveViewportWidth();
+            if (viewportWidth > LeftPadding + RightPadding)
+            {
+                // 光标位置 = LeftPadding + 内容区域宽度的一半
+                CursorPosition = LeftPadding + (viewportWidth - LeftPadding - RightPadding) / 2;
+            }
+            
             OnTimeRangeChanged();
         }
         finally
         {
             _isJumping = false;
         }
+    }
+
+    /// <summary>
+    /// 获取有效的视口宽度
+    /// </summary>
+    private double GetEffectiveViewportWidth()
+    {
+        if (_scrollViewer != null && _scrollViewer.Viewport.Width > 0)
+        {
+            return _scrollViewer.Viewport.Width;
+        }
+        return Bounds.Width;
     }
 
     #endregion
@@ -929,24 +970,21 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     // 更新时间游标
     private void UpdateCursorTime()
     {
-        if (_scrollViewer == null || !ShowCursor) return;
-        if (_timeAxisCanvas == null) return;
+        if (!ShowCursor) return;
 
+        var viewportWidth = GetEffectiveViewportWidth();
+        
         if (CursorPosition < LeftPadding)
         {
             CursorPosition = LeftPadding;
         }
 
-        if (CursorPosition > _scrollViewer.Viewport.Width - RightPadding)
+        if (viewportWidth > RightPadding && CursorPosition > viewportWidth - RightPadding)
         {
-            CursorPosition = _scrollViewer.Viewport.Width - RightPadding;
+            CursorPosition = viewportWidth - RightPadding;
         }
 
-
-
         CursorTime = XToTime(CursorPosition);
-        return;
-
     }
 
 
@@ -967,8 +1005,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
 
     public double TimeToX(DateTime time)
     {
-        if (_scrollViewer == null) return double.NaN;
-        var viewportWidth = _scrollViewer.Viewport.Width - LeftPadding - RightPadding;
+        var viewportWidth = GetEffectiveViewportWidth() - LeftPadding - RightPadding;
         var timeSpan = EndTime - StartTime;
         if (timeSpan.Ticks <= 0 || viewportWidth <= 0) return double.NaN;
 
@@ -979,9 +1016,7 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
 
     public DateTime XToTime(double x)
     {
-        if (_scrollViewer == null) return DateTime.MinValue;
-
-        var viewportWidth = _scrollViewer.Viewport.Width - LeftPadding - RightPadding;
+        var viewportWidth = GetEffectiveViewportWidth() - LeftPadding - RightPadding;
         if (viewportWidth <= 0) return DateTime.MinValue;
 
         // 鼠标相对于内容区的位置（StartTime 对应的 X 位置是 LeftPadding）
