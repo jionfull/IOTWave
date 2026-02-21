@@ -120,18 +120,16 @@
                     </CheckBox.Styles>
                 </CheckBox>
                 <!-- 当前值显示区域 -->
-               
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
-                                           FontSize="10"
-                                            Foreground="{Binding Brush}"
-                                           Opacity="0.8"/>
-                                <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
-                                           FontSize="10"
-                                             Foreground="{Binding Brush}"
-                                           FontWeight="Bold"/>
-                            </StackPanel>
-                     
+                <StackPanel Orientation="Vertical" Margin="20,0,0,0">
+                    <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss}'}"
+                               FontSize="10"
+                               Foreground="{Binding Brush}"
+                               Opacity="0.8"/>
+                    <TextBlock Text="{Binding CursorPoint.Value, StringFormat='{}{0:F2}'}"
+                               FontSize="10"
+                               Foreground="{Binding Brush}"
+                               FontWeight="Bold"/>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </Styles.Resources>
