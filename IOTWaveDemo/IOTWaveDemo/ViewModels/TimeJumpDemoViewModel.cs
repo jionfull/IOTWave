@@ -38,14 +38,7 @@ public partial class TimeJumpDemoViewModel : ObservableObject
         _chart = chart;
     }
 
-    /// <summary>
-    /// 获取完整的跳转目标时间
-    /// </summary>
-    private DateTime GetFullJumpTargetTime()
-    {
-        var date = _dataViewModel.JumpTargetTime?.Date ?? DateTime.Now.Date;
-        return date + JumpTargetTimeSpan;
-    }
+   
 
     /// <summary>
     /// 跳转到起始位置
@@ -78,8 +71,8 @@ public partial class TimeJumpDemoViewModel : ObservableObject
     /// 跳转到指定时间
     /// </summary>
     [RelayCommand]
-    private void JumpToTargetTime()
+    private void JumpToTargetTime6()
     {
-        _chart?.WaveListPanel?.JumpToTime(GetFullJumpTargetTime());
+        _chart?.WaveListPanel?.JumpToTime(_dataViewModel.DataStartTime.AddHours(6));
     }
 }

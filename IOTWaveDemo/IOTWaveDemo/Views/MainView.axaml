@@ -175,15 +175,10 @@
 
             <TextBlock Text="指定时间：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
 
-            <DatePicker SelectedDate="{Binding TimeJumpDemoViewModel.DataViewModel.JumpTargetTime, Mode=TwoWay}"
-                       VerticalAlignment="Center"/>
+       
 
-            <TimePicker SelectedTime="{Binding TimeJumpDemoViewModel.JumpTargetTimeSpan, Mode=TwoWay}"
-                       VerticalAlignment="Center"
-                       Width="120"/>
-
-            <Button Content="跳转到指定时间"
-                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTimeCommand}"
+            <Button Content="跳转到6点"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTime6Command}"
                     Background="#10B981" Foreground="White" Padding="10,5"/>
           </StackPanel>
         </Border>
