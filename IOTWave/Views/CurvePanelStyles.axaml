@@ -39,61 +39,55 @@
             </CheckBox>
         </DataTemplate>
 
-        <!-- 带数值显示的模板：显示曲线名称 + 当前时间 + 当前值 -->
-        <DataTemplate x:Key="CurveLegendWithValueTemplate" DataType="models:CurveData">
-            <StackPanel Orientation="Vertical" Margin="5,0" Spacing="2">
-                <!-- 曲线名称和可见性控制 -->
-                <CheckBox Background="Transparent"
-                          IsChecked="{Binding IsVisible}"
-                          Content="{Binding Name}"
-                          Foreground="{Binding Brush}">
-                    <CheckBox.Styles>
-                        <Style Selector="CheckBox:pointerover">
-                            <Setter Property="Foreground" Value="{Binding Brush}"/>
-                        </Style>
-                        <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                        </Style>
-                        <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="BorderBrush" Value="{Binding Brush}"/>
-                        </Style>
-                    </CheckBox.Styles>
-                </CheckBox>
+   
 
-                <!-- 当前值显示区域 -->
-                <StackPanel Orientation="Horizontal" Spacing="4" Margin="20,0,0,0">
-                    <!-- 相对时间（仅在相对时间模式下显示） -->
-                    <TextBlock Text="{Binding RelativeCursorTime}"
-                               FontSize="10"
-                               Foreground="{Binding Brush}"
-                               Opacity="0.8"/>
-                    <TextBlock Text=":"
-                               FontSize="10"
-                               Foreground="{Binding Brush}"
-                               Opacity="0.6"
-                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNotNullOrEmpty}}"/>
-                    <!-- 绝对时间（仅在没有相对时间时显示） -->
-                    <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
-                               FontSize="10"
-                               Foreground="{Binding Brush}"
-                               Opacity="0.8"
-                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNullOrEmpty}}"/>
-                    <TextBlock Text=":"
-                               FontSize="10"
-                               Foreground="{Binding Brush}"
-                               Opacity="0.6"
-                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNullOrEmpty}}"/>
-                    <TextBlock Text="{Binding CursorPoint.Value, StringFormat='{}{0:F2}'}"
-                               FontSize="10"
-                               Foreground="{Binding Brush}"
-                               FontWeight="Bold"/>
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
+      <DataTemplate x:Key="CurveLegendWithValueTemplate" DataType="models:CurveData">
+        <StackPanel Orientation="Vertical" Margin="5,0" Spacing="2">
+          <!-- 曲线名称和可见性控制 -->
+          <CheckBox Background="Transparent"
+                    IsChecked="{Binding IsVisible}"
+                    Content="{Binding Name}"
+                    Foreground="{Binding Brush}">
+            <CheckBox.Styles>
+              <Style Selector="CheckBox:pointerover">
+                <Setter Property="Foreground" Value="{Binding Brush}"/>
+              </Style>
+              <Style Selector="CheckBox:unchecked /template/ Border#NormalRectangle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+              </Style>
+              <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="{Binding Brush}"/>
+              </Style>
+            </CheckBox.Styles>
+          </CheckBox>
+
+          <!-- 当前值显示区域 -->
+          <StackPanel Orientation="Vertical" Spacing="2" Margin="20,0,0,0">
+            <!-- 相对时间（仅在相对时间模式下显示） -->
+            <TextBlock Text="{Binding RelativeCursorTime}"
+                       FontSize="10"
+                       Foreground="{Binding Brush}"
+                       Opacity="0.8"
+                       IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNotNullOrEmpty}}"/>
+
+            <!-- 绝对时间（仅在没有相对时间时显示） -->
+            <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
+                       FontSize="10"
+                       Foreground="{Binding Brush}"
+                       Opacity="0.8"
+                       IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNullOrEmpty}}"/>
+
+            <TextBlock Text="{Binding CursorPoint.Value, StringFormat='{}{0:F2}'}"
+                       FontSize="10"
+                       Foreground="{Binding Brush}"
+                       FontWeight="Bold"/>
+          </StackPanel>
+        </StackPanel>
+      </DataTemplate>
 
         <!-- 日报表图例项模板 -->
         <DataTemplate x:Key="ReportLegendItemTemplate" DataType="models:CurveData">
@@ -120,18 +114,26 @@
                     </CheckBox.Styles>
                 </CheckBox>
                 <!-- 当前值显示区域 -->
-               
+                  <ContentControl
+                  Background="Transparent"
+                  Tag="{Binding Brush}"
+                  Content="{Binding CursorPoint}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate DataType="models:ReportPoint">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="{Binding ReportTime,StringFormat='{}{0:HH:mm:ss}'} "
                                            FontSize="10"
-                                            Foreground="{Binding Brush}"
+                                           Foreground="{Binding $parent[ContentControl].Tag}"
                                            Opacity="0.8"/>
                                 <TextBlock Text="{Binding Value,StringFormat='{}{0:F2}'}"
                                            FontSize="10"
-                                             Foreground="{Binding Brush}"
+                                           Foreground="{Binding $parent[ContentControl].Tag}"
                                            FontWeight="Bold"/>
                             </StackPanel>
-                     
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+             
             </StackPanel>
         </DataTemplate>
     </Styles.Resources>
@@ -200,13 +202,12 @@
 
     <!-- ListBox 容器样式 - 基础样式 -->
     <Style Selector="ListBox.curveLegend">
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendItemTemplate}"/>
     </Style>
 
     <!-- ListBox 容器样式 - 带数值显示 -->
     <Style Selector="ListBox.curveLegendWithValue">
-        <Setter Property="Height" Value="55"/>
+     
         <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
     </Style>
 
