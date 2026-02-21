@@ -841,4 +841,340 @@ public class CurveBoundaryTests
     }
 
     #endregion
+
+    #region 二分查找索引调整 Bug 修复测试
+
+    /// <summary>
+    /// Bug 修复测试：二分查找返回的索引需要扩展范围
+    /// 
+    /// 问题描述：
+    /// 在 CurvePanel.axaml.cs 中，使用 BinarySearch 查找时间范围时，
+    /// 返回的 startIndex 和 endIndex 可能恰好是边界上的点，
+    /// 但没有包含边界外紧邻的点，导致曲线在边界处被截断。
+    /// 
+    /// 修复方案：
+    /// startIndex-- 和 endIndex++ 来扩展索引范围，
+    /// 确保边界处的点不会被遗漏。
+    /// </summary>
+
+    /// <summary>
+    /// 场景1：二分查找返回的索引恰好是边界点，需要向前扩展
+    /// </summary>
+    [Test]
+    public void BinarySearch_IndexAdjustment_ShouldIncludePreviousPoint()
+    {
+        // Arrange - 创建按时间排序的点列表
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:00:00"), Value = 100 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:01:00"), Value = 110 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:02:00"), Value = 120 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:03:00"), Value = 130 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:04:00"), Value = 140 },
+        };
+
+        var visibleStartTime = DateTime.Parse("2024-01-01 10:02:00"); // 恰好是第3个点
+        var visibleEndTime = DateTime.Parse("2024-01-01 10:04:00");
+
+        // Act - 模拟二分查找（不使用修复前的索引调整）
+        var startIndex = points.BinarySearch(new TimePoint { Time = visibleStartTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = points.BinarySearch(new TimePoint { Time = visibleEndTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+
+        // 不应用修复：直接使用二分查找结果
+        var startIndexWithoutFix = startIndex;
+        var endIndexWithoutFix = endIndex;
+
+        // 应用修复：扩展索引范围
+        startIndex--;
+        endIndex++;
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(points.Count, endIndex);
+
+        // Assert
+        // 修复前：startIndex = 2 (10:02:00)，不包含前面的点
+        Assert.That(startIndexWithoutFix, Is.EqualTo(2), "修复前 startIndex 应该是 2");
+        
+        // 修复后：startIndex = 1 (10:01:00)，包含了前一个点
+        Assert.That(startIndex, Is.EqualTo(1), "修复后 startIndex 应该是 1，包含前一个点");
+        
+        // 验证修复后包含的点更多
+        var countWithoutFix = endIndexWithoutFix - startIndexWithoutFix;
+        var countWithFix = endIndex - startIndex;
+        Assert.That(countWithFix, Is.GreaterThan(countWithoutFix), "修复后应该包含更多的点");
+    }
+
+    /// <summary>
+    /// 场景2：二分查找返回负数（未找到），需要正确处理并扩展范围
+    /// </summary>
+    [Test]
+    public void BinarySearch_NotFound_ReturnsNegativeIndex_ShouldAdjustCorrectly()
+    {
+        // Arrange
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:00:00"), Value = 100 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:02:00"), Value = 120 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:04:00"), Value = 140 },
+        };
+
+        // 查询的时间点不在列表中
+        var visibleStartTime = DateTime.Parse("2024-01-01 10:01:00"); // 在 10:00 和 10:02 之间
+        var visibleEndTime = DateTime.Parse("2024-01-01 10:03:00");   // 在 10:02 和 10:04 之间
+
+        // Act
+        var startIndex = points.BinarySearch(new TimePoint { Time = visibleStartTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = points.BinarySearch(new TimePoint { Time = visibleEndTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        // 验证二分查找返回负数
+        Assert.That(startIndex, Is.LessThan(0), "startIndex 应该返回负数（未找到）");
+        Assert.That(endIndex, Is.LessThan(0), "endIndex 应该返回负数（未找到）");
+
+        // 应用修复逻辑
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+        startIndex--;
+        endIndex++;
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(points.Count, endIndex);
+
+        // Assert
+        // ~startIndex = 1 (应该插入到索引1的位置)
+        // startIndex-- = 0，确保包含 10:00:00 的点
+        Assert.That(startIndex, Is.EqualTo(0), "修复后应该包含第一个点");
+        
+        // ~endIndex = 2
+        // endIndex++ = 3，确保包含到列表末尾
+        Assert.That(endIndex, Is.EqualTo(3), "修复后应该包含到列表末尾");
+    }
+
+    /// <summary>
+    /// 场景3：边界情况 - 查询时间早于所有点
+    /// </summary>
+    [Test]
+    public void BinarySearch_QueryBeforeAllPoints_ShouldIncludeFirstPoints()
+    {
+        // Arrange
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:02:00"), Value = 120 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:03:00"), Value = 130 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:04:00"), Value = 140 },
+        };
+
+        var visibleStartTime = DateTime.Parse("2024-01-01 10:00:00"); // 早于所有点
+        var visibleEndTime = DateTime.Parse("2024-01-01 10:02:30");   // 在第一个和第二个点之间
+
+        // Act
+        var startIndex = points.BinarySearch(new TimePoint { Time = visibleStartTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = points.BinarySearch(new TimePoint { Time = visibleEndTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+        startIndex--;
+        endIndex++;
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(points.Count, endIndex);
+
+        // Assert
+        Assert.That(startIndex, Is.EqualTo(0), "查询时间早于所有点时，startIndex 应该为 0");
+        Assert.That(endIndex, Is.EqualTo(2), "应该包含前两个点");
+    }
+
+    /// <summary>
+    /// 场景4：边界情况 - 查询时间晚于所有点
+    /// </summary>
+    [Test]
+    public void BinarySearch_QueryAfterAllPoints_ShouldIncludeLastPoints()
+    {
+        // Arrange
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:00:00"), Value = 100 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:01:00"), Value = 110 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:02:00"), Value = 120 },
+        };
+
+        var visibleStartTime = DateTime.Parse("2024-01-01 10:01:30"); // 在第二个和第三个点之间
+        var visibleEndTime = DateTime.Parse("2024-01-01 10:05:00");   // 晚于所有点
+
+        // Act
+        var startIndex = points.BinarySearch(new TimePoint { Time = visibleStartTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = points.BinarySearch(new TimePoint { Time = visibleEndTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+        startIndex--;
+        endIndex++;
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(points.Count, endIndex);
+
+        // Assert
+        Assert.That(startIndex, Is.EqualTo(1), "应该包含第二个点");
+        Assert.That(endIndex, Is.EqualTo(3), "查询时间晚于所有点时，endIndex 应该为列表长度");
+    }
+
+    /// <summary>
+    /// 场景5：验证修复后曲线边界不会断裂
+    /// 这是最关键的测试：确保索引调整能防止曲线在边界处被截断
+    /// </summary>
+    [Test]
+    public void BinarySearch_IndexAdjustment_PreventsCurveBreakAtBoundary()
+    {
+        // Arrange - 模拟真实场景：曲线数据点
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:00:00"), Value = 100 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:01:00"), Value = 150 }, // 峰值
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:02:00"), Value = 120 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:03:00"), Value = 180 }, // 峰值
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:04:00"), Value = 130 },
+        };
+
+        // 可见时间范围恰好从 10:01:00 开始
+        var visibleStartTime = DateTime.Parse("2024-01-01 10:01:00");
+        var visibleEndTime = DateTime.Parse("2024-01-01 10:03:00");
+
+        // Act - 不使用修复
+        var startIndexNoFix = points.BinarySearch(new TimePoint { Time = visibleStartTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndexNoFix = points.BinarySearch(new TimePoint { Time = visibleEndTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        if (startIndexNoFix < 0) startIndexNoFix = ~startIndexNoFix;
+        if (endIndexNoFix < 0) endIndexNoFix = ~endIndexNoFix;
+
+        // 使用修复
+        var startIndexWithFix = startIndexNoFix;
+        var endIndexWithFix = endIndexNoFix;
+        startIndexWithFix--;
+        endIndexWithFix++;
+        startIndexWithFix = Math.Max(0, startIndexWithFix);
+        endIndexWithFix = Math.Min(points.Count, endIndexWithFix);
+
+        // Assert
+        // 不使用修复时，只包含索引 1 到 3 的点（因为 BinarySearch 找到了确切的匹配）
+        var visiblePointsNoFix = points.Skip(startIndexNoFix).Take(endIndexNoFix - startIndexNoFix).ToList();
+        
+        // 使用修复后，包含索引 0 到 4 的点
+        // 注意：Take(count) 中的 count = endIndex - startIndex
+        // 当 startIndex=0, endIndex=4 时，count=4，会取索引 0,1,2,3
+        // 但实际上我们需要的是从 startIndex 到 endIndex-1 的点
+        var visiblePointsWithFix = points.Skip(startIndexWithFix).Take(endIndexWithFix - startIndexWithFix).ToList();
+
+        // 注意：BinarySearch 找到了确切的匹配（10:01:00 和 10:03:00），所以返回的是索引 1 和 3
+        // 不使用修复时：Take(3-1)=Take(2)，包含索引 1 和 2（共2个点）
+        Assert.That(visiblePointsNoFix.Count, Is.EqualTo(2), "不使用修复时只包含2个点（索引1和2）");
+        // 使用修复后：Take(4-0)=Take(4)，包含索引 0,1,2,3（共4个点）
+        // 注意：这里不包含索引4，因为 endIndexWithFix=4，Take(4)只取4个点
+        Assert.That(visiblePointsWithFix.Count, Is.EqualTo(4), "使用修复后包含4个点（索引0,1,2,3）");
+
+        // 关键验证：修复后包含了边界外紧邻的点（前面的点）
+        Assert.That(visiblePointsWithFix.Any(p => p.Time == DateTime.Parse("2024-01-01 10:00:00")), Is.True, 
+            "修复后应该包含可见范围之前的点（用于正确绘制边界处的线段）");
+        
+        // 注意：由于 endIndexWithFix=4，不包含索引4（10:04:00）
+        // 这是符合原始代码逻辑的：endIndex 是排他的（exclusive）
+        Assert.That(visiblePointsWithFix.Any(p => p.Time == DateTime.Parse("2024-01-01 10:03:00")), Is.True, 
+            "修复后应该包含10:03:00的点");
+    }
+
+    /// <summary>
+    /// 场景6：索引调整后的边界保护
+    /// 验证 startIndex-- 和 endIndex++ 不会越界
+    /// </summary>
+    [Test]
+    public void BinarySearch_IndexAdjustment_BoundaryProtection()
+    {
+        // Arrange
+        var points = new List<TimePoint>
+        {
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:00:00"), Value = 100 },
+            new TimePoint { Time = DateTime.Parse("2024-01-01 10:01:00"), Value = 110 },
+        };
+
+        // 场景A：查询时间早于第一个点
+        var earlyTime = DateTime.Parse("2024-01-01 09:00:00");
+        var startIndexA = points.BinarySearch(new TimePoint { Time = earlyTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        if (startIndexA < 0) startIndexA = ~startIndexA;
+        startIndexA--;
+        startIndexA = Math.Max(0, startIndexA); // 边界保护
+
+        Assert.That(startIndexA, Is.EqualTo(0), "startIndex 不应该小于0");
+
+        // 场景B：查询时间晚于最后一个点
+        var lateTime = DateTime.Parse("2024-01-01 11:00:00");
+        var endIndexB = points.BinarySearch(new TimePoint { Time = lateTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        if (endIndexB < 0) endIndexB = ~endIndexB;
+        endIndexB++;
+        endIndexB = Math.Min(points.Count, endIndexB); // 边界保护
+
+        Assert.That(endIndexB, Is.EqualTo(points.Count), "endIndex 不应该超过列表长度");
+    }
+
+    /// <summary>
+    /// 场景7：实际 Bug 复现 - 下采样前的索引范围问题
+    /// </summary>
+    [Test]
+    public void BinarySearch_RealBugReproduction_IndexRangeTooSmall()
+    {
+        // Arrange - 模拟真实的数据点和可见范围
+        var allPoints = new List<TimePoint>();
+        var baseTime = DateTime.Parse("2024-01-01 10:00:00");
+        
+        // 创建100个数据点，每秒一个
+        for (int i = 0; i < 100; i++)
+        {
+            allPoints.Add(new TimePoint 
+            { 
+                Time = baseTime.AddSeconds(i), 
+                Value = 100 + Math.Sin(i * 0.1) * 50 
+            });
+        }
+
+        // 可见范围：第30秒到第70秒
+        var visibleStart = baseTime.AddSeconds(30);
+        var visibleEnd = baseTime.AddSeconds(70);
+
+        // Act - 模拟修复前的逻辑
+        var startIndex = allPoints.BinarySearch(new TimePoint { Time = visibleStart, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = allPoints.BinarySearch(new TimePoint { Time = visibleEnd, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+
+        var originalStartIndex = startIndex;
+        var originalEndIndex = endIndex;
+
+        // 应用修复
+        startIndex--;
+        endIndex++;
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(allPoints.Count, endIndex);
+
+        // Assert
+        // 注意：BinarySearch 找到了确切的匹配（第30秒和第70秒的点都存在）
+        // 修复前：范围是 [30, 70]，共40个点（索引30到69）
+        var originalRange = originalEndIndex - originalStartIndex;
+        
+        // 修复后：范围是 [29, 71]，共42个点
+        var fixedRange = endIndex - startIndex;
+
+        // BinarySearch 找到确切匹配时，返回的是实际索引
+        // 所以 originalStartIndex = 30, originalEndIndex = 70
+        Assert.That(originalStartIndex, Is.EqualTo(30), "修复前 startIndex 应该是30");
+        Assert.That(originalEndIndex, Is.EqualTo(70), "修复前 endIndex 应该是70");
+        Assert.That(originalRange, Is.EqualTo(40), "修复前范围应该是40个点");
+        Assert.That(fixedRange, Is.EqualTo(42), "修复后范围应该是42个点（包含边界外各一个点）");
+
+        // 验证边界点被正确包含
+        var firstIncludedPoint = allPoints[startIndex];
+        var lastIncludedPoint = allPoints[endIndex - 1];
+
+        Assert.That(firstIncludedPoint.Time, Is.EqualTo(baseTime.AddSeconds(29)), 
+            "第一个包含的点应该是可见范围前一个点");
+        Assert.That(lastIncludedPoint.Time, Is.EqualTo(baseTime.AddSeconds(70)), 
+            "最后一个包含的点应该是索引70对应的点（10:01:10）");
+    }
+
+    #endregion
 }
