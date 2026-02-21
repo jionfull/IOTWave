@@ -61,6 +61,7 @@
                    Foreground="Gray"
                    TextWrapping="Wrap"/>
         <views:IOTChart2 Grid.Row="1"
+                      Classes="showValue"
                       DataContext="{Binding RelativeTimeViewModel}"/>
       </Grid>
     </TabItem>
