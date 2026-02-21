@@ -43,7 +43,8 @@ public partial class TimeJumpDemoViewModel : ObservableObject
     /// </summary>
     private DateTime GetFullJumpTargetTime()
     {
-        return _dataViewModel.JumpTargetTime.Date + JumpTargetTimeSpan;
+        var date = _dataViewModel.JumpTargetTime?.Date ?? DateTime.Now.Date;
+        return date + JumpTargetTimeSpan;
     }
 
     /// <summary>

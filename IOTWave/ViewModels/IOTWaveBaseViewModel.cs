@@ -40,7 +40,7 @@ public partial class IOTWaveBaseViewModel:ViewModelBase
      /// 跳转目标时间（用于时间跳转功能）
      /// </summary>
      [ObservableProperty]
-     private DateTime _jumpTargetTime = DateTime.Now;
+     private DateTime? _jumpTargetTime = DateTime.Now;
 
     public ObservableCollection<DataSeriesGroupBase> Items { get; } = new();
 
