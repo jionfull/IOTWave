@@ -174,11 +174,11 @@
             <Separator Width="20" Background="Transparent"/>
             
             <TextBlock Text="指定时间：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
-            
-            <DatePicker SelectedDate="{Binding TimeJumpViewModel.JumpTargetTime}"
+
+            <DatePicker SelectedDate="{Binding TimeJumpViewModel.JumpTargetTime, Mode=TwoWay}"
                        VerticalAlignment="Center"/>
-            
-            <TimePicker SelectedTime="{Binding TimeJumpViewModel.JumpTargetTime}"
+
+            <TimePicker SelectedTime="{Binding TimeJumpViewModel.JumpTargetTimeSpan, Mode=TwoWay}"
                        VerticalAlignment="Center"
                        Width="120"/>
             

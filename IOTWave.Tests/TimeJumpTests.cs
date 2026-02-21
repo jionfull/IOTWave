@@ -224,8 +224,11 @@ public class TimeJumpTests
     {
         // Arrange
         var viewModel = new IOTWaveBaseViewModel();
-        var targetTime = new DateTime(2024, 1, 1, 5, 30, 0);
-        viewModel.JumpTargetTime = targetTime;
+        var targetDate = new DateTime(2024, 1, 1, 0, 0, 0);
+        var targetTimeSpan = new TimeSpan(5, 30, 0); // 5:30:00
+
+        viewModel.JumpTargetTime = targetDate;
+        viewModel.JumpTargetTimeSpan = targetTimeSpan;
 
         TimeJumpEventArgs? eventArgs = null;
         viewModel.TimeJumpRequested += (args) => eventArgs = args;
@@ -236,7 +239,7 @@ public class TimeJumpTests
         // Assert
         Assert.That(eventArgs, Is.Not.Null, "应该触发 TimeJumpRequested 事件");
         Assert.That(eventArgs!.JumpType, Is.EqualTo(TimeJumpType.SpecificTime), "跳转类型应该是 SpecificTime");
-        Assert.That(eventArgs.TargetTime, Is.EqualTo(targetTime), "目标时间应该正确传递");
+        Assert.That(eventArgs.TargetTime, Is.EqualTo(targetDate + targetTimeSpan), "目标时间应该是日期+时间的组合");
     }
 
     [Test]

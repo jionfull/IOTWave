@@ -45,6 +45,17 @@ public partial class IOTWaveBaseViewModel:ViewModelBase
      private DateTime _jumpTargetTime = DateTime.Now;
 
      /// <summary>
+     /// 指定跳转时间的时间部分（用于 TimePicker 绑定）
+     /// </summary>
+     [ObservableProperty]
+     private TimeSpan _jumpTargetTimeSpan = TimeSpan.Zero;
+
+     /// <summary>
+     /// 获取完整的跳转目标时间（日期 + 时间）
+     /// </summary>
+     public DateTime FullJumpTargetTime => JumpTargetTime.Date + JumpTargetTimeSpan;
+
+     /// <summary>
      /// 时间跳转事件，用于通知 View 层执行跳转
      /// </summary>
      public event Action<TimeJumpEventArgs>? TimeJumpRequested;
@@ -76,14 +87,14 @@ public partial class IOTWaveBaseViewModel:ViewModelBase
          TimeJumpRequested?.Invoke(new TimeJumpEventArgs(TimeJumpType.Middle));
      }
 
-     /// <summary>
-     /// 跳转到指定时间命令
-     /// </summary>
-     [RelayCommand]
-     private void JumpToTargetTime()
-     {
-         TimeJumpRequested?.Invoke(new TimeJumpEventArgs(TimeJumpType.SpecificTime, JumpTargetTime));
-     }
+    /// <summary>
+    /// 跳转到指定时间命令
+    /// </summary>
+    [RelayCommand]
+    private void JumpToTargetTime()
+    {
+        TimeJumpRequested?.Invoke(new TimeJumpEventArgs(TimeJumpType.SpecificTime, FullJumpTargetTime));
+    }
 
 
     public ObservableCollection<DataSeriesGroupBase> Items { get; } = new()

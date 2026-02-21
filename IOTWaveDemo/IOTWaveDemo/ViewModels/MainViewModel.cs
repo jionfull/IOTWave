@@ -681,6 +681,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 设置默认跳转目标时间为中午12点
             TimeJumpViewModel.JumpTargetTime = startTime.AddHours(12);
+            TimeJumpViewModel.JumpTargetTimeSpan = TimeSpan.FromHours(12);
 
             // 创建温度曲线面板
             var tempPanel = new CurveGroup()
