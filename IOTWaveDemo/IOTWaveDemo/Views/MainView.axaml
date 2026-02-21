@@ -29,21 +29,24 @@
     <Style Selector="DataGrid">
       <Setter Property="Foreground" Value="#7DD3FC"/>
       <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Background" Value="#1A1A1A"/>
+    </Style>
+    <Style Selector="DataGridRow">
+      <Setter Property="Background" Value="#1A1A1A"/>
+      <Setter Property="Height" Value="32"/>
     </Style>
     <Style Selector="DataGridCell">
       <Setter Property="BorderThickness" Value="0"/>
-      <Setter Property="Padding" Value="2"/>
+      <Setter Property="Padding" Value="4"/>
+      <Setter Property="Background" Value="Transparent"/>
     </Style>
     <Style Selector="DataGridCell:pointerover /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Opacity" Value="0.1"/>
+      <Setter Property="Opacity" Value="0.15"/>
       <Setter Property="Fill" Value="#7DD3FC"/>
     </Style>
     <Style Selector="DataGridCell:selected /template/ Rectangle#BackgroundRectangle">
-      <Setter Property="Opacity" Value="0.2"/>
+      <Setter Property="Opacity" Value="0.25"/>
       <Setter Property="Fill" Value="#00B4D8"/>
-    </Style>
-    <Style Selector="DataGridRow">
-      <Setter Property="Height" Value="28"/>
     </Style>
 
     <!-- 时间跳转按钮样式 -->
@@ -99,16 +102,12 @@
             <DataGrid Grid.Row="1"
                       ItemsSource="{Binding BasicViewModel.Items}"
                       AutoGenerateColumns="False"
-                      CanUserResizeColumns="False"
-                      CanUserReorderColumns="False"
-                      CanUserSortColumns="False"
                       IsReadOnly="False"
+                      Background="#1A1A1A"
                       BorderThickness="0"
-                      Background="Transparent"
-                      RowBackground="Transparent"
+                      RowBackground="#1A1A1A"
                       GridLinesVisibility="None"
-                      HeadersVisibility="None"
-                      SelectionMode="Single">
+                      HeadersVisibility="None">
               <DataGrid.Columns>
                 <DataGridTemplateColumn Width="*">
                   <DataGridTemplateColumn.CellTemplate>
@@ -117,7 +116,7 @@
                                 IsChecked="{Binding IsVisible}"
                                 Foreground="#7DD3FC"
                                 Background="Transparent"
-                                Margin="5,3"/>
+                                Margin="8,5"/>
                     </DataTemplate>
                   </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
