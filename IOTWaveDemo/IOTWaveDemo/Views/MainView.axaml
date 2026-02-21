@@ -109,7 +109,8 @@
                       GridLinesVisibility="None"
                       HeadersVisibility="None">
               <DataGrid.Columns>
-                <DataGridTemplateColumn Width="*">
+               
+                <DataGridTemplateColumn Width="*" Header="名称"  >
                   <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate DataType="models:DataSeriesGroupBase">
                       <CheckBox Content="{Binding Name}"
