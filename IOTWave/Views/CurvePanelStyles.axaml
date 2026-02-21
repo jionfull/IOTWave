@@ -1,6 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:models="using:IOTWave.Models">
+        xmlns:models="using:IOTWave.Models"
+        xmlns:cvt="using:Avalonia.Data.Converters">
     
     <!-- 曲线图例 ListBox 的 DataTemplate -->
     <Design.PreviewWith>
@@ -65,14 +66,27 @@
 
                 <!-- 当前值显示区域 -->
                 <StackPanel Orientation="Horizontal" Spacing="4" Margin="20,0,0,0">
-                    <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
+                    <!-- 相对时间（仅在相对时间模式下显示） -->
+                    <TextBlock Text="{Binding RelativeCursorTime}"
                                FontSize="10"
                                Foreground="{Binding Brush}"
                                Opacity="0.8"/>
                     <TextBlock Text=":"
                                FontSize="10"
                                Foreground="{Binding Brush}"
-                               Opacity="0.6"/>
+                               Opacity="0.6"
+                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNotNullOrEmpty}}"/>
+                    <!-- 绝对时间（仅在没有相对时间时显示） -->
+                    <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
+                               FontSize="10"
+                               Foreground="{Binding Brush}"
+                               Opacity="0.8"
+                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNullOrEmpty}}"/>
+                    <TextBlock Text=":"
+                               FontSize="10"
+                               Foreground="{Binding Brush}"
+                               Opacity="0.6"
+                               IsVisible="{Binding RelativeCursorTime, Converter={x:Static cvt:StringConverters.IsNullOrEmpty}}"/>
                     <TextBlock Text="{Binding CursorPoint.Value, StringFormat='{}{0:F2}'}"
                                FontSize="10"
                                Foreground="{Binding Brush}"

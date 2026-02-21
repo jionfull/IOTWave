@@ -59,6 +59,12 @@ public partial class CurveData :ObservableObject
     private TimePoint? _cursorPoint;
 
     /// <summary>
+    /// 相对光标时间偏移（相对于基准时间的字符串表示）
+    /// </summary>
+    [ObservableProperty]
+    private string? _relativeCursorTime;
+
+    /// <summary>
     /// 根据光标时间更新当前值（查找光标时间之前最近的数据点）
     /// </summary>
     public void UpdateCurrentValue(DateTime? cursorTime)
@@ -66,6 +72,7 @@ public partial class CurveData :ObservableObject
         if (!cursorTime.HasValue || Points.Count == 0)
         {
             CursorPoint = null;
+            RelativeCursorTime = null;
             return;
         }
 
@@ -83,7 +90,45 @@ public partial class CurveData :ObservableObject
         {
             // 光标时间在所有数据点之前
             CursorPoint = null;
+            RelativeCursorTime = null;
         }
+    }
+
+    /// <summary>
+    /// 设置相对光标时间（由 CurvePanel 调用）
+    /// </summary>
+    public void SetRelativeCursorTime(DateTime baseTime)
+    {
+        if (CursorPoint == null)
+        {
+            RelativeCursorTime = null;
+            return;
+        }
+        var offset = CursorPoint.Time - baseTime;
+        RelativeCursorTime = FormatRelativeTime(offset);
+    }
+
+    private static string FormatRelativeTime(TimeSpan offset)
+    {
+        if (offset.TotalSeconds < 0)
+        {
+            return $"-{FormatPositiveTime(offset.Duration())}";
+        }
+        return FormatPositiveTime(offset);
+    }
+
+    private static string FormatPositiveTime(TimeSpan duration)
+    {
+        if (duration.TotalDays >= 1)
+            return $"{(int)duration.TotalDays}d {duration.Hours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        else if (duration.TotalHours >= 1)
+            return $"{(int)duration.TotalHours}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+        else if (duration.TotalMinutes >= 1)
+            return $"{(int)duration.TotalMinutes}:{duration.Seconds:D2}";
+        else if (duration.TotalSeconds >= 1)
+            return $"{duration.TotalSeconds:F1}s";
+        else
+            return $"{duration.TotalMilliseconds:F0}ms";
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

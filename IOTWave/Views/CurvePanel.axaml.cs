@@ -182,6 +182,15 @@ public class CurvePanel : TemplatedControl
         foreach (var curve in Items.Curves)
         {
             curve.UpdateCurrentValue(cursorTime);
+            // 如果使用相对时间模式，设置相对光标时间
+            if (ChartGlobal?.UseRelativeTime == true)
+            {
+                curve.SetRelativeCursorTime(ChartGlobal.RelativeTimeBase);
+            }
+            else
+            {
+                curve.RelativeCursorTime = null;
+            }
         }
     }
 
