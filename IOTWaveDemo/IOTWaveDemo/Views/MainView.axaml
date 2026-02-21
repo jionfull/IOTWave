@@ -141,7 +141,8 @@
           TimeMarkers="{Binding TimeMarkers}"
           TimeRangeMarkers="{Binding TimeRangeMarkers}"
           StartTime="{Binding BeginTime}"
-          EndTime="{Binding EndTime}">
+          EndTime="{Binding EndTime}"
+          CursorMoveStep="Day">
         <views:WaveListPanel.DataTemplates>
           <DataTemplate DataType="models:CurveGroup">
             <views:CurvePanel

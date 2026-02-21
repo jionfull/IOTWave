@@ -28,6 +28,8 @@
                                         RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                         AutoDistributePanelHeight="{Binding $parent[controls:IOTChart2].AutoDistributePanelHeight}"
                                         VerticalScrollBarVisibility="{Binding $parent[controls:IOTChart2].VerticalScrollBarVisibility}"
+                                        CursorMoveStep="{Binding $parent[controls:IOTChart2].CursorMoveStep}"
+                                        EnableKeyboardCursorControl="{Binding $parent[controls:IOTChart2].EnableKeyboardCursorControl}"
                                         Background="Black">
                     <controls:WaveListPanel.DataTemplates>
                         <DataTemplate DataType="{x:Type models:CurveGroup}">
@@ -72,6 +74,8 @@
                                         RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
                                         AutoDistributePanelHeight="{Binding $parent[controls:IOTChart2].AutoDistributePanelHeight}"
                                         VerticalScrollBarVisibility="{Binding $parent[controls:IOTChart2].VerticalScrollBarVisibility}"
+                                        CursorMoveStep="{Binding $parent[controls:IOTChart2].CursorMoveStep}"
+                                        EnableKeyboardCursorControl="{Binding $parent[controls:IOTChart2].EnableKeyboardCursorControl}"
                                         Background="Black">
                     <controls:WaveListPanel.DataTemplates>
                         <DataTemplate DataType="{x:Type models:CurveGroup}">

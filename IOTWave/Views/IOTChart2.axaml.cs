@@ -26,6 +26,14 @@ public class IOTChart2 : TemplatedControl
         AvaloniaProperty.Register<IOTChart2, string>(
             nameof(RelativeTimeBaseLabel), "基准");
 
+    public static readonly StyledProperty<CursorMoveStep> CursorMoveStepProperty =
+        AvaloniaProperty.Register<IOTChart2, CursorMoveStep>(
+            nameof(CursorMoveStep), CursorMoveStep.Second);
+
+    public static readonly StyledProperty<bool> EnableKeyboardCursorControlProperty =
+        AvaloniaProperty.Register<IOTChart2, bool>(
+            nameof(EnableKeyboardCursorControl), true);
+
     private WaveListPanel? _waveListPanel;
 
     public bool AutoDistributePanelHeight
@@ -65,6 +73,24 @@ public class IOTChart2 : TemplatedControl
     {
         get => GetValue(RelativeTimeBaseLabelProperty);
         set => SetValue(RelativeTimeBaseLabelProperty, value);
+    }
+
+    /// <summary>
+    /// 光标移动步长类型，控制按键移动的时间单位
+    /// </summary>
+    public CursorMoveStep CursorMoveStep
+    {
+        get => GetValue(CursorMoveStepProperty);
+        set => SetValue(CursorMoveStepProperty, value);
+    }
+
+    /// <summary>
+    /// 是否启用键盘控制光标移动
+    /// </summary>
+    public bool EnableKeyboardCursorControl
+    {
+        get => GetValue(EnableKeyboardCursorControlProperty);
+        set => SetValue(EnableKeyboardCursorControlProperty, value);
     }
 
     /// <summary>
