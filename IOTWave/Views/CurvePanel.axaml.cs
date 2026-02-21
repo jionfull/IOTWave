@@ -360,14 +360,11 @@ public class CurvePanel : TemplatedControl
     }
 
     /// <summary>
-    /// 计算线段与垂直边界的交点
+    /// 计算线段与垂直边界的交点（委托给静态方法）
     /// </summary>
     private Point GetIntersection(Point p1, Point p2, double xBoundary)
     {
-        // 线性插值计算交点Y坐标
-        var t = (xBoundary - p1.X) / (p2.X - p1.X);
-        var y = p1.Y + t * (p2.Y - p1.Y);
-        return new Point(xBoundary, y);
+        return GetIntersectionStatic(p1, p2, xBoundary);
     }
 
     // 缓存画笔以避免重复创建
@@ -394,6 +391,157 @@ public class CurvePanel : TemplatedControl
             _brushCache[key] = brush;
         }
         return brush;
+    }
+
+    /// <summary>
+    /// 计算可见点的索引范围（可独立测试）
+    /// </summary>
+    public static (int startIndex, int endIndex) CalculateVisiblePointIndices(
+        List<TimePoint> points,
+        DateTime visibleTimeStart,
+        DateTime visibleTimeEnd,
+        Rect drawArea)
+    {
+        if (!points.Any())
+            return (0, 0);
+
+        // 添加边界缓冲，确保边界处的线段正确绘制
+        var bufferWidth = (visibleTimeEnd - visibleTimeStart).TotalSeconds / drawArea.Width;
+        var bufferTime = TimeSpan.FromSeconds(bufferWidth);
+
+        // 预过滤：只获取时间范围内可能显示点（二分查找优化）
+        var startTime = visibleTimeStart.Subtract(bufferTime);
+        var endTime = visibleTimeEnd.Add(bufferTime);
+
+        // 使用二分查找快速定位索引范围
+        var startIndex = points.BinarySearch(new TimePoint { Time = startTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+        var endIndex = points.BinarySearch(new TimePoint { Time = endTime, Value = 0 }, TimePoint.TimeComparer.Instance);
+
+        // 处理二分查找的返回值（可能返回负数表示未找到）
+        if (startIndex < 0) startIndex = ~startIndex;
+        if (endIndex < 0) endIndex = ~endIndex;
+        startIndex--;
+        endIndex++;
+
+        // 确保索引有效
+        startIndex = Math.Max(0, startIndex);
+        endIndex = Math.Min(points.Count, endIndex);
+
+        return (startIndex, endIndex);
+    }
+
+    /// <summary>
+    /// 构建曲线几何图形（可独立测试）
+    /// </summary>
+    public static StreamGeometry BuildCurveGeometry(
+        List<(Point point, int originalIndex)> downsampledPoints,
+        Rect drawArea)
+    {
+        var geometry = new StreamGeometry();
+
+        if (downsampledPoints.Count == 0)
+            return geometry;
+
+        using (var ctx = geometry.Open())
+        {
+            Point? firstPoint = null;
+            Point prevTransformed = downsampledPoints[0].point;
+
+            for (int i = 0; i < downsampledPoints.Count; i++)
+            {
+                var current = downsampledPoints[i].point;
+
+                bool prevVisible = prevTransformed.X >= drawArea.Left && prevTransformed.X <= drawArea.Right;
+                bool currentVisible = current.X >= drawArea.Left && current.X <= drawArea.Right;
+
+                if (prevVisible && currentVisible)
+                {
+                    // 两点都在可见区域内
+                    if (!firstPoint.HasValue)
+                    {
+                        firstPoint = prevTransformed;
+                        ctx.BeginFigure(prevTransformed, false);
+                    }
+
+                    ctx.LineTo(current);
+                }
+                else if (prevVisible && !currentVisible)
+                {
+                    // 从区域内到区域外：计算交点
+                    if (current.X > drawArea.Right)
+                    {
+                        var intersection = GetIntersectionStatic(prevTransformed, current, drawArea.Right);
+                        if (!firstPoint.HasValue)
+                        {
+                            firstPoint = prevTransformed;
+                            ctx.BeginFigure(prevTransformed, false);
+                        }
+                        ctx.LineTo(intersection);
+                    }
+                }
+                else if (!prevVisible && currentVisible)
+                {
+                    // 从区域外到区域内：计算交点并开始绘制
+                    if (prevTransformed.X < drawArea.Left)
+                    {
+                        var intersection = GetIntersectionStatic(prevTransformed, current, drawArea.Left);
+                        ctx.BeginFigure(intersection, false);
+                        ctx.LineTo(current);
+                        firstPoint = intersection;
+                    }
+                }
+                else if (!prevVisible && !currentVisible)
+                {
+                    // 两点都在区域外，但可能跨越整个区域
+                    if (prevTransformed.X < drawArea.Left && current.X > drawArea.Right)
+                    {
+                        var startIntersection = GetIntersectionStatic(prevTransformed, current, drawArea.Left);
+                        var endIntersection = GetIntersectionStatic(prevTransformed, current, drawArea.Right);
+                        ctx.BeginFigure(startIntersection, false);
+                        ctx.LineTo(endIntersection);
+                    }
+                }
+
+                prevTransformed = current;
+            }
+        }
+
+        return geometry;
+    }
+
+    /// <summary>
+    /// 静态版本的 GetIntersection，便于测试
+    /// </summary>
+    public static Point GetIntersectionStatic(Point p1, Point p2, double xBoundary)
+    {
+        var t = (xBoundary - p1.X) / (p2.X - p1.X);
+        var y = p1.Y + t * (p2.Y - p1.Y);
+        return new Point(xBoundary, y);
+    }
+
+    /// <summary>
+    /// 绘制数据点（可独立测试的纯逻辑部分）
+    /// </summary>
+    public static List<EllipseGeometry> CreateDataPointGeometries(
+        List<(Point point, int originalIndex)> downsampledPoints,
+        Rect drawArea,
+        double pointSize = 3)
+    {
+        var geometries = new List<EllipseGeometry>();
+
+        foreach (var (point, _) in downsampledPoints)
+        {
+            if (point.X >= drawArea.Left && point.X <= drawArea.Right &&
+                point.Y >= drawArea.Top && point.Y <= drawArea.Bottom)
+            {
+                var ellipse = new EllipseGeometry(
+                    new Rect(point.X - pointSize, point.Y - pointSize, pointSize * 2, pointSize * 2)
+                );
+                geometries.Add(ellipse);
+            }
+        }
+
+        return geometries;
     }
 
     /// <summary>
@@ -491,31 +639,12 @@ public class CurvePanel : TemplatedControl
         if (yRange <= 0)
             return;
 
-        // 计算时间范围过滤
-        var visibleTimeStart = ChartGlobal.StartTime;
-        var visibleTimeEnd = ChartGlobal.EndTime;
-
-        // 添加边界缓冲，确保边界处的线段正确绘制
-        var bufferWidth = (visibleTimeEnd - visibleTimeStart).TotalSeconds / drawArea.Width;
-        var bufferTime = TimeSpan.FromSeconds(bufferWidth);
-
-        // 预过滤：只获取时间范围内可能显示点（二分查找优化）
-        var startTime = visibleTimeStart.Subtract(bufferTime);
-        var endTime = visibleTimeEnd.Add(bufferTime);
-
-        // 使用二分查找快速定位索引范围
-        var startIndex = curve.Points.BinarySearch(new TimePoint { Time = startTime, Value = 0 }, TimePoint.TimeComparer.Instance);
-        var endIndex = curve.Points.BinarySearch(new TimePoint { Time = endTime, Value = 0 }, TimePoint.TimeComparer.Instance);
-
-        // 处理二分查找的返回值（可能返回负数表示未找到）
-        if (startIndex < 0) startIndex = ~startIndex;
-        if (endIndex < 0) endIndex = ~endIndex;
-        startIndex--;
-        endIndex++;
-
-        // 确保索引有效
-        startIndex = Math.Max(0, startIndex);
-        endIndex = Math.Min(curve.Points.Count, endIndex);
+        // 计算可见点索引范围
+        var (startIndex, endIndex) = CalculateVisiblePointIndices(
+            curve.Points,
+            ChartGlobal.StartTime,
+            ChartGlobal.EndTime,
+            drawArea);
 
         // 如果没有可见点，直接返回
         if (startIndex >= endIndex)
@@ -524,97 +653,23 @@ public class CurvePanel : TemplatedControl
         // 使用保留极值的下采样
         var downsampledPoints = DownsamplePreservingExtremes(curve.Points, startIndex, endIndex, drawArea.Width, drawArea);
 
+        // 构建曲线几何图形
+        var geometry = BuildCurveGeometry(downsampledPoints, drawArea);
+
+        // 绘制曲线
         var curvePen = GetCachedPen(curve.Color, curve.LineWidth);
-        var geometry = new StreamGeometry();
-
-        using (var ctx = geometry.Open())
-        {
-            if (downsampledPoints.Count > 0)
-            {
-                Point? firstPoint = null;
-                Point prevTransformed = downsampledPoints[0].point;
-
-                for (int i = 0; i < downsampledPoints.Count; i++)
-                {
-                    var current = downsampledPoints[i].point;
-
-                    bool prevVisible = prevTransformed.X >= drawArea.Left && prevTransformed.X <= drawArea.Right;
-                    bool currentVisible = current.X >= drawArea.Left && current.X <= drawArea.Right;
-
-                    if (prevVisible && currentVisible)
-                    {
-                        // 两点都在可见区域内
-                        if (!firstPoint.HasValue)
-                        {
-                            firstPoint = prevTransformed;
-                            ctx.BeginFigure(prevTransformed, false);
-                        }
-
-                        ctx.LineTo(current);
-                    }
-                    else if (prevVisible && !currentVisible)
-                    {
-                        // 从区域内到区域外：计算交点
-                        if (current.X > drawArea.Right)
-                        {
-                            var intersection = GetIntersection(prevTransformed, current, drawArea.Right);
-                            if (!firstPoint.HasValue)
-                            {
-                                firstPoint = prevTransformed;
-                                ctx.BeginFigure(prevTransformed, false);
-                            }
-                            ctx.LineTo(intersection);
-                        }
-                    }
-                    else if (!prevVisible && currentVisible)
-                    {
-                        // 从区域外到区域内：计算交点并开始绘制
-                        if (prevTransformed.X < drawArea.Left)
-                        {
-                            var intersection = GetIntersection(prevTransformed, current, drawArea.Left);
-                            ctx.BeginFigure(intersection, false);
-                            ctx.LineTo(current);
-                            firstPoint = intersection;
-                        }
-                    }
-                    else if (!prevVisible && !currentVisible)
-                    {
-                        // 两点都在区域外，但可能跨越整个区域
-                        if (prevTransformed.X < drawArea.Left && current.X > drawArea.Right)
-                        {
-                            var startIntersection = GetIntersection(prevTransformed, current, drawArea.Left);
-                            var endIntersection = GetIntersection(prevTransformed, current, drawArea.Right);
-                            ctx.BeginFigure(startIntersection, false);
-                            ctx.LineTo(endIntersection);
-                        }
-                    }
-
-                    prevTransformed = current;
-                }
-            }
-        }
-
         context.DrawGeometry(null, curvePen, geometry);
 
-        // 绘制数据点（如果启用）- 使用下采样后的点
+        // 绘制数据点（如果启用）
         var tickPrePixel = (ChartGlobal.EndTime.Ticks - ChartGlobal.StartTime.Ticks) / drawArea.Width;
         if (curve.ShowPoints && tickPrePixel < curve.PointShowLimit * TimeSpan.TicksPerSecond)
         {
             var pointBrush = GetCachedBrush(curve.Color);
-            const double pointSize = 3;
-
-            // 绘制下采样后的关键点
-            foreach (var (point, _) in downsampledPoints)
+            var dataPointGeometries = CreateDataPointGeometries(downsampledPoints, drawArea);
+            
+            foreach (var ellipse in dataPointGeometries)
             {
-                // 只绘制在可见区域内的点
-                if (point.X >= drawArea.Left && point.X <= drawArea.Right &&
-                    point.Y >= drawArea.Top && point.Y <= drawArea.Bottom)
-                {
-                    var ellipse = new EllipseGeometry(
-                        new Rect(point.X - pointSize, point.Y - pointSize, pointSize * 2, pointSize * 2)
-                    );
-                    context.DrawGeometry(pointBrush, null, ellipse);
-                }
+                context.DrawGeometry(pointBrush, null, ellipse);
             }
         }
     }
