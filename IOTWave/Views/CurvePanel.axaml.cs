@@ -510,6 +510,8 @@ public class CurvePanel : TemplatedControl
         // 处理二分查找的返回值（可能返回负数表示未找到）
         if (startIndex < 0) startIndex = ~startIndex;
         if (endIndex < 0) endIndex = ~endIndex;
+        startIndex--;
+        endIndex++;
 
         // 确保索引有效
         startIndex = Math.Max(0, startIndex);
