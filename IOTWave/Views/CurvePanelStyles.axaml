@@ -207,7 +207,7 @@
 
     <!-- ListBox 容器样式 - 带数值显示 -->
     <Style Selector="ListBox.curveLegendWithValue">
-        <Setter Property="Height" Value="55"/>
+        <Setter Property="Height" Value="70"/>
         <Setter Property="ItemTemplate" Value="{StaticResource CurveLegendWithValueTemplate}"/>
     </Style>
 
