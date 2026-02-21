@@ -425,6 +425,9 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         _zoomInCommand = ReactiveCommand.Create(ZoomIn);
         _zoomOutCommand = ReactiveCommand.Create(ZoomOut);
 
+        // 允许控件获取键盘焦点
+        Focusable = true;
+
         // 时间范围变化时触发 CursorCanvas 重绘
         this.GetObservable(StartTimeProperty).Subscribe(_ => _cursorCanvas?.InvalidateVisual());
         this.GetObservable(EndTimeProperty).Subscribe(_ => _cursorCanvas?.InvalidateVisual());
@@ -969,6 +972,9 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
         if (!IsInteractive) return;
+
+        // 获取键盘焦点
+        Focus();
 
         var position = e.GetCurrentPoint(_scrollViewer).Position;
         _isDragging = true;
