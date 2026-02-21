@@ -514,6 +514,18 @@ public class CurvePanel : TemplatedControl
     /// </summary>
     public static Point GetIntersectionStatic(Point p1, Point p2, double xBoundary)
     {
+        // 处理垂直线段的情况
+        if (Math.Abs(p2.X - p1.X) < double.Epsilon)
+        {
+            // 如果 xBoundary 正好是线段的 x 坐标，返回 p1
+            if (Math.Abs(xBoundary - p1.X) < double.Epsilon)
+            {
+                return new Point(xBoundary, p1.Y);
+            }
+            // 否则返回 p1（任意合理值）
+            return new Point(xBoundary, p1.Y);
+        }
+
         var t = (xBoundary - p1.X) / (p2.X - p1.X);
         var y = p1.Y + t * (p2.Y - p1.Y);
         return new Point(xBoundary, y);
