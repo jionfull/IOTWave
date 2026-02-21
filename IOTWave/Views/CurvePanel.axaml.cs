@@ -725,15 +725,7 @@ public class CurvePanel : TemplatedControl
 
         foreach (var tickTime in tickIntervals)
         {
-            if (tickTime - beginTime.Ticks < _baseInterval * 0.5)
-            {
-                continue;
-            }
-
-            if (endTime.Ticks - tickTime < pixelsPerTick * 0.5)
-            {
-                continue;
-            }
+          
 
             // 计算像素位置
             var x = (tickTime - beginTime.Ticks) * pixelsPerTick + ChartGlobal.LeftPadding;

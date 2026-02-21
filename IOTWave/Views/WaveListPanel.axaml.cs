@@ -13,6 +13,42 @@ using ReactiveUI;
 
 namespace IOTWave.Views;
 
+/// <summary>
+/// 光标移动步长类型
+/// </summary>
+public enum CursorMoveStep
+{
+    /// <summary>
+    /// 微秒 (1μs)
+    /// </summary>
+    Microsecond = 0,
+    
+    /// <summary>
+    /// 毫秒 (1ms)
+    /// </summary>
+    Millisecond = 1,
+    
+    /// <summary>
+    /// 秒 (1s)
+    /// </summary>
+    Second = 2,
+    
+    /// <summary>
+    /// 分钟 (1min)
+    /// </summary>
+    Minute = 3,
+    
+    /// <summary>
+    /// 小时 (1h)
+    /// </summary>
+    Hour = 4,
+    
+    /// <summary>
+    /// 天 (1d)
+    /// </summary>
+    Day = 5
+}
+
 public class WaveListPanel : SelectingItemsControl, IChartGlobal
 {
     // 依赖属性定义
@@ -108,6 +144,14 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     public static readonly StyledProperty<string> RelativeTimeBaseLabelProperty =
         AvaloniaProperty.Register<WaveListPanel, string>(
             nameof(RelativeTimeBaseLabel), "基准");
+
+    public static readonly StyledProperty<CursorMoveStep> CursorMoveStepProperty =
+        AvaloniaProperty.Register<WaveListPanel, CursorMoveStep>(
+            nameof(CursorMoveStep), CursorMoveStep.Second);
+
+    public static readonly StyledProperty<bool> EnableKeyboardCursorControlProperty =
+        AvaloniaProperty.Register<WaveListPanel, bool>(
+            nameof(EnableKeyboardCursorControl), true);
 
     // 命令属性
     public static readonly DirectProperty<WaveListPanel, ICommand> ZoomInCommandProperty =
@@ -233,6 +277,24 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     {
         get => GetValue(RelativeTimeBaseLabelProperty);
         set => SetValue(RelativeTimeBaseLabelProperty, value);
+    }
+
+    /// <summary>
+    /// 光标移动步长类型，控制按键移动的时间单位
+    /// </summary>
+    public CursorMoveStep CursorMoveStep
+    {
+        get => GetValue(CursorMoveStepProperty);
+        set => SetValue(CursorMoveStepProperty, value);
+    }
+
+    /// <summary>
+    /// 是否启用键盘控制光标移动
+    /// </summary>
+    public bool EnableKeyboardCursorControl
+    {
+        get => GetValue(EnableKeyboardCursorControlProperty);
+        set => SetValue(EnableKeyboardCursorControlProperty, value);
     }
 
     public bool ShowCursor
@@ -709,7 +771,8 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
-        if (_scrollViewer == null) return;
+        
+        if (!EnableKeyboardCursorControl || _scrollViewer == null) return;
 
         var viewportWidth = _scrollViewer.Viewport.Width - LeftPadding - RightPadding;
         if (viewportWidth <= 0) return;
@@ -717,24 +780,29 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         var timeSpan = EndTime - StartTime;
         if (timeSpan.Ticks <= 0) return;
 
-        // 计算每秒对应的像素宽度
-        var pixelsPerSecond = viewportWidth / timeSpan.TotalSeconds;
+        if (e.Key == Key.Left || e.Key == Key.Right)
+        {
+            if (CursorTime.HasValue)
+            {
+                // 获取基础步长
+                var step = GetCursorMoveStepTimeSpan();
+                
+                // Alt 键按下时，步长乘以 10
+                if (e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+                {
+                    step = TimeSpan.FromTicks(step.Ticks * 10);
+                }
 
-        if (e.Key == Key.Left)
-        {
-            // 向左移动1秒
-            if (CursorTime.HasValue)
-            {
-                CursorTime = CursorTime.Value.AddSeconds(-1);
-                CursorPosition = TimeToX(CursorTime.Value);
-            }
-        }
-        else if (e.Key == Key.Right)
-        {
-            // 向右移动1秒
-            if (CursorTime.HasValue)
-            {
-                CursorTime = CursorTime.Value.AddSeconds(1);
+                // 根据方向移动
+                if (e.Key == Key.Left)
+                {
+                    CursorTime = CursorTime.Value.Subtract(step);
+                }
+                else
+                {
+                    CursorTime = CursorTime.Value.Add(step);
+                }
+
                 CursorPosition = TimeToX(CursorTime.Value);
             }
         }
@@ -750,6 +818,23 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             CursorPosition = _scrollViewer.Viewport.Width - RightPadding;
             CursorTime = XToTime(CursorPosition);
         }
+    }
+
+    /// <summary>
+    /// 根据 CursorMoveStep 获取对应的时间跨度
+    /// </summary>
+    private TimeSpan GetCursorMoveStepTimeSpan()
+    {
+        return CursorMoveStep switch
+        {
+            CursorMoveStep.Microsecond => TimeSpan.FromTicks(10), // 1μs = 10 ticks
+            CursorMoveStep.Millisecond => TimeSpan.FromMilliseconds(1),
+            CursorMoveStep.Second => TimeSpan.FromSeconds(1),
+            CursorMoveStep.Minute => TimeSpan.FromMinutes(1),
+            CursorMoveStep.Hour => TimeSpan.FromHours(1),
+            CursorMoveStep.Day => TimeSpan.FromDays(1),
+            _ => TimeSpan.FromSeconds(1)
+        };
     }
 
     // 鼠标事件处理
@@ -834,10 +919,10 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             // 普通模式：对齐到自然时间
             var remainder = StartTime.Ticks % interval;
             firstTick = StartTime.Ticks - remainder + interval;
-            if (remainder > interval / 2)
+            /*if (remainder > interval / 2)
             {
                 firstTick += interval;
-            }
+            }*/
         }
 
         return firstTick;

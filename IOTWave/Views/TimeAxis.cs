@@ -88,10 +88,10 @@ public class TimeAxis : Control
         var axisY = 1;
         //DrawLeft Ticks;
         context.DrawLine(AxisPen, new Point(ChartGlobal.LeftPadding, 1),
-            new Point(ChartGlobal.LeftPadding, ScaleConfig.MajorTickLength));
+            new Point(ChartGlobal.LeftPadding, ScaleConfig.MajorTickLength+16));
         context.DrawLine(AxisPen, new Point(Bounds.Width - ChartGlobal.RightPadding, 1),
             new Point(Bounds.Width - ChartGlobal.RightPadding, ScaleConfig.MajorTickLength));
-        DrawStartLabel(context);
+       
         var preTicks = ChartGlobal.StartTime.Ticks;
         foreach (var tickTime in tickIntervals)
         {
@@ -115,6 +115,7 @@ public class TimeAxis : Control
             DrawTimeLabel(context, preTicks, tickTime, x, ScaleConfig.MajorTickLength);
             preTicks = tickTime;
         }
+        DrawStartLabel(context);
     }
 
     private void DrawStartLabel(DrawingContext context)
@@ -133,8 +134,8 @@ public class TimeAxis : Control
         }
         else
         {
-            labelText = bTime.ToString("HH:mm:ss");
-            labelText2 = bTime.ToString("M月d日");
+            labelText = "";//bTime.ToString("");
+            labelText2 = bTime.ToString("M月d日 HH:mm:ss");
         }
         
         var formattedText = new FormattedText(
