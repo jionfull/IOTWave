@@ -91,49 +91,17 @@
                       DataContext="{Binding RelativeTimeViewModel}"/>
       </Grid>
     </TabItem>
-    <TabItem Header="当前值显示示例">
-      <views:WaveListPanel
-          Classes="demoPanel"
-          DataContext="{Binding CurrentValueViewModel}"
-          ItemsSource="{Binding Items}"
-          TimeMarkers="{Binding TimeMarkers}"
-          TimeRangeMarkers="{Binding TimeRangeMarkers}"
-          StartTime="{Binding BeginTime}"
-          EndTime="{Binding EndTime}">
-        <views:WaveListPanel.DataTemplates>
-          <DataTemplate DataType="models:CurveGroup">
-            <views:CurvePanel
-                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
-                Foreground="#7DD3FC"
-                Items="{Binding}"
-                YMarkers="{Binding YMarkers}"
-                Height="{Binding Height}">
-              <views:CurvePanel.Template>
-                <ControlTemplate>
-                  <Grid Background="{TemplateBinding Background}">
-                    <ListBox Name="PART_Legend"
-                             Classes="legendBox curveLegendWithValue"
-                             ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
-                  </Grid>
-                </ControlTemplate>
-              </views:CurvePanel.Template>
-            </views:CurvePanel>
-          </DataTemplate>
-          <DataTemplate DataType="models:StatuSeriesGroup">
-            <views:StatusPanel
-                ChartGlobal="{Binding $parent[views:WaveListPanel]}"
-                Items="{Binding}"
-                Height="{Binding Height}"
-                Margin="0,1" />
-          </DataTemplate>
-        </views:WaveListPanel.DataTemplates>
-      </views:WaveListPanel>
-    </TabItem>
+
       <TabItem Header="当前值显示示例2">
        <views:IOTChart2 Classes="showValue" DataContext="{Binding CurrentValueViewModel}" />
      
     </TabItem>
-     <TabItem Header="日报表显示示例">
+
+    <TabItem Header="日报表显示示例1">
+      <views:IOTChart2 Classes="dayReport" DataContext="{Binding DayReportViewModel}" />
+
+    </TabItem>
+     <TabItem Header="日报表显示示例2">
       <views:WaveListPanel
           Classes="demoPanel"
           DataContext="{Binding DayReportViewModel}"

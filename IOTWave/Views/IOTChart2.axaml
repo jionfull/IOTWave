@@ -108,4 +108,61 @@
             </ControlTemplate>
         </Setter>
     </Style>
+  <Style Selector="controls|IOTChart2.dayReport">
+    <!-- 带当前值显示的模板 -->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <controls:WaveListPanel x:Name="CurveDisplay"
+                                StartTime="{Binding BeginTime}"
+                                EndTime="{Binding EndTime}"
+                                ShowCursor="True"
+                                ItemsSource="{Binding Items}"
+                                ShowTimeAxis="True"
+                                CursorTime="{Binding SelectedTime}"
+                                GridBrush="#6400B4D8"
+                                LabelBrush="#7DD3FC"
+                                IsInteractive="True"
+                                StatusPanelHeight="20"
+                                TimeMarkers="{Binding TimeMarkers}"
+                                TimeRangeMarkers="{Binding TimeRangeMarkers}"
+                                UseRelativeTime="{Binding UseRelativeTime}"
+                                RelativeTimeBase="{Binding RelativeTimeBase}"
+                                RelativeTimeBaseLabel="{Binding RelativeTimeBaseLabel}"
+                                AutoDistributePanelHeight="{Binding $parent[controls:IOTChart2].AutoDistributePanelHeight}"
+                                VerticalScrollBarVisibility="{Binding $parent[controls:IOTChart2].VerticalScrollBarVisibility}"
+                                CursorMoveStep="{Binding $parent[controls:IOTChart2].CursorMoveStep}"
+                                EnableKeyboardCursorControl="{Binding $parent[controls:IOTChart2].EnableKeyboardCursorControl}"
+                                Background="Black">
+          <controls:WaveListPanel.DataTemplates>
+            <DataTemplate DataType="{x:Type models:CurveGroup}">
+              <controls:CurvePanel
+                  ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
+                  Foreground="#7DD3FC"
+                  Items="{Binding}"
+                  YMarkers="{Binding YMarkers}"
+                  Height="{Binding Height}">
+                <controls:CurvePanel.Template>
+                  <ControlTemplate>
+                    <Grid Background="{TemplateBinding Background}">
+                      <ListBox Name="PART_Legend"
+                               Classes="legendBox reportLegend"
+                               ItemsSource="{Binding Items.Curves, RelativeSource={RelativeSource TemplatedParent}}"/>
+                    </Grid>
+                  </ControlTemplate>
+                </controls:CurvePanel.Template>
+              </controls:CurvePanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">
+              <controls:StatusPanel
+                  ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
+                  Items="{Binding}"
+                  Height="{Binding Height}"
+                  Margin="0,1" />
+            </DataTemplate>
+          </controls:WaveListPanel.DataTemplates>
+        </controls:WaveListPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
 </Styles>
