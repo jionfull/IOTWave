@@ -804,6 +804,9 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                 }
 
                 CursorPosition = TimeToX(CursorTime.Value);
+                
+                // 标记事件已处理，阻止冒泡到 TabControl
+                e.Handled = true;
             }
         }
 
