@@ -38,14 +38,16 @@
                                 Foreground="#7DD3FC"
                                 Items="{Binding}"
                                 YMarkers="{Binding YMarkers}"
-                                Height="{Binding Height}" />
+                                Height="{Binding Height}"
+                                IsVisible="{Binding IsVisible}" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type models:StatuSeriesGroup}">
                             <controls:StatusPanel
                                 ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
                                 Items="{Binding}"
                                 Height="{Binding Height}"
-                                Margin="0,1" />
+                                Margin="0,1"
+                                IsVisible="{Binding IsVisible}" />
                         </DataTemplate>
                     </controls:WaveListPanel.DataTemplates>
                 </controls:WaveListPanel>
@@ -84,7 +86,8 @@
                                 Foreground="#7DD3FC"
                                 Items="{Binding}"
                                 YMarkers="{Binding YMarkers}"
-                                Height="{Binding Height}">
+                                Height="{Binding Height}"
+                                IsVisible="{Binding IsVisible}">
                                 <controls:CurvePanel.Template>
                                     <ControlTemplate>
                                         <Grid Background="{TemplateBinding Background}">
@@ -101,7 +104,8 @@
                                 ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
                                 Items="{Binding}"
                                 Height="{Binding Height}"
-                                Margin="0,1" />
+                                Margin="0,1"
+                                IsVisible="{Binding IsVisible}" />
                         </DataTemplate>
                     </controls:WaveListPanel.DataTemplates>
                 </controls:WaveListPanel>
@@ -140,7 +144,8 @@
                   Foreground="#7DD3FC"
                   Items="{Binding}"
                   YMarkers="{Binding YMarkers}"
-                  Height="{Binding Height}">
+                  Height="{Binding Height}"
+                  IsVisible="{Binding IsVisible}">
                 <controls:CurvePanel.Template>
                   <ControlTemplate>
                     <Grid Background="{TemplateBinding Background}">
@@ -157,7 +162,8 @@
                   ChartGlobal="{Binding $parent[controls:WaveListPanel]}"
                   Items="{Binding}"
                   Height="{Binding Height}"
-                  Margin="0,1" />
+                  Margin="0,1"
+                  IsVisible="{Binding IsVisible}" />
             </DataTemplate>
           </controls:WaveListPanel.DataTemplates>
         </controls:WaveListPanel>

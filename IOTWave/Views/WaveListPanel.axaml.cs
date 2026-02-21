@@ -1170,12 +1170,15 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
             return;
         }
 
-        // 统计 CurvePanel 和 StatusPanel 数量
+        // 统计 CurvePanel 和 StatusPanel 数量（只计算可见的）
         int curvePanelCount = 0;
         int statusPanelCount = 0;
 
         foreach (var item in Items)
         {
+            if (item is DataSeriesGroupBase group && !group.IsVisible)
+                continue;
+                
             if (item is CurveGroup)
                 curvePanelCount++;
             else if (item is StatuSeriesGroup)
@@ -1250,11 +1253,21 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
                     
                    if (targetControl is CurvePanel curvePanel)
                     {
+                        // 检查数据源是否可见
+                        if (curvePanel.DataContext is DataSeriesGroupBase group && !group.IsVisible)
+                        {
+                            continue;
+                        }
                         curvePanel.Height = curvePanelHeight;
                         curveCount++;
                     }
                     else if (targetControl is StatusPanel statusPanel)
                     {
+                        // 检查数据源是否可见
+                        if (statusPanel.DataContext is DataSeriesGroupBase group && !group.IsVisible)
+                        {
+                            continue;
+                        }
                         statusPanel.Height = StatusPanelHeight;
                         statusCount++;
                     }
