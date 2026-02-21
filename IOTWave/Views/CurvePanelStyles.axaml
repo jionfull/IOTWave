@@ -42,8 +42,8 @@
         <DataTemplate x:Key="CurveLegendWithValueTemplate" DataType="models:CurveData">
             <StackPanel Orientation="Vertical" Margin="5,0" Spacing="2">
                 <!-- 曲线名称和可见性控制 -->
-                <CheckBox Background="Transparent" 
-                          IsChecked="{Binding IsVisible}" 
+                <CheckBox Background="Transparent"
+                          IsChecked="{Binding IsVisible}"
                           Content="{Binding Name}"
                           Foreground="{Binding Brush}">
                     <CheckBox.Styles>
@@ -62,19 +62,19 @@
                         </Style>
                     </CheckBox.Styles>
                 </CheckBox>
-                
+
                 <!-- 当前值显示区域 -->
                 <StackPanel Orientation="Horizontal" Spacing="4" Margin="20,0,0,0">
-                    <TextBlock Text="{Binding CurrentTimeText}" 
-                               FontSize="10" 
+                    <TextBlock Text="{Binding CursorPoint.Time, StringFormat='{}{0:HH:mm:ss.fff}'}"
+                               FontSize="10"
                                Foreground="{Binding Brush}"
                                Opacity="0.8"/>
-                    <TextBlock Text=":" 
-                               FontSize="10" 
+                    <TextBlock Text=":"
+                               FontSize="10"
                                Foreground="{Binding Brush}"
                                Opacity="0.6"/>
-                    <TextBlock Text="{Binding CurrentValueText}" 
-                               FontSize="10" 
+                    <TextBlock Text="{Binding CursorPoint.Value, StringFormat='{}{0:F2}'}"
+                               FontSize="10"
                                Foreground="{Binding Brush}"
                                FontWeight="Bold"/>
                 </StackPanel>

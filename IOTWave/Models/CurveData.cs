@@ -55,55 +55,8 @@ public partial class CurveData :ObservableObject
         }
     }
 
-    private double? _currentValue;
-    /// <summary>
-    /// 光标位置对应的曲线值（光标时间之前最近的数据点）
-    /// </summary>
-    public double? CurrentValue
-    {
-        get => _currentValue;
-        set
-        {
-            if (_currentValue != value)
-            {
-                _currentValue = value;
-                OnPropertyChanged(nameof(CurrentValue));
-                OnPropertyChanged(nameof(CurrentValueText));
-            }
-        }
-    }
-
     [ObservableProperty]
     private TimePoint? _cursorPoint;
-  
-
-    private DateTime? _currentTime;
-    /// <summary>
-    /// 当前值对应的时间点
-    /// </summary>
-    public DateTime? CurrentTime
-    {
-        get => _currentTime;
-        set
-        {
-            if (_currentTime != value)
-            {
-                _currentTime = value;
-                OnPropertyChanged(nameof(CurrentTime));
-                OnPropertyChanged(nameof(CurrentTimeText));
-            }
-        }
-    }
-
-    /// <summary>
-    /// 当前值的文本表示
-    /// </summary>
-    public string CurrentValueText => CurrentValue?.ToString("F2") ?? "--";
-
-    /// <summary>
-    /// 当前时间的文本表示
-    /// </summary>
-    public string CurrentTimeText => CurrentTime?.ToString("HH:mm:ss.fff") ?? "--:--:--";
 
     /// <summary>
     /// 根据光标时间更新当前值（查找光标时间之前最近的数据点）
@@ -112,29 +65,24 @@ public partial class CurveData :ObservableObject
     {
         if (!cursorTime.HasValue || Points.Count == 0)
         {
-            CurrentValue = null;
-            CurrentTime = null;
+            CursorPoint = null;
             return;
         }
 
         // 二分查找找到第一个时间大于光标时间的点
         var index = Points.BinarySearch(new TimePoint { Time = cursorTime.Value }, TimePoint.TimeComparer.Instance);
-        
+
         if (index < 0) index = ~index;
-        
+
         // index 是第一个大于光标时间的点，所以前一个点就是我们要找的点
         if (index > 0)
         {
-            var point = Points[index - 1];
-            CursorPoint = point;
-            CurrentValue = point.Value;
-            CurrentTime = point.Time;
+            CursorPoint = Points[index - 1];
         }
         else if (index == 0 && Points.Count > 0)
         {
             // 光标时间在所有数据点之前
-            CurrentValue = null;
-            CurrentTime = null;
+            CursorPoint = null;
         }
     }
 
