@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using IOTWave.ViewModels;
 
 namespace IOTWave.Views;
 
@@ -68,56 +67,14 @@ public class IOTChart2 : TemplatedControl
         set => SetValue(RelativeTimeBaseLabelProperty, value);
     }
 
+    /// <summary>
+    /// 获取内部的 WaveListPanel 控件，用于直接调用跳转方法
+    /// </summary>
+    public WaveListPanel? WaveListPanel => _waveListPanel;
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-
         _waveListPanel = e.NameScope.Find<WaveListPanel>("CurveDisplay");
-
-        // 订阅 DataContext 变化
-        this.GetObservable(DataContextProperty).Subscribe(OnDataContextChanged);
-    }
-
-    private IOTWaveBaseViewModel? _currentViewModel;
-
-    private void OnDataContextChanged(object? dataContext)
-    {
-        // 取消旧 ViewModel 的订阅
-        if (_currentViewModel != null)
-        {
-            _currentViewModel.TimeJumpRequested -= OnTimeJumpRequested;
-        }
-
-        _currentViewModel = dataContext as IOTWaveBaseViewModel;
-
-        // 订阅新 ViewModel 的事件
-        if (_currentViewModel != null)
-        {
-            _currentViewModel.TimeJumpRequested += OnTimeJumpRequested;
-        }
-    }
-
-    private void OnTimeJumpRequested(TimeJumpEventArgs e)
-    {
-        if (_waveListPanel == null || _currentViewModel == null) return;
-
-        switch (e.JumpType)
-        {
-            case TimeJumpType.Start:
-                _waveListPanel.JumpToStart(_currentViewModel.DataStartTime);
-                break;
-            case TimeJumpType.End:
-                _waveListPanel.JumpToEnd(_currentViewModel.DataEndTime);
-                break;
-            case TimeJumpType.Middle:
-                _waveListPanel.JumpToMiddle(_currentViewModel.DataStartTime, _currentViewModel.DataEndTime);
-                break;
-            case TimeJumpType.SpecificTime:
-                if (e.TargetTime.HasValue)
-                {
-                    _waveListPanel.JumpToTime(e.TargetTime.Value);
-                }
-                break;
-        }
     }
 }

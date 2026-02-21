@@ -153,43 +153,44 @@
           <RowDefinition Height="Auto"/>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <!-- 跳转按钮面板 -->
         <Border Background="#1A1A1A" Padding="10">
           <StackPanel Orientation="Horizontal" Spacing="10">
             <TextBlock Text="时间跳转：" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0"/>
-            
-            <Button Content="跳转到起始" 
-                    Command="{Binding TimeJumpViewModel.JumpToStartCommand}"
+
+            <Button Content="跳转到起始"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToStartCommand}"
                     Background="#3B82F6" Foreground="White" Padding="10,5"/>
-            
-            <Button Content="跳转到中间" 
-                    Command="{Binding TimeJumpViewModel.JumpToMiddleCommand}"
+
+            <Button Content="跳转到中间"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToMiddleCommand}"
                     Background="#8B5CF6" Foreground="White" Padding="10,5"/>
-            
-            <Button Content="跳转到结束" 
-                    Command="{Binding TimeJumpViewModel.JumpToEndCommand}"
+
+            <Button Content="跳转到结束"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToEndCommand}"
                     Background="#EC4899" Foreground="White" Padding="10,5"/>
-            
+
             <Separator Width="20" Background="Transparent"/>
-            
+
             <TextBlock Text="指定时间：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
 
-            <DatePicker SelectedDate="{Binding TimeJumpViewModel.JumpTargetTime, Mode=TwoWay}"
+            <DatePicker SelectedDate="{Binding TimeJumpDemoViewModel.DataViewModel.JumpTargetTime, Mode=TwoWay}"
                        VerticalAlignment="Center"/>
 
-            <TimePicker SelectedTime="{Binding TimeJumpViewModel.JumpTargetTimeSpan, Mode=TwoWay}"
+            <TimePicker SelectedTime="{Binding TimeJumpDemoViewModel.JumpTargetTimeSpan, Mode=TwoWay}"
                        VerticalAlignment="Center"
                        Width="120"/>
-            
-            <Button Content="跳转到指定时间" 
-                    Command="{Binding TimeJumpViewModel.JumpToTargetTimeCommand}"
+
+            <Button Content="跳转到指定时间"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTimeCommand}"
                     Background="#10B981" Foreground="White" Padding="10,5"/>
           </StackPanel>
         </Border>
-        
-        <views:IOTChart2 Grid.Row="1"
-                        DataContext="{Binding TimeJumpViewModel}"
+
+        <views:IOTChart2 x:Name="TimeJumpChart"
+                        Grid.Row="1"
+                        DataContext="{Binding TimeJumpDemoViewModel.DataViewModel}"
                         AutoDistributePanelHeight="True"/>
       </Grid>
     </TabItem>

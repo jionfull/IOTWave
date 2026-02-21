@@ -169,78 +169,7 @@ public class TimeJumpTests
 
     #endregion
 
-    #region ViewModel 命令测试
-
-    [Test]
-    public void ViewModel_JumpToStartCommand_ShouldRaiseEvent()
-    {
-        // Arrange
-        var viewModel = new IOTWaveBaseViewModel();
-        TimeJumpEventArgs? eventArgs = null;
-        viewModel.TimeJumpRequested += (args) => eventArgs = args;
-
-        // Act
-        viewModel.JumpToStartCommand.Execute(null);
-
-        // Assert
-        Assert.That(eventArgs, Is.Not.Null, "应该触发 TimeJumpRequested 事件");
-        Assert.That(eventArgs!.JumpType, Is.EqualTo(TimeJumpType.Start), "跳转类型应该是 Start");
-    }
-
-    [Test]
-    public void ViewModel_JumpToEndCommand_ShouldRaiseEvent()
-    {
-        // Arrange
-        var viewModel = new IOTWaveBaseViewModel();
-        TimeJumpEventArgs? eventArgs = null;
-        viewModel.TimeJumpRequested += (args) => eventArgs = args;
-
-        // Act
-        viewModel.JumpToEndCommand.Execute(null);
-
-        // Assert
-        Assert.That(eventArgs, Is.Not.Null, "应该触发 TimeJumpRequested 事件");
-        Assert.That(eventArgs!.JumpType, Is.EqualTo(TimeJumpType.End), "跳转类型应该是 End");
-    }
-
-    [Test]
-    public void ViewModel_JumpToMiddleCommand_ShouldRaiseEvent()
-    {
-        // Arrange
-        var viewModel = new IOTWaveBaseViewModel();
-        TimeJumpEventArgs? eventArgs = null;
-        viewModel.TimeJumpRequested += (args) => eventArgs = args;
-
-        // Act
-        viewModel.JumpToMiddleCommand.Execute(null);
-
-        // Assert
-        Assert.That(eventArgs, Is.Not.Null, "应该触发 TimeJumpRequested 事件");
-        Assert.That(eventArgs!.JumpType, Is.EqualTo(TimeJumpType.Middle), "跳转类型应该是 Middle");
-    }
-
-    [Test]
-    public void ViewModel_JumpToTargetTimeCommand_ShouldRaiseEventWithTargetTime()
-    {
-        // Arrange
-        var viewModel = new IOTWaveBaseViewModel();
-        var targetDate = new DateTime(2024, 1, 1, 0, 0, 0);
-        var targetTimeSpan = new TimeSpan(5, 30, 0); // 5:30:00
-
-        viewModel.JumpTargetTime = targetDate;
-        viewModel.JumpTargetTimeSpan = targetTimeSpan;
-
-        TimeJumpEventArgs? eventArgs = null;
-        viewModel.TimeJumpRequested += (args) => eventArgs = args;
-
-        // Act
-        viewModel.JumpToTargetTimeCommand.Execute(null);
-
-        // Assert
-        Assert.That(eventArgs, Is.Not.Null, "应该触发 TimeJumpRequested 事件");
-        Assert.That(eventArgs!.JumpType, Is.EqualTo(TimeJumpType.SpecificTime), "跳转类型应该是 SpecificTime");
-        Assert.That(eventArgs.TargetTime, Is.EqualTo(targetDate + targetTimeSpan), "目标时间应该是日期+时间的组合");
-    }
+    #region ViewModel 属性测试
 
     [Test]
     public void ViewModel_DataTimeRange_ShouldBeSettable()
@@ -257,6 +186,20 @@ public class TimeJumpTests
         // Assert
         Assert.That(viewModel.DataStartTime, Is.EqualTo(dataStart));
         Assert.That(viewModel.DataEndTime, Is.EqualTo(dataEnd));
+    }
+
+    [Test]
+    public void ViewModel_JumpTargetTime_ShouldBeSettable()
+    {
+        // Arrange
+        var viewModel = new IOTWaveBaseViewModel();
+        var targetTime = new DateTime(2024, 1, 1, 12, 0, 0);
+
+        // Act
+        viewModel.JumpTargetTime = targetTime;
+
+        // Assert
+        Assert.That(viewModel.JumpTargetTime, Is.EqualTo(targetTime));
     }
 
     #endregion

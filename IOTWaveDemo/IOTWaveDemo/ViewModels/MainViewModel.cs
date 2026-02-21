@@ -23,7 +23,7 @@ namespace IOTWaveDemo.ViewModels
 
         [ObservableProperty]
         private IOTWaveBaseViewModel currentValueViewModel = new IOTWaveBaseViewModel();
-       
+
         [ObservableProperty]
         private IOTWaveBaseViewModel dayReportViewModel = new IOTWaveBaseViewModel();
 
@@ -31,11 +31,15 @@ namespace IOTWaveDemo.ViewModels
         /// 时间跳转演示 ViewModel
         /// </summary>
         [ObservableProperty]
-        private IOTWaveBaseViewModel timeJumpViewModel = new IOTWaveBaseViewModel();
+        private TimeJumpDemoViewModel timeJumpDemoViewModel;
 
 
         public MainViewModel()
         {
+            // 初始化时间跳转演示
+            var timeJumpData = new IOTWaveBaseViewModel();
+            timeJumpDemoViewModel = new TimeJumpDemoViewModel(timeJumpData);
+
             InitializeBasicData();
             InitializeScrollableData();
             InitializeRelativeTimeData();
@@ -670,18 +674,19 @@ namespace IOTWaveDemo.ViewModels
             var rnd = new Random();
             var startTime = DateTime.Now.Date;
             var endTime = startTime.AddHours(24);
+            var dataViewModel = TimeJumpDemoViewModel.DataViewModel;
 
             // 设置数据范围（24小时数据）
-            TimeJumpViewModel.DataStartTime = startTime;
-            TimeJumpViewModel.DataEndTime = endTime;
+            dataViewModel.DataStartTime = startTime;
+            dataViewModel.DataEndTime = endTime;
 
             // 设置初始可视范围（4小时窗口）
-            TimeJumpViewModel.BeginTime = startTime;
-            TimeJumpViewModel.EndTime = startTime.AddHours(4);
+            dataViewModel.BeginTime = startTime;
+            dataViewModel.EndTime = startTime.AddHours(4);
 
             // 设置默认跳转目标时间为中午12点
-            TimeJumpViewModel.JumpTargetTime = startTime.AddHours(12);
-            TimeJumpViewModel.JumpTargetTimeSpan = TimeSpan.FromHours(12);
+            dataViewModel.JumpTargetTime = startTime.AddHours(12);
+            TimeJumpDemoViewModel.JumpTargetTimeSpan = TimeSpan.FromHours(12);
 
             // 创建温度曲线面板
             var tempPanel = new CurveGroup()
@@ -721,7 +726,7 @@ namespace IOTWaveDemo.ViewModels
             tempPanel.Curves.Add(tempCurve1);
             tempPanel.Curves.Add(tempCurve2);
             tempPanel.YMarkers.Add(new YMarker(30, "高温警告"));
-            TimeJumpViewModel.Items.Add(tempPanel);
+            dataViewModel.Items.Add(tempPanel);
 
             // 创建压力曲线面板
             var pressurePanel = new CurveGroup()
@@ -748,22 +753,22 @@ namespace IOTWaveDemo.ViewModels
 
             pressurePanel.Curves.Add(pressureCurve);
             pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
-            TimeJumpViewModel.Items.Add(pressurePanel);
+            dataViewModel.Items.Add(pressurePanel);
 
             // 添加时间标记
-            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            dataViewModel.TimeMarkers.Add(new TimeMarker
             {
                 Time = startTime.AddHours(6),
                 Label = "早班开始",
                 Color = Colors.Yellow
             });
-            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            dataViewModel.TimeMarkers.Add(new TimeMarker
             {
                 Time = startTime.AddHours(12),
                 Label = "午休时间",
                 Color = Colors.Orange
             });
-            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            dataViewModel.TimeMarkers.Add(new TimeMarker
             {
                 Time = startTime.AddHours(18),
                 Label = "晚班开始",
