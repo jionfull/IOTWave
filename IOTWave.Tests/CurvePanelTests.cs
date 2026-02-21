@@ -1,4 +1,7 @@
 using Avalonia;
+using Avalonia.Headless;
+using Avalonia.Logging;
+using Avalonia.Platform;
 using IOTWave.Models;
 using IOTWave.Views;
 
@@ -10,6 +13,10 @@ namespace IOTWave.Tests;
 [TestFixture]
 public class CurvePanelTests
 {
+    // 注意：Avalonia 平台初始化在单元测试中比较复杂
+    // 对于需要 Avalonia 平台的测试，我们使用 Ignore 属性
+    // 在实际的 UI 测试环境中，这些测试会正常工作
+
     #region CalculateVisiblePointIndices 测试
 
     [Test]
@@ -262,139 +269,11 @@ public class CurvePanelTests
 
     #endregion
 
-    #region BuildCurveGeometry 测试（需要 Avalonia 平台，标记为忽略）
-
+    #region BuildCurveGeometry 测试说明
     /// <summary>
-    /// 注意：这些测试需要 Avalonia 平台初始化才能正确运行
-    /// 在实际 UI 测试环境中，这些测试会正常工作
+    /// 注意：BuildCurveGeometry 相关的测试已移至 CurvePanelHeadlessTests.cs 文件
+    /// 这些测试需要 Avalonia 平台初始化，使用 Headless 模式运行
     /// </summary>
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_EmptyList_ReturnsEmptyGeometry()
-    {
-        var points = new List<(Point, int)>();
-        var drawArea = new Rect(100, 0, 600, 400);
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_BothPointsInside_DrawsLine()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(200, 100), 0),
-            (new Point(300, 200), 1),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_FromOutsideToInside_StartsAtIntersection()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(50, 100), 0),
-            (new Point(200, 200), 1),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_FromInsideToOutside_EndsAtIntersection()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(600, 200), 0),
-            (new Point(800, 300), 1),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_BothOutsideCrossingArea_DrawsAcross()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(50, 100), 0),
-            (new Point(800, 200), 1),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_MultipleSegments_ConnectsCorrectly()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(200, 100), 0),
-            (new Point(300, 150), 1),
-            (new Point(400, 200), 2),
-            (new Point(500, 180), 3),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_SinglePoint_ReturnsEmpty()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(200, 100), 0),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
-    [Test]
-    [Ignore("需要 Avalonia 平台初始化")]
-    public void BuildCurveGeometry_AlternatingInsideOutside_HandlesCorrectly()
-    {
-        var drawArea = new Rect(100, 0, 600, 400);
-        var points = new List<(Point, int)>
-        {
-            (new Point(50, 100), 0),
-            (new Point(200, 150), 1),
-            (new Point(800, 200), 2),
-            (new Point(400, 180), 3),
-        };
-
-        var geometry = CurvePanel.BuildCurveGeometry(points, drawArea);
-
-        Assert.That(geometry, Is.Not.Null);
-    }
-
     #endregion
 
     #region 集成测试
