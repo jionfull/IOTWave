@@ -145,5 +145,53 @@
         </views:WaveListPanel.DataTemplates>
       </views:WaveListPanel>
     </TabItem>
+
+    <!-- 时间跳转演示 -->
+    <TabItem Header="时间跳转演示">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 跳转按钮面板 -->
+        <Border Background="#1A1A1A" Padding="10">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="时间跳转：" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0"/>
+            
+            <Button Content="跳转到起始" 
+                    Command="{Binding TimeJumpViewModel.JumpToStartCommand}"
+                    Background="#3B82F6" Foreground="White" Padding="10,5"/>
+            
+            <Button Content="跳转到中间" 
+                    Command="{Binding TimeJumpViewModel.JumpToMiddleCommand}"
+                    Background="#8B5CF6" Foreground="White" Padding="10,5"/>
+            
+            <Button Content="跳转到结束" 
+                    Command="{Binding TimeJumpViewModel.JumpToEndCommand}"
+                    Background="#EC4899" Foreground="White" Padding="10,5"/>
+            
+            <Separator Width="20" Background="Transparent"/>
+            
+            <TextBlock Text="指定时间：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
+            
+            <DatePicker SelectedDate="{Binding TimeJumpViewModel.JumpTargetTime}"
+                       VerticalAlignment="Center"/>
+            
+            <TimePicker SelectedTime="{Binding TimeJumpViewModel.JumpTargetTime}"
+                       VerticalAlignment="Center"
+                       Width="120"/>
+            
+            <Button Content="跳转到指定时间" 
+                    Command="{Binding TimeJumpViewModel.JumpToTargetTimeCommand}"
+                    Background="#10B981" Foreground="White" Padding="10,5"/>
+          </StackPanel>
+        </Border>
+        
+        <views:IOTChart2 Grid.Row="1"
+                        DataContext="{Binding TimeJumpViewModel}"
+                        AutoDistributePanelHeight="True"/>
+      </Grid>
+    </TabItem>
   </TabControl>
 </UserControl>

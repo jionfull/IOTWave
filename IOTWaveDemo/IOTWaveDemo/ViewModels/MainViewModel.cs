@@ -27,6 +27,12 @@ namespace IOTWaveDemo.ViewModels
         [ObservableProperty]
         private IOTWaveBaseViewModel dayReportViewModel = new IOTWaveBaseViewModel();
 
+        /// <summary>
+        /// 时间跳转演示 ViewModel
+        /// </summary>
+        [ObservableProperty]
+        private IOTWaveBaseViewModel timeJumpViewModel = new IOTWaveBaseViewModel();
+
 
         public MainViewModel()
         {
@@ -35,6 +41,7 @@ namespace IOTWaveDemo.ViewModels
             InitializeRelativeTimeData();
             InitializeCurrentValueData();
             InitializeDayReportData();
+            InitializeTimeJumpData();
         }
 
         private void InitializeBasicData()
@@ -653,6 +660,114 @@ namespace IOTWaveDemo.ViewModels
             pressurePanel.Curves.Add(pressureCurve);
             pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
             DayReportViewModel.Items.Add(pressurePanel);
+        }
+
+        /// <summary>
+        /// 初始化时间跳转演示数据
+        /// </summary>
+        private void InitializeTimeJumpData()
+        {
+            var rnd = new Random();
+            var startTime = DateTime.Now.Date;
+            var endTime = startTime.AddHours(24);
+
+            // 设置数据范围（24小时数据）
+            TimeJumpViewModel.DataStartTime = startTime;
+            TimeJumpViewModel.DataEndTime = endTime;
+
+            // 设置初始可视范围（4小时窗口）
+            TimeJumpViewModel.BeginTime = startTime;
+            TimeJumpViewModel.EndTime = startTime.AddHours(4);
+
+            // 设置默认跳转目标时间为中午12点
+            TimeJumpViewModel.JumpTargetTime = startTime.AddHours(12);
+
+            // 创建温度曲线面板
+            var tempPanel = new CurveGroup()
+            {
+                Legend = "温度监控",
+                Height = 200
+            };
+
+            var tempCurve1 = new CurveData
+            {
+                Name = "温度传感器1",
+                Color = Color.Parse("#FF6B6B")
+            };
+
+            var tempCurve2 = new CurveData
+            {
+                Name = "温度传感器2",
+                Color = Color.Parse("#4ECDC4")
+            };
+
+            // 生成24小时数据，每秒10个点
+            for (int i = 0; i < 86400; i++)
+            {
+                var time = startTime.AddSeconds(i);
+                tempCurve1.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 25 + 5 * Math.Sin(i * Math.PI / 1800) + rnd.NextDouble() * 1
+                });
+                tempCurve2.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 28 + 4 * Math.Cos(i * Math.PI / 1500) + rnd.NextDouble() * 0.8
+                });
+            }
+
+            tempPanel.Curves.Add(tempCurve1);
+            tempPanel.Curves.Add(tempCurve2);
+            tempPanel.YMarkers.Add(new YMarker(30, "高温警告"));
+            TimeJumpViewModel.Items.Add(tempPanel);
+
+            // 创建压力曲线面板
+            var pressurePanel = new CurveGroup()
+            {
+                Legend = "压力监控",
+                Height = 150
+            };
+
+            var pressureCurve = new CurveData
+            {
+                Name = "压力传感器",
+                Color = Color.Parse("#45B7D1")
+            };
+
+            for (int i = 0; i < 86400; i++)
+            {
+                var time = startTime.AddSeconds(i);
+                pressureCurve.Points.Add(new TimePoint
+                {
+                    Time = time,
+                    Value = 100 + 10 * Math.Sin(i * Math.PI / 2000) + rnd.NextDouble() * 2
+                });
+            }
+
+            pressurePanel.Curves.Add(pressureCurve);
+            pressurePanel.YMarkers.Add(new YMarker(110, "高压警告"));
+            TimeJumpViewModel.Items.Add(pressurePanel);
+
+            // 添加时间标记
+            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = startTime.AddHours(6),
+                Label = "早班开始",
+                Color = Colors.Yellow
+            });
+            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = startTime.AddHours(12),
+                Label = "午休时间",
+                Color = Colors.Orange
+            });
+            TimeJumpViewModel.TimeMarkers.Add(new TimeMarker
+            {
+                Time = startTime.AddHours(18),
+                Label = "晚班开始",
+                Color = Colors.Purple
+            });
         }
     }
 }

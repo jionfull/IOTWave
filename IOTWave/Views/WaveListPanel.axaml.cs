@@ -490,6 +490,97 @@ public class WaveListPanel : SelectingItemsControl, IChartGlobal
         OnTimeRangeChanged();
     }
 
+    #region 时间跳转功能
+
+    /// <summary>
+    /// 标志位，用于防止事件循环
+    /// </summary>
+    private bool _isJumping = false;
+
+    /// <summary>
+    /// 跳转到指定时间，保持当前时间跨度不变
+    /// </summary>
+    /// <param name="targetTime">目标中心时间</param>
+    public void JumpToTime(DateTime targetTime)
+    {
+        if (_isJumping) return;
+
+        try
+        {
+            _isJumping = true;
+            var timeSpan = EndTime - StartTime;
+
+            // 以目标时间为中心，保持时间跨度不变
+            StartTime = targetTime - TimeSpan.FromTicks(timeSpan.Ticks / 2);
+            EndTime = targetTime + TimeSpan.FromTicks(timeSpan.Ticks / 2);
+
+            OnTimeRangeChanged();
+        }
+        finally
+        {
+            _isJumping = false;
+        }
+    }
+
+    /// <summary>
+    /// 跳转到数据起始位置
+    /// </summary>
+    /// <param name="dataStartTime">数据起始时间</param>
+    public void JumpToStart(DateTime dataStartTime)
+    {
+        var timeSpan = EndTime - StartTime;
+        StartTime = dataStartTime;
+        EndTime = dataStartTime + timeSpan;
+        OnTimeRangeChanged();
+    }
+
+    /// <summary>
+    /// 跳转到数据结束位置
+    /// </summary>
+    /// <param name="dataEndTime">数据结束时间</param>
+    public void JumpToEnd(DateTime dataEndTime)
+    {
+        var timeSpan = EndTime - StartTime;
+        EndTime = dataEndTime;
+        StartTime = dataEndTime - timeSpan;
+        OnTimeRangeChanged();
+    }
+
+    /// <summary>
+    /// 跳转到数据中间位置
+    /// </summary>
+    /// <param name="dataStartTime">数据起始时间</param>
+    /// <param name="dataEndTime">数据结束时间</param>
+    public void JumpToMiddle(DateTime dataStartTime, DateTime dataEndTime)
+    {
+        var middleTime = dataStartTime + TimeSpan.FromTicks((dataEndTime - dataStartTime).Ticks / 2);
+        JumpToTime(middleTime);
+    }
+
+    /// <summary>
+    /// 跳转到指定时间，并指定可见时间范围
+    /// </summary>
+    /// <param name="targetTime">目标中心时间</param>
+    /// <param name="visibleSpan">可见时间跨度</param>
+    public void JumpToTime(DateTime targetTime, TimeSpan visibleSpan)
+    {
+        if (_isJumping) return;
+
+        try
+        {
+            _isJumping = true;
+            StartTime = targetTime - TimeSpan.FromTicks(visibleSpan.Ticks / 2);
+            EndTime = targetTime + TimeSpan.FromTicks(visibleSpan.Ticks / 2);
+            OnTimeRangeChanged();
+        }
+        finally
+        {
+            _isJumping = false;
+        }
+    }
+
+    #endregion
+
     private void OnTimeRangeChanged()
     {
         UpdateCursorTime();
