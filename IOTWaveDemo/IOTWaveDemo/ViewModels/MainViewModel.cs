@@ -141,7 +141,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 温度曲线数据
             var tempPanel = new CurveGroup()
-            {
+            {Name = "温度监控",
                 Legend = "温度监控",
                 Height = 200
             };
@@ -187,7 +187,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 湿度曲线数据
             var humidityPanel = new CurveGroup()
-            {
+            {Name = "湿度监控",
                 Legend = "湿度监控",
                 Height = 150
             };
@@ -368,7 +368,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 创建事件型曲线数据 - 模拟振动信号
             var vibrationPanel = new CurveGroup()
-            {
+            {Name = "振动信号",
                 Legend = "振动信号",
                 Height = 200
             };
@@ -422,7 +422,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 创建第二个曲线 - 模拟压力变化
             var pressurePanel = new CurveGroup()
-            {
+            {Name = "压力变化",
                 Legend = "压力变化",
                 Height = 150
             };
@@ -513,7 +513,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 温度曲线面板
             var tempPanel = new CurveGroup()
-            {
+            {Name = "温度监控",
                 Legend = "温度监控",
                 Height = 200
             };
@@ -553,7 +553,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 压力曲线面板
             var pressurePanel = new CurveGroup()
-            {
+            {Name = "压力监控",
                 Legend = "压力监控",
                 Height = 150
             };
@@ -594,7 +594,7 @@ namespace IOTWaveDemo.ViewModels
 
             // 温度曲线面板
             var tempPanel = new CurveGroup()
-            {
+            {Name = "环境温度",
                 Legend = "环境温度",
                 Height = 200
             };
@@ -639,6 +639,7 @@ namespace IOTWaveDemo.ViewModels
             // 压力曲线面板
             var pressurePanel = new CurveGroup()
             {
+                Name = "压力监控",
                 Legend = "压力监控",
                 Height = 150
             };
@@ -691,6 +692,7 @@ namespace IOTWaveDemo.ViewModels
             // 创建温度曲线面板
             var tempPanel = new CurveGroup()
             {
+                Name = "温度监控",
                 Legend = "温度监控",
                 Height = 200
             };
@@ -731,6 +733,7 @@ namespace IOTWaveDemo.ViewModels
             // 创建压力曲线面板
             var pressurePanel = new CurveGroup()
             {
+                Name = "压力监控",
                 Legend = "压力监控",
                 Height = 150
             };

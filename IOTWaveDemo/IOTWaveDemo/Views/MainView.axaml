@@ -120,6 +120,7 @@
                                 Margin="8,5"/>
                     </DataTemplate>
                   </DataGridTemplateColumn.CellTemplate>
+                  
                 </DataGridTemplateColumn>
               </DataGrid.Columns>
             </DataGrid>
