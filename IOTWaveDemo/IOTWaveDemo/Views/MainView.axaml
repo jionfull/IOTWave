@@ -24,6 +24,32 @@
       <Setter Property="StatusPanelHeight" Value="20"/>
       <Setter Property="Background" Value="Black"/>
     </Style>
+
+    <!-- 时间跳转按钮样式 -->
+    <Style Selector="Button.jumpBtn">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="10,5"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <ContentPresenter x:Name="PART_ContentPresenter"
+                            Background="{TemplateBinding Background}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Content="{TemplateBinding Content}"/>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="Button.jumpBtn:pointerover /template/ ContentPresenter">
+      <Setter Property="TextBlock.Foreground" Value="Black"/>
+      <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style Selector="Button.jumpBtn:pressed /template/ ContentPresenter">
+      <Setter Property="TextBlock.Foreground" Value="White"/>
+      <Setter Property="Background" Value="#333333"/>
+    </Style>
   </UserControl.Styles>
 
   <TabControl>
@@ -159,27 +185,52 @@
           <StackPanel Orientation="Horizontal" Spacing="10">
             <TextBlock Text="时间跳转：" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0"/>
 
-            <Button Content="跳转到起始"
+            <Button Content="跳转到起始" Classes="jumpBtn"
                     Command="{Binding TimeJumpDemoViewModel.JumpToStartCommand}"
-                    Background="#3B82F6" Foreground="White" Padding="10,5"/>
+                    Background="#3B82F6"/>
 
-            <Button Content="跳转到中间"
+            <Button Content="跳转到中间" Classes="jumpBtn"
                     Command="{Binding TimeJumpDemoViewModel.JumpToMiddleCommand}"
-                    Background="#8B5CF6" Foreground="White" Padding="10,5"/>
+                    Background="#8B5CF6"/>
 
-            <Button Content="跳转到结束"
+            <Button Content="跳转到结束" Classes="jumpBtn"
                     Command="{Binding TimeJumpDemoViewModel.JumpToEndCommand}"
-                    Background="#EC4899" Foreground="White" Padding="10,5"/>
+                    Background="#EC4899"/>
 
             <Separator Width="20" Background="Transparent"/>
 
             <TextBlock Text="指定时间：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
 
-       
+            <Button Content="跳转到6:30" Classes="jumpBtn"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTime630Command}"
+                    Background="#10B981"/>
 
-            <Button Content="跳转到6点"
-                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTime6Command}"
-                    Background="#10B981" Foreground="White" Padding="10,5"/>
+            <Button Content="跳转到17:25" Classes="jumpBtn"
+                    Command="{Binding TimeJumpDemoViewModel.JumpToTargetTime1725Command}"
+                    Background="#F59E0B"/>
+
+            <Separator Width="20" Background="Transparent"/>
+
+            <TextBlock Text="播放：" VerticalAlignment="Center" Foreground="White" Margin="0,0,5,0"/>
+
+            <Button Classes="jumpBtn"
+                    Command="{Binding TimeJumpDemoViewModel.PlayCommand}"
+                    Background="#22C55E">
+              <Panel>
+                <TextBlock Text="▶" FontSize="12" IsVisible="{Binding !TimeJumpDemoViewModel.IsPlaying}"/>
+                <TextBlock Text="⏸" FontSize="12" IsVisible="{Binding TimeJumpDemoViewModel.IsPlaying}"/>
+              </Panel>
+            </Button>
+
+            <TextBlock Text="速度：" VerticalAlignment="Center" Foreground="White" Margin="10,0,5,0"/>
+            <ComboBox Width="80"
+                      SelectedIndex="{Binding TimeJumpDemoViewModel.PlaySpeedIndex}">
+              <ComboBoxItem Content="0.5x"/>
+              <ComboBoxItem Content="1x"/>
+              <ComboBoxItem Content="2x"/>
+              <ComboBoxItem Content="4x"/>
+              <ComboBoxItem Content="8x"/>
+            </ComboBox>
           </StackPanel>
         </Border>
 
