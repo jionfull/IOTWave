@@ -4,7 +4,7 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <!-- NuGet Package Information -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>IOTWave</PackageId>
@@ -13,7 +13,7 @@
     <Company>jionfull(NoCompany)</Company>
     <Product>IOTWave</Product>
     <Description>An IoT framework library for .NET 8.0 and .NET 10</Description>
-    <PackageTags>iot;framework;net8;net10;iotwave</PackageTags>
+    <PackageTags>iot;framework;net8;net10;iotwave;visualization;timeseries</PackageTags>
     <PackageProjectUrl>https://github.com/jionfull/IOTWave</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jionfull/IOTWave</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Doc\README.md" Pack="true" PackagePath="README.md" />
+    <None Include="..\README.md" Pack="true" PackagePath="README.md" />
     <None Include="..\LICENSE" Pack="true" PackagePath="LICENSE" />
   </ItemGroup>
 
