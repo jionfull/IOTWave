@@ -14,4 +14,6 @@ public partial class DataSeriesGroupBase:ObservableObject
     [ObservableProperty]
     private bool _isVisible = true;  
 
+    public Dictionary<string, object> Properties { get; set; } = new();
+
 }

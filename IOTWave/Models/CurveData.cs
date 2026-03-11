@@ -9,7 +9,9 @@ public partial class CurveData :ObservableObject
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;
     public string Legend { get; set; }= String.Empty;
-    
+
+    public Dictionary<string, object> Properties { get; set; } = new();
+
     private Color _color = Colors.Blue;
     public Color Color 
     { 
