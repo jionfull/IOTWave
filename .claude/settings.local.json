@@ -9,7 +9,9 @@
       "Bash(ls:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(pwsh -File push-nuget.ps1)",
+      "Bash(powershell -ExecutionPolicy Bypass -File push-nuget.ps1)"
     ]
   }
 }
