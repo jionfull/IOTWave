@@ -162,3 +162,6 @@ bld/
 # Keep project documentation (if desired)
 !README.md
 !*.md
+
+# NuGet API key
+.nuget-api-key
